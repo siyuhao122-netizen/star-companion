@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>星伴 · 声音小话筒 | 发声启蒙游戏</title>
+  <!-- 字体与图标库 -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      background: #F3EFE9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      padding: 24px;
+    }
+
+    /* 游戏主容器 */
+    .mic-game {
+      max-width: 800px;
+      width: 100%;
+      background: #FFFCF7;
+      border-radius: 64px;
+      box-shadow: 0 30px 40px -20px rgba(60, 40, 28, 0.3), 0 0 0 1px rgba(235, 216, 190, 0.6);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .game-inner {
+      padding: 28px 28px 36px;
+    }
+
+    /* 头部 */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn,
+    .help-btn {
+      background: #F5EDE4;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
+      font-size: 20px;
+      color: #B88B5C;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .back-btn:active,
+    .help-btn:active {
+      background: #E6D8CA;
+      transform: scale(0.95);
+    }
+
+    .game-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #6C4F32;
+      background: #FCF4EA;
+      padding: 8px 28px;
+      border-radius: 60px;
+      letter-spacing: 1px;
+    }
+
+    .game-title i {
+      margin-right: 8px;
+      color: #D9A066;
+    }
+
+    /* 核心小话筒区域 */
+    .mic-stage {
+      background: #FEF9F2;
+      border-radius: 68px;
+      padding: 28px 20px;
+      margin-bottom: 28px;
+      text-align: center;
+      border: 2px solid #F4E5D6;
+      box-shadow: inset 0 1px 4px #FFF8F0, 0 10px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .character-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mic-icon {
+      font-size: 80px;
+      background: #F9EDE0;
+      width: 140px;
+      height: 140px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05), inset 0 1px 0 #FFF;
+      transition: 0.1s;
+    }
+
+    .target-sound {
+      font-size: 72px;
+      font-weight: 800;
+      background: #FFFAF2;
+      padding: 12px 36px;
+      border-radius: 100px;
+      display: inline-block;
+      margin: 16px 0 8px;
+      letter-spacing: 8px;
+      color: #CF9F6E;
+      border: 1px solid #F3E2D0;
+      font-family: monospace;
+    }
+
+    .listen-hint {
+      font-size: 18px;
+      font-weight: 600;
+      color: #B58253;
+      background: #FEF2E4;
+      padding: 8px 24px;
+      border-radius: 48px;
+    }
+
+    /* 录音按钮 + 音量可视化 */
+    .voice-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0 10px;
+    }
+
+    .record-btn {
+      background: #EADBCA;
+      border: none;
+      width: 110px;
+      height: 110px;
+      border-radius: 80px;
+      font-size: 48px;
+      color: #A77348;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #C6AA8A;
+      transition: 0.05s linear;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .record-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #C6AA8A;
+    }
+
+    .volume-meter {
+      width: 80%;
+      background: #F0E2D4;
+      border-radius: 30px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    .volume-fill {
+      width: 0%;
+      height: 100%;
+      background: #D9A56C;
+      border-radius: 30px;
+      transition: width 0.05s linear;
+    }
+
+    .encourage-tip {
+      font-size: 14px;
+      color: #C19463;
+      background: #FEF5EA;
+      padding: 8px 18px;
+      border-radius: 40px;
+    }
+
+    /* 星星奖励展示 */
+    .stars-reward {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 16px 0 12px;
+    }
+
+    .star-item {
+      font-size: 32px;
+      color: #E9C594;
+      transition: 0.1s;
+    }
+
+    .star-item.active {
+      color: #F7B05E;
+      text-shadow: 0 0 6px #FFD58C;
+    }
+
+    /* 进度与回合 */
+    .game-progress {
+      background: #FBF5ED;
+      border-radius: 44px;
+      padding: 18px 22px;
+      margin-top: 12px;
+    }
+
+    .round-stats {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      color: #8F6A44;
+    }
+
+    .progress-bar-bg {
+      background: #EADDCB;
+      border-radius: 20px;
+      height: 10px;
+      margin: 12px 0;
+    }
+
+    .progress-fill {
+      width: 0%;
+      background: #D9A56C;
+      border-radius: 20px;
+      height: 100%;
+    }
+
+    .next-btn {
+      background: #F0E2D4;
+      border: none;
+      width: 100%;
+      padding: 14px;
+      border-radius: 48px;
+      font-weight: 700;
+      font-size: 18px;
+      color: #AA784C;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    .next-btn:active {
+      background: #E4D2BF;
+    }
+
+    /* 反馈浮层 */
+    .feedback-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      backdrop-filter: blur(12px);
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 700;
+      color: #B4753E;
+      font-size: 18px;
+      z-index: 200;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid #FFE4CA;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @keyframes bounceStar {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+
+    .star-bounce {
+      animation: bounceStar 0.3s ease;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    @media (max-width: 550px) {
+      .game-inner {
+        padding: 20px;
+      }
+
+      .target-sound {
+        font-size: 48px;
+        letter-spacing: 4px;
+      }
+
+      .mic-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 56px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="mic-game">
+    <div class="game-inner">
+      <!-- 头部 -->
+      <div class="game-header">
+        <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+        <div class="game-title"><i class="fas fa-microphone-alt"></i> 声音小话筒</div>
+        <button class="help-btn" id="helpBtn"><i class="fas fa-question"></i></button>
+      </div>
+
+      <!-- 小话筒舞台 -->
+      <div class="mic-stage">
+        <div class="character-area">
+          <div class="mic-icon" id="micIcon">
+            <i class="fas fa-microphone-alt"></i>
+          </div>
+          <div class="target-sound" id="targetSound">a</div>
+          <div class="listen-hint" id="listenHint">🐱 小猫咪想听你学 "a" ～</div>
+        </div>
+
+        <!-- 录音与音量可视化 -->
+        <div class="voice-action">
+          <button class="record-btn" id="recordBtn">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <div class="volume-meter">
+            <div class="volume-fill" id="volumeFill"></div>
+          </div>
+          <div class="encourage-tip" id="encourageTip">
+            💡 发出任何声音都可以！哪怕只是气声，星星就会亮起来～
+          </div>
+        </div>
+
+        <!-- 星星奖励区 (每轮最多3星) -->
+        <div class="stars-reward" id="starsReward">
+          <div class="star-item"><i class="fas fa-star"></i></div>
+          <div class="star-item"><i class="fas fa-star"></i></div>
+          <div class="star-item"><i class="fas fa-star"></i></div>
+        </div>
+      </div>
+
+      <!-- 进度与回合控制 -->
+      <div class="game-progress">
+        <div class="round-stats">
+          <span><i class="fas fa-music"></i> 第 <span id="currentRound">1</span> / <span id="totalRounds">6</span>
+            轮</span>
+          <span><i class="fas fa-star-of-life"></i> 本轮获得 <span id="roundStars">0</span> 颗星</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+        <button class="next-btn" id="nextRoundBtn">🎤 下一个声音 →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 声音小话筒 - 发声鼓励游戏（元音/简单短句，任何发声尝试都奖励星星）
+    // 实现模拟音频检测（基于Web Audio API 音量检测）与星星奖励机制
+
+    // 游戏语料库 (元音 + 简单拟声词，鼓励模仿)
+    const soundLibrary = [
+      { text: "a", display: "a — 啊", hint: "张开小嘴巴，像医生检查喉咙～" },
+      { text: "o", display: "o — 喔", hint: "圆圆的嘴巴，喔喔喔～" },
+      { text: "e", display: "e — 鹅", hint: "嘴巴扁扁，试试 e~" },
+      { text: "ma", display: "ma — 妈", hint: "轻轻说'妈'，妈妈会开心哟" },
+      { text: "ba", display: "ba — 爸", hint: "试试 ba ba，真棒！" },
+      { text: "wu", display: "wu — 呜", hint: "小火车 wu wu wu~ 发出声音就成功" }
+    ];
+
+    let currentIndex = 0;           // 当前轮次索引 (0~5)
+    let roundStarsEarned = 0;       // 本轮已获得的星星数 (最多3)
+    let canGetStars = true;          // 本轮是否还能继续获得星星（每次发声都给，但每轮最多3星）
+    let audioContext = null;
+    let mediaStream = null;
+    let sourceNode = null;
+    let analyserNode = null;
+    let animationId = null;
+    let isListening = false;
+    let lastVolume = 0;
+    let starAnimationTimer = null;
+
+    // DOM 元素
+    const targetSoundSpan = document.getElementById('targetSound');
+    const listenHintSpan = document.getElementById('listenHint');
+    const recordBtn = document.getElementById('recordBtn');
+    const volumeFill = document.getElementById('volumeFill');
+    const starsContainer = document.getElementById('starsReward');
+    const roundStarsSpan = document.getElementById('roundStars');
+    const currentRoundSpan = document.getElementById('currentRound');
+    const totalRoundsSpan = document.getElementById('totalRounds');
+    const progressFill = document.getElementById('progressFill');
+    const nextRoundBtn = document.getElementById('nextRoundBtn');
+    const encourageTipSpan = document.getElementById('encourageTip');
+    const micIconDiv = document.getElementById('micIcon');
+
+    totalRoundsSpan.innerText = soundLibrary.length;
+
+    // 更新界面显示当前声音目标
+    function updateTargetDisplay() {
+      const item = soundLibrary[currentIndex];
+      targetSoundSpan.innerText = item.display || item.text;
+      listenHintSpan.innerHTML = `🐣 ${item.hint}`;
+      encourageTipSpan.innerHTML = `💡 发出类似“${item.text}”的任何声音，星星⭐就会增加！不要求标准～`;
+      // 重置本轮星星计数和可获取标记
+      roundStarsEarned = 0;
+      canGetStars = true;
+      updateStarsUI();
+      roundStarsSpan.innerText = "0";
+      // 重置音量条视觉效果
+      volumeFill.style.width = "0%";
+      // 清除之前可能的检测标记
+    }
+
+    // 更新星星显示
+    function updateStarsUI() {
+      const starDivs = starsContainer.querySelectorAll('.star-item');
+      starDivs.forEach((star, idx) => {
+        if (idx < roundStarsEarned) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+      roundStarsSpan.innerText = roundStarsEarned;
+    }
+
+    // 增加星星 (检测到有效发声时调用)
+    function addStar() {
+      if (!canGetStars) return false;
+      if (roundStarsEarned >= 3) {
+        canGetStars = false;
+        return false;
+      }
+      roundStarsEarned++;
+      updateStarsUI();
+      // 播放星星动画和鼓励提示
+      const starElements = starsContainer.querySelectorAll('.star-item');
+      if (roundStarsEarned <= starElements.length) {
+        const starTarget = starElements[roundStarsEarned - 1];
+        starTarget.classList.add('star-bounce');
+        setTimeout(() => starTarget.classList.remove('star-bounce'), 300);
+      }
+      // 显示浮动鼓励语
+      showFloatingMessage("✨ 哇！发出声音啦！获得小星星 ✨", "#FCE8CF");
+      // 改变话筒图标快乐反馈
+      micIconDiv.style.transform = "scale(1.1)";
+      setTimeout(() => micIconDiv.style.transform = "", 200);
+
+      if (roundStarsEarned >= 3) {
+        canGetStars = false;
+        showFloatingMessage("🎉 太厉害了！本轮集满三颗星，继续挑战新声音！ 🎉", "#EADBCA");
+      }
+      return true;
+    }
+
+    // 浮动消息
+    function showFloatingMessage(msg, bg = "#FFF5E9") {
+      let existing = document.querySelector('.feedback-toast');
+      if (existing) existing.remove();
+      let toast = document.createElement('div');
+      toast.className = 'feedback-toast';
+      toast.innerHTML = `<i class="fas fa-microphone"></i> ${msg}`;
+      toast.style.background = bg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1800);
+    }
+
+    // 音量检测核心 (基于 Web Audio)
+    async function initAudio() {
+      if (audioContext && audioContext.state !== 'closed') {
+        // 已初始化，直接返回
+        return true;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStream = stream;
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyserNode = audioContext.createAnalyser();
+        analyserNode.fftSize = 256;
+        const bufferLength = analyserNode.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        sourceNode = audioContext.createMediaStreamSource(stream);
+        sourceNode.connect(analyserNode);
+        // 不将声音输出到扬声器避免回声
+        if (audioContext.state === 'suspended') {
+          await audioContext.resume();
+        }
+        // 启动音量监听
+        startVolumeMeter(analyserNode, dataArray);
+        return true;
+      } catch (err) {
+        console.warn("麦克风权限未开启", err);
+        showFloatingMessage("🎙️ 需要麦克风权限才能玩声音游戏～ 请检查设置", "#F3D9C2");
+        return false;
+      }
+    }
+
+    let volumeLoop = null;
+    function startVolumeMeter(analyser, dataArray) {
+      if (volumeLoop) cancelAnimationFrame(volumeLoop);
+      function updateVolume() {
+        if (!analyser || !isListening) return;
+        analyser.getByteTimeDomainData(dataArray);
+        let maxSample = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          let v = (dataArray[i] - 128) / 128;
+          maxSample = Math.max(maxSample, Math.abs(v));
+        }
+        let volume = Math.min(1, maxSample * 2.5);  // 灵敏度调节，气声也能触发
+        lastVolume = volume;
+        volumeFill.style.width = (volume * 100) + '%';
+        // 检测声音阈值 (0.08 极低阈值，任何声音尝试都算)
+        if (volume > 0.09 && isListening && canGetStars && roundStarsEarned < 3) {
+          // 发声成功！奖励星星，并且为了避免一秒钟多次奖励，加冷却
+          if (!window.lastRewardTime || (Date.now() - window.lastRewardTime) > 800) {
+            window.lastRewardTime = Date.now();
+            addStar();
+          }
+        }
+        volumeLoop = requestAnimationFrame(updateVolume);
+      }
+      volumeLoop = requestAnimationFrame(updateVolume);
+    }
+
+    // 监听按钮开始/停止录音状态（视觉反馈，并开启音量检测flag）
+    let isRecording = false;
+    recordBtn.addEventListener('mousedown', async () => {
+      if (!isListening) {
+        let success = await initAudio();
+        if (!success) return;
+        isListening = true;
+        isRecording = true;
+        recordBtn.style.background = "#D9C2A8";
+        recordBtn.innerHTML = '<i class="fas fa-microphone-alt" style="color:#4F3622;"></i>';
+        micIconDiv.style.boxShadow = "0 0 0 3px #F2C94C";
+        showFloatingMessage("🎤 正在听你发声！发出任何声音试试看～", "#FDF0E0");
+        // 如果本轮还未获得星星，鼓励发声
+        if (roundStarsEarned === 0 && canGetStars) {
+          encourageTipSpan.innerHTML = "🎙️ 小话筒开啦！发出“啊”或者任何声音，星星就会出现～";
+        } else {
+          encourageTipSpan.innerHTML = "💪 继续发声，还可以拿更多星星！";
+        }
+      }
+    });
+
+    // 松开停止检测（但为了交互流畅，不关闭音频，只是暂时不反馈新星星？由于阈值持续，但为了避免过度，不停止，但松开后降低灵敏度？ 按需求游戏保持常开也无妨。但为了体验，按钮控制检测flag）
+    document.body.addEventListener('mouseup', () => {
+      if (isRecording) {
+        // 不关闭检测，但变更提示
+        if (isListening) {
+          // 保持监听，但用户松手后鼓励仍然持续，不过为了游戏习惯，保持检测；可以设定持续监听
+        }
+        isRecording = false;
+        recordBtn.style.background = "#EADBCA";
+        recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        micIconDiv.style.boxShadow = "";
+        encourageTipSpan.innerHTML = "💡 按住话筒按钮说话，或直接对着麦克风发声！我们随时在听～";
+      }
+    });
+
+    // 移动端触摸支持
+    recordBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (!isListening) {
+        initAudio().then(() => {
+          isListening = true;
+          isRecording = true;
+          recordBtn.style.background = "#D9C2A8";
+          recordBtn.innerHTML = '<i class="fas fa-microphone-alt"></i>';
+          micIconDiv.style.boxShadow = "0 0 0 3px #F2C94C";
+          showFloatingMessage("🎤 正在听你发声！发出任何声音试试看～", "#FDF0E0");
+        });
+      } else {
+        isRecording = true;
+        recordBtn.style.background = "#D9C2A8";
+        micIconDiv.style.boxShadow = "0 0 0 3px #F2C94C";
+      }
+    });
+    recordBtn.addEventListener('touchend', () => {
+      isRecording = false;
+      recordBtn.style.background = "#EADBCA";
+      recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+      micIconDiv.style.boxShadow = "";
+    });
+
+    // 下一轮 (切换到新声音)
+    function goToNextRound() {
+      if (currentIndex + 1 < soundLibrary.length) {
+        currentIndex++;
+        updateTargetDisplay();
+        // 重置本轮星星计数
+        roundStarsEarned = 0;
+        canGetStars = true;
+        updateStarsUI();
+        // 更新进度条
+        const percent = ((currentIndex) / soundLibrary.length) * 100;
+        progressFill.style.width = `${percent}%`;
+        currentRoundSpan.innerText = currentIndex + 1;
+        // 重置音量可视化鼓励
+        volumeFill.style.width = "0%";
+        showFloatingMessage(`🌟 新挑战：模仿“${soundLibrary[currentIndex].display}”，发声就有星星！`, "#F6EADB");
+        encourageTipSpan.innerHTML = `🎤 试试发出类似“${soundLibrary[currentIndex].text}”的声音，不着急慢慢来～`;
+      } else {
+        // 游戏完成，展示总结
+        showFloatingMessage("🎉 太厉害了！完成了所有声音挑战，每天练习会越来越会沟通！ 🎉", "#EEDCC8");
+        setTimeout(() => {
+          alert("✨ 声音小话筒完成！你鼓励了孩子发声的每一步 ✨\n任何声音都是进步，继续加油！");
+        }, 500);
+        // 重置游戏循环（可重新开始）
+        if (confirm("完成全部关卡！是否重新开始游戏？")) {
+          currentIndex = 0;
+          updateTargetDisplay();
+          roundStarsEarned = 0;
+          canGetStars = true;
+          updateStarsUI();
+          progressFill.style.width = "0%";
+          currentRoundSpan.innerText = 1;
+          showFloatingMessage("新的一轮开始啦！继续用小话筒发声吧～", "#FEF1E2");
+        }
+      }
+    }
+
+    nextRoundBtn.addEventListener('click', () => {
+      if (currentIndex + 1 <= soundLibrary.length) {
+        goToNextRound();
+      } else {
+        goToNextRound(); // 处理完成
+      }
+    });
+
+    // 辅助按钮
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (confirm("返回主界面将退出声音游戏，确定吗？")) {
+        window.location.href = "#";
+        showFloatingMessage("回到主界面", "#F4E5D6");
+      }
+    });
+    document.getElementById('helpBtn').addEventListener('click', () => {
+      showFloatingMessage("🎙️ 按住话筒按钮/对着麦克风发出任何声音（a/o/e或气声），每发一次声音就奖励星星⭐！不要求标准清晰，鼓励尝试！", "#FFF2E4");
+    });
+
+    // 初始化第一轮
+    updateTargetDisplay();
+    // 预先请求麦克风权限但不启动录音检测，待用户第一次按话筒时再启动（优雅体验）
+    // 为了避免自动请求权限, 在页面加载后静默不请求，等到用户点击按钮时请求。
+    // 增加页面加载后提示
+    window.onload = () => {
+      // 预授权？不自动，等待用户触发
+      console.log("声音小话筒准备就绪，按住话筒发声即可获得星星！");
+      encourageTipSpan.innerHTML = "🎙️ 按住话筒按钮，发出“啊”“喔”或任何声音，每次发声都能拿星星！";
+    };
+
+    // 清理资源（页面关闭）
+    window.addEventListener('beforeunload', () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+      }
+      if (audioContext) {
+        audioContext.close();
+      }
+      if (volumeLoop) cancelAnimationFrame(volumeLoop);
+    });
+  </script>
+</body>
+
+</html>
