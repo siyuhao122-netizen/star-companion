@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>星伴 · 指物练习 | 语音播报版</title>
-  <!-- 字体与图标 -->
+  <title>星伴 · 指物游戏 | 智能分析报告</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -28,7 +27,7 @@
       padding: 12px;
     }
 
-    /* 主卡片 1024*600 固定尺寸 */
+    /* 主容器固定尺寸 1024*600 */
     .game-master {
       width: 1024px;
       height: 600px;
@@ -43,45 +42,44 @@
     }
 
     .game-panel {
-      padding: 18px 28px 20px;
+      padding: 16px 26px 18px;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
 
-    /* 顶部栏 */
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .left-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .home-btn {
       background: #F1E7DE;
       border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 26px;
-      font-size: 22px;
+      width: 44px;
+      height: 44px;
+      border-radius: 24px;
+      font-size: 20px;
       color: #8C6E52;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: 0.1s;
-      box-shadow: 0 4px 0 #DBC8B5;
+      box-shadow: 0 3px 0 #DBC8B5;
       border: 1px solid #EADACA;
     }
 
     .home-btn:active {
-      transform: translateY(3px);
+      transform: translateY(2px);
       box-shadow: 0 1px 0 #DBC8B5;
     }
 
@@ -93,119 +91,106 @@
 
     .logo-mark {
       background: #EADBCF;
-      width: 44px;
-      height: 44px;
-      border-radius: 26px;
+      width: 40px;
+      height: 40px;
+      border-radius: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 20px;
       color: #8C6E52;
     }
 
     .game-title {
       font-weight: 700;
-      font-size: 22px;
-      letter-spacing: 1.5px;
+      font-size: 20px;
       color: #7C5F48;
     }
 
     .round-info {
       background: #F7EFE6;
-      padding: 8px 20px;
-      border-radius: 60px;
+      padding: 6px 18px;
+      border-radius: 50px;
       font-weight: 700;
-      font-size: 18px;
+      font-size: 16px;
       color: #9F7C5F;
       border: 1px solid #EDDDCF;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* 错误计数显示 */
-    .error-counter {
-      background: #FCE8E8;
-      padding: 4px 14px;
-      border-radius: 30px;
-      font-size: 14px;
-      color: #C06060;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-    }
-
-    .error-counter i {
-      font-size: 12px;
-    }
-
-    /* 提示区 */
-    .hint-area {
-      background: #F9F3EB;
-      margin: 4px 0 8px;
-      padding: 10px 20px;
-      border-radius: 36px;
-      border-left: 5px solid #D9B48F;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
+    .error-counter {
+      background: #FCE8E8;
+      padding: 3px 12px;
+      border-radius: 28px;
+      font-size: 13px;
+      color: #C06060;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .hint-area {
+      background: #F9F3EB;
+      margin: 3px 0 6px;
+      padding: 8px 18px;
+      border-radius: 32px;
+      border-left: 4px solid #D9B48F;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .hint-icon {
-      font-size: 22px;
+      font-size: 20px;
       color: #C69C6D;
     }
 
     .hint-text {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
       color: #5F4A36;
     }
 
-    .hint-text strong {
-      color: #B27A4A;
-    }
-
-    /* 目标展示区 */
     .question-head {
       text-align: center;
-      margin: 4px 0 12px;
+      margin: 2px 0 8px;
     }
 
     .target-display {
-      font-size: 38px;
+      font-size: 32px;
       font-weight: 800;
       color: #5F4230;
       background: #FCF6EE;
       display: inline-block;
-      padding: 6px 36px;
-      border-radius: 60px;
-      box-shadow: 0 3px 0 #E6D3C0;
+      padding: 4px 30px;
+      border-radius: 50px;
+      box-shadow: 0 2px 0 #E6D3C0;
     }
 
     .target-emoji {
-      font-size: 42px;
-      margin-left: 8px;
+      font-size: 36px;
+      margin-left: 6px;
     }
 
-    /* 物品网格 - 4列 */
     .items-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin: 4px 0 12px;
+      gap: 12px;
+      margin: 2px 0 8px;
       flex: 1;
     }
 
     .item-card {
       background: #FFFFFF;
-      border-radius: 32px;
-      padding: 12px 6px;
+      border-radius: 28px;
+      padding: 8px 4px;
       text-align: center;
       cursor: pointer;
-      border: 2.5px solid #F0E3D6;
-      box-shadow: 0 8px 0 #E2D1C0, 0 6px 14px rgba(160, 120, 80, 0.05);
+      border: 2px solid #F0E3D6;
+      box-shadow: 0 6px 0 #E2D1C0, 0 4px 10px rgba(160, 120, 80, 0.05);
       transition: all 0.1s;
       display: flex;
       flex-direction: column;
@@ -214,30 +199,30 @@
     }
 
     .item-card:active {
-      transform: translateY(4px);
-      box-shadow: 0 4px 0 #DBC8B5;
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #DBC8B5;
     }
 
     .item-emoji {
-      font-size: 70px;
+      font-size: 60px;
       line-height: 1.1;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .item-name {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
       color: #785F48;
       background: #FBF4EB;
-      padding: 4px 16px;
-      border-radius: 36px;
+      padding: 3px 12px;
+      border-radius: 30px;
       border: 1px solid #EDD9C6;
     }
 
     .item-card.correct-glow {
       background: #E3F0D8;
       border-color: #A8C998;
-      box-shadow: 0 5px 0 #9BB582;
+      box-shadow: 0 4px 0 #9BB582;
     }
 
     .item-card.wrong-shake {
@@ -254,89 +239,86 @@
       }
 
       25% {
-        transform: translateX(-5px);
+        transform: translateX(-4px);
       }
 
       75% {
-        transform: translateX(5px);
+        transform: translateX(4px);
       }
     }
 
-    /* 底部区域 */
     .bottom-section {
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
-    /* 反馈信息条 */
     .feedback-bar {
       background: #FDF8F2;
-      border-radius: 36px;
-      padding: 10px 20px;
-      margin-bottom: 10px;
+      border-radius: 30px;
+      padding: 8px 18px;
+      margin-bottom: 8px;
       text-align: center;
       font-weight: 600;
-      font-size: 17px;
+      font-size: 14px;
       color: #7F9A6B;
       border: 1px solid #F0E0D0;
-      min-height: 50px;
+      min-height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* 统计栏 */
     .stats-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #FDF8F2;
-      border-radius: 40px;
-      padding: 10px 18px;
-      margin-bottom: 8px;
+      border-radius: 36px;
+      padding: 8px 16px;
+      margin-bottom: 6px;
       border: 1px solid #F0E0D0;
     }
 
     .stats-group {
       display: flex;
-      gap: 20px;
+      gap: 16px;
     }
 
     .stat-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: #FFFFFFE0;
-      padding: 5px 18px;
-      border-radius: 40px;
+      padding: 4px 16px;
+      border-radius: 36px;
       font-weight: 600;
       color: #6F523A;
-      font-size: 15px;
+      font-size: 13px;
     }
 
     .stat-number {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       color: #BA8A5C;
-      margin-left: 4px;
+      margin-left: 3px;
     }
 
     .action-group {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-secondary {
       background: #F1E7DE;
       border: none;
-      padding: 10px 22px;
-      border-radius: 40px;
+      padding: 8px 18px;
+      border-radius: 36px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 13px;
       color: #8B6A4C;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       border: 1px solid #E6D2C0;
       transition: all 0.1s;
     }
@@ -346,12 +328,6 @@
       transform: scale(0.97);
     }
 
-    .btn-primary {
-      background: #EAD1BB;
-      border-color: #DDBB9A;
-    }
-
-    /* 进度条 */
     .progress-section {
       margin-top: 2px;
     }
@@ -359,42 +335,41 @@
     .progress-header {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       color: #B19780;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .bar-bg {
       background: #EFE3D8;
-      height: 10px;
-      border-radius: 30px;
+      height: 8px;
+      border-radius: 20px;
       overflow: hidden;
     }
 
     .bar-fill {
       background: #D0A77A;
       height: 100%;
-      border-radius: 30px;
+      border-radius: 20px;
       transition: width 0.3s;
     }
 
-    /* 提醒弹窗 */
     .reminder-popup {
       position: absolute;
-      top: 28%;
+      top: 25%;
       left: 50%;
       transform: translate(-50%, -30%);
       background: #FFF6EA;
-      padding: 14px 28px;
-      border-radius: 50px;
+      padding: 10px 24px;
+      border-radius: 44px;
       box-shadow: 0 20px 30px -6px rgba(100, 70, 30, 0.2), 0 0 0 2px #FFE6CD;
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
       color: #AF7642;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       z-index: 100;
       opacity: 0;
       visibility: hidden;
@@ -407,15 +382,15 @@
       visibility: visible;
     }
 
-    /* 成绩弹窗 */
+    /* 训练报告弹窗 - 完全在1024x600内 */
     .result-modal {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(3px);
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(2px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -423,6 +398,7 @@
       opacity: 0;
       visibility: hidden;
       transition: 0.2s;
+      border-radius: 48px;
     }
 
     .result-modal.show {
@@ -432,73 +408,112 @@
 
     .modal-card {
       background: #FFFCF5;
-      border-radius: 52px;
-      padding: 28px 40px;
+      border-radius: 44px;
+      padding: 18px 26px;
       max-width: 520px;
       width: 90%;
+      max-height: 540px;
+      overflow-y: auto;
       text-align: center;
-      box-shadow: 0 40px 50px -20px #5f3e2a33;
+      box-shadow: 0 30px 40px -16px #5f3e2a33;
       border: 1px solid #FFE9D4;
     }
 
     .modal-title {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 800;
       color: #7C5F48;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin: 20px 0;
+      gap: 8px;
+      margin: 12px 0;
     }
 
     .stat-item {
       background: #F9F3EB;
-      padding: 12px;
-      border-radius: 24px;
+      padding: 6px;
+      border-radius: 20px;
     }
 
     .stat-label {
-      font-size: 13px;
+      font-size: 11px;
       color: #9B846C;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .stat-value {
-      font-size: 32px;
+      font-size: 22px;
       font-weight: 800;
       color: #C28B5E;
     }
 
     .stat-unit {
-      font-size: 14px;
+      font-size: 11px;
       color: #9B846C;
-      margin-left: 4px;
+      margin-left: 3px;
+    }
+
+    .analysis-area {
+      background: #F2EEE7;
+      border-radius: 24px;
+      padding: 12px 14px;
+      margin: 8px 0 14px;
+      text-align: left;
+      border-left: 5px solid #D0A77A;
+    }
+
+    .analysis-title {
+      font-weight: 800;
+      font-size: 16px;
+      color: #7C5F48;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .analysis-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #4A3A2C;
+      font-weight: 500;
+    }
+
+    .single-button {
+      display: flex;
+      justify-content: center;
     }
 
     .modal-btn {
-      background: #EAD1BB;
+      background: #C8A87C;
       border: none;
-      padding: 14px 30px;
-      border-radius: 50px;
+      padding: 12px 28px;
+      border-radius: 44px;
       font-weight: 700;
-      font-size: 18px;
-      color: #6F4E34;
+      font-size: 16px;
+      color: white;
       cursor: pointer;
-      margin-top: 10px;
-      border: 1px solid #DDBB9A;
-      width: 100%;
+      border: 1px solid #B48F64;
+      transition: 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.97);
+      background: #B58F64;
     }
   </style>
 </head>
 
 <body>
-  <div class="game-master">
-    <div class="game-panel">
-      <!-- 顶部 -->
+  <div class="game-master" id="gameMasterContainer">
+    <div class="game-panel" id="mainGamePanel">
       <div class="top-bar">
         <div class="left-actions">
           <button class="home-btn" id="homeButton"><i class="fas fa-home"></i></button>
@@ -508,31 +523,19 @@
           </div>
         </div>
         <div class="round-info">
-          <i class="fas fa-list-ul"></i> 第 <span id="currentRoundDisplay">1</span> / <span
-            id="totalRoundsDisplay">8</span> 轮
-          <span class="error-counter" id="roundErrorDisplay">
-            <i class="fas fa-times-circle"></i> <span id="roundErrorCount">0</span>/3
-          </span>
+          <i class="fas fa-list-ul"></i> 第 <span id="currentRoundDisplay">1</span>/<span
+            id="totalRoundsDisplay">8</span>
+          <span class="error-counter"><i class="fas fa-times-circle"></i> <span id="roundErrorCount">0</span>/3</span>
         </div>
       </div>
-
-      <!-- 提示区 -->
       <div class="hint-area">
         <div class="hint-icon"><i class="fas fa-hand-pointer"></i></div>
-        <div class="hint-text" id="hintMessage">
-          <strong>👉 指一指</strong> "<span id="hintTarget">苹果</span>" 然后点击对应卡片
-        </div>
+        <div class="hint-text"><strong>👉 指一指</strong> "<span id="hintTarget">苹果</span>" 然后点击对应卡片</div>
       </div>
-
-      <!-- 目标展示 -->
       <div class="question-head">
-        <div class="target-display">
-          <span id="targetName">苹果</span>
-          <span class="target-emoji" id="targetEmoji">🍎</span>
+        <div class="target-display"><span id="targetName">苹果</span><span class="target-emoji" id="targetEmoji">🍎</span>
         </div>
       </div>
-
-      <!-- 物品网格 -->
       <div class="items-grid" id="itemsGridContainer">
         <div class="item-card" data-item="苹果" data-emoji="🍎">
           <div class="item-emoji">🍎</div>
@@ -551,120 +554,98 @@
           <div class="item-name">西瓜</div>
         </div>
       </div>
-
-      <!-- 底部区域 -->
       <div class="bottom-section">
-        <!-- 反馈信息条 -->
-        <div class="feedback-bar" id="inlineFeedback">
-          ✨ 第 1 轮：指一指"苹果"，点击卡片吧
-        </div>
-
-        <!-- 统计栏 -->
+        <div class="feedback-bar" id="inlineFeedback">✨ 第 1 轮：指一指"苹果"，点击卡片吧</div>
         <div class="stats-footer">
           <div class="stats-group">
-            <div class="stat-badge">
-              <i class="fas fa-check-circle" style="color:#A9C28B;"></i>
-              成功 <span class="stat-number" id="successValue">0</span>
-            </div>
-            <div class="stat-badge">
-              <i class="fas fa-times-circle" style="color:#D4A0A0;"></i>
-              错误 <span class="stat-number" id="errorValue">0</span>
-            </div>
-            <div class="stat-badge">
-              <i class="fas fa-hourglass-half"></i>
-              用时 <span class="stat-number" id="timerValue">0</span>s
-            </div>
+            <div class="stat-badge"><i class="fas fa-check-circle" style="color:#A9C28B;"></i> 成功 <span
+                class="stat-number" id="successValue">0</span></div>
+            <div class="stat-badge"><i class="fas fa-times-circle" style="color:#D4A0A0;"></i> 错误 <span
+                class="stat-number" id="errorValue">0</span></div>
+            <div class="stat-badge"><i class="fas fa-hourglass-half"></i> 用时 <span class="stat-number"
+                id="timerValue">0</span>s</div>
           </div>
           <div class="action-group">
-            <button class="btn-secondary" id="skipRoundButton">
-              <i class="fas fa-forward"></i> 跳过
-            </button>
-            <button class="btn-secondary btn-primary" id="endGameButton">
-              <i class="fas fa-flag-checkered"></i> 结束
-            </button>
+            <button class="btn-secondary" id="skipRoundButton"><i class="fas fa-forward"></i> 跳过</button>
+            <button class="btn-secondary" id="endGameButton"><i class="fas fa-flag-checkered"></i> 结束</button>
           </div>
         </div>
-
-        <!-- 进度条 -->
         <div class="progress-section">
-          <div class="progress-header">
-            <span>训练进度</span>
-            <span id="progressPercentText">0%</span>
-          </div>
+          <div class="progress-header"><span>训练进度</span><span id="progressPercentText">0%</span></div>
           <div class="bar-bg">
-            <div class="bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            <div class="bar-fill" id="progressBarFill" style="width:0%;"></div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- 提醒弹窗 -->
-    <div class="reminder-popup" id="reminderPopup">
-      <i class="fas fa-bell"></i> <span id="reminderText">⏰ 还剩20秒</span>
+    <div class="reminder-popup" id="reminderPopup"><i class="fas fa-bell"></i> <span id="reminderText">⏰ 还剩20秒</span>
     </div>
-  </div>
 
-  <!-- 成绩弹窗 -->
-  <div class="result-modal" id="resultModal">
-    <div class="modal-card">
-      <div class="modal-title"><i class="fas fa-trophy" style="margin-right: 10px;"></i>练习完成</div>
-
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-check-circle" style="color:#A9C28B;"></i> 正确次数</div>
-          <div class="stat-value"><span id="finalCorrect">0</span><span class="stat-unit">次</span></div>
+    <!-- 训练报告弹窗 -->
+    <div class="result-modal" id="resultModal">
+      <div class="modal-card">
+        <div class="modal-title"><i class="fas fa-chart-line"></i> 训练报告</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">总点击</div>
+            <div class="stat-value"><span id="finalTotalClicks">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">正确点击</div>
+            <div class="stat-value"><span id="finalCorrectClicks">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">错误点击</div>
+            <div class="stat-value"><span id="finalWrongClicks">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">正确轮数</div>
+            <div class="stat-value"><span id="finalCorrectRounds">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">错误轮数</div>
+            <div class="stat-value"><span id="finalWrongRounds">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">点击准确率</div>
+            <div class="stat-value"><span id="finalClickRate">0</span>%</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">轮次正确率</div>
+            <div class="stat-value"><span id="finalRoundAccuracy">0</span>%</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">平均用时</div>
+            <div class="stat-value"><span id="finalAvgTime">0</span><span class="stat-unit">秒</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">超时次数</div>
+            <div class="stat-value"><span id="finalTimeout">0</span></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">跳过次数</div>
+            <div class="stat-value"><span id="finalSkip">0</span></div>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-times-circle" style="color:#D4A0A0;"></i> 错误次数</div>
-          <div class="stat-value"><span id="finalWrong">0</span><span class="stat-unit">次</span></div>
+        <div class="analysis-area">
+          <div class="analysis-title"><i class="fas fa-robot"></i> 智能分析</div>
+          <div class="analysis-text" id="analysisText">正在生成训练反馈...</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-mouse-pointer"></i> 点击次数</div>
-          <div class="stat-value"><span id="finalClicks">0</span><span class="stat-unit">次</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-percent"></i> 正确率</div>
-          <div class="stat-value"><span id="finalAccuracy">0</span><span class="stat-unit">%</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-clock"></i> 超时次数</div>
-          <div class="stat-value"><span id="finalTimeout">0</span><span class="stat-unit">次</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-hourglass-half"></i> 平均用时</div>
-          <div class="stat-value"><span id="finalAvgTime">0</span><span class="stat-unit">秒</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-forward"></i> 跳过次数</div>
-          <div class="stat-value"><span id="finalSkip">0</span><span class="stat-unit">次</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label"><i class="fas fa-hourglass-end"></i> 总用时</div>
-          <div class="stat-value"><span id="finalTotalTime">0</span><span class="stat-unit">秒</span></div>
+        <div class="single-button">
+          <button class="modal-btn" id="homeReturnBtn"><i class="fas fa-home"></i> 返回首页</button>
         </div>
       </div>
-
-      <button class="modal-btn" id="closeModalBtn">返回主页</button>
     </div>
   </div>
 
   <script>
     (function () {
-      "use strict";
-
       const TOTAL_ROUNDS = 8;
       const MAX_TIME = 30;
       const MAX_ERRORS_PER_ROUND = 3;
-      const REMINDER_TIMES = [10, 20];
+      const ITEMS = [{ name: '苹果', emoji: '🍎' }, { name: '香蕉', emoji: '🍌' }, { name: '橘子', emoji: '🍊' }, { name: '西瓜', emoji: '🍉' }];
 
-      const ITEMS = [
-        { name: '苹果', emoji: '🍎' },
-        { name: '香蕉', emoji: '🍌' },
-        { name: '橘子', emoji: '🍊' },
-        { name: '西瓜', emoji: '🍉' }
-      ];
-
-      // DOM
+      // DOM 元素
       const currentRoundSpan = document.getElementById('currentRoundDisplay');
       const totalRoundsSpan = document.getElementById('totalRoundsDisplay');
       const targetNameSpan = document.getElementById('targetName');
@@ -683,68 +664,61 @@
       const endBtn = document.getElementById('endGameButton');
       const homeBtn = document.getElementById('homeButton');
       const resultModal = document.getElementById('resultModal');
-      const roundErrorDisplay = document.getElementById('roundErrorCount');
+      const roundErrorSpan = document.getElementById('roundErrorCount');
 
-      // 统计相关DOM
-      const finalCorrect = document.getElementById('finalCorrect');
-      const finalWrong = document.getElementById('finalWrong');
-      const finalClicks = document.getElementById('finalClicks');
-      const finalAccuracy = document.getElementById('finalAccuracy');
-      const finalTimeout = document.getElementById('finalTimeout');
+      // 报告DOM
+      const finalTotalClicks = document.getElementById('finalTotalClicks');
+      const finalCorrectClicks = document.getElementById('finalCorrectClicks');
+      const finalWrongClicks = document.getElementById('finalWrongClicks');
+      const finalCorrectRounds = document.getElementById('finalCorrectRounds');
+      const finalWrongRounds = document.getElementById('finalWrongRounds');
+      const finalClickRate = document.getElementById('finalClickRate');
+      const finalRoundAccuracy = document.getElementById('finalRoundAccuracy');
       const finalAvgTime = document.getElementById('finalAvgTime');
+      const finalTimeout = document.getElementById('finalTimeout');
       const finalSkip = document.getElementById('finalSkip');
-      const finalTotalTime = document.getElementById('finalTotalTime');
-      const closeModalBtn = document.getElementById('closeModalBtn');
+      const analysisTextSpan = document.getElementById('analysisText');
+      const homeReturnBtn = document.getElementById('homeReturnBtn');
 
       totalRoundsSpan.textContent = TOTAL_ROUNDS;
 
-      // 状态
+      // 游戏状态
       let currentRound = 1;
       let currentTarget = '苹果';
       let roundActive = true;
       let gameActive = true;
       let roundErrorCount = 0;
-
-      // 计时相关
-      let timerInterval = null;
-      let reminderTimeouts = [];
-      let autoNextTimeout = null;
-      let popupTimeout = null;
       let roundStartTime = 0;
       let totalTimeSpent = 0;
       let roundTimes = [];
 
       // 统计数据
       let stats = {
-        correct: 0,
-        wrongClick: 0,
         totalClicks: 0,
-        timeout: 0,
-        skip: 0
+        correctClicks: 0,
+        wrongClicks: 0,
+        correctRounds: 0,
+        wrongRounds: 0,
+        timeoutCount: 0,
+        skipCount: 0
       };
 
-      // 语音合成
+      let timerInterval = null;
+      let reminderTimeouts = [];
+      let autoNextTimeout = null;
+      let popupTimeout = null;
+
       function speak(text, isCorrect = null) {
         if (!window.speechSynthesis) return;
         try {
           let speakText = text;
-          if (isCorrect === true) {
-            const encouragements = ['真棒！', '好厉害！', '太聪明了！', '做得好！', '对了！'];
-            speakText = encouragements[Math.floor(Math.random() * encouragements.length)] + text;
-          } else if (isCorrect === false) {
-            const encourages = ['再试试看，', '没关系，', '加油，', '慢慢来，'];
-            speakText = encourages[Math.floor(Math.random() * encourages.length)] + text;
-          }
-          const utterance = new SpeechSynthesisUtterance(speakText);
-          utterance.lang = 'zh-CN';
-          utterance.rate = 0.95;
-          utterance.pitch = 1.2;
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(utterance);
+          if (isCorrect === true) { const arr = ['真棒！', '好厉害！', '太聪明了！']; speakText = arr[Math.floor(Math.random() * arr.length)] + text; }
+          else if (isCorrect === false) { const arr = ['再试试看，', '没关系，', '加油，']; speakText = arr[Math.floor(Math.random() * arr.length)] + text; }
+          const utterance = new SpeechSynthesisUtterance(speakText); utterance.lang = 'zh-CN'; utterance.rate = 0.95; utterance.pitch = 1.2;
+          window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance);
         } catch (e) { }
       }
 
-      // 更新UI
       function updateRoundUI() {
         currentRoundSpan.textContent = currentRound;
         const pct = (currentRound / TOTAL_ROUNDS) * 100;
@@ -752,16 +726,16 @@
         progressPercent.textContent = `${Math.round(pct)}%`;
       }
 
-      function updateErrorDisplay() {
-        roundErrorDisplay.textContent = roundErrorCount;
-        errorSpan.textContent = stats.wrongClick + stats.timeout + stats.skip;
+      // 错误总数 = 错误点击 + 超时次数 + 跳过次数
+      function updateErrorTotalDisplay() {
+        const totalErrors = stats.wrongClicks + stats.timeoutCount + stats.skipCount;
+        errorSpan.textContent = totalErrors;
+        successSpan.textContent = stats.correctRounds;
       }
 
-      function updateFeedbackMessage() {
-        if (roundActive) {
-          inlineFeedback.innerHTML = `🔍 第 ${currentRound} 轮：指一指"${currentTarget}"，点击卡片吧`;
-          inlineFeedback.style.color = '#7F9A6B';
-        }
+      function updateRoundErrorUI() {
+        roundErrorSpan.textContent = roundErrorCount;
+        updateErrorTotalDisplay();
       }
 
       function setTarget(itemName) {
@@ -770,140 +744,23 @@
         targetNameSpan.textContent = item.name;
         targetEmojiSpan.textContent = item.emoji;
         hintTargetSpan.textContent = item.name;
-        updateFeedbackMessage();
+        inlineFeedback.innerHTML = `🔍 第 ${currentRound} 轮：指一指"${currentTarget}"，点击卡片吧`;
+        inlineFeedback.style.color = '#7F9A6B';
         speak(`指一指${item.name}`);
       }
 
       function clearTimers() {
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = null;
-        reminderTimeouts.forEach(t => clearTimeout(t));
-        reminderTimeouts = [];
+        if (timerInterval) clearInterval(timerInterval); timerInterval = null;
+        reminderTimeouts.forEach(t => clearTimeout(t)); reminderTimeouts = [];
         if (autoNextTimeout) clearTimeout(autoNextTimeout);
         if (popupTimeout) clearTimeout(popupTimeout);
         reminderPopup.classList.remove('show');
       }
 
-      function hidePopup() {
-        reminderPopup.classList.remove('show');
-      }
-
-      function showReminder(msg) {
-        reminderText.textContent = msg;
-        reminderPopup.classList.add('show');
-        if (popupTimeout) clearTimeout(popupTimeout);
-        popupTimeout = setTimeout(hidePopup, 2000);
-      }
-
-      function startRound() {
-        clearTimers();
-        roundErrorCount = 0;
-        updateErrorDisplay();
-        roundStartTime = Date.now();
-        timerSpan.textContent = '0';
-
-        timerInterval = setInterval(() => {
-          if (!roundActive || !gameActive) return;
-          const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
-          timerSpan.textContent = elapsed;
-          if (elapsed >= MAX_TIME && roundActive) {
-            roundActive = false;
-            clearTimers();
-            stats.timeout++;
-            updateErrorDisplay();
-            inlineFeedback.innerHTML = `⏳ 30秒已到，自动进入下一题`;
-            inlineFeedback.style.color = '#B27A4A';
-            speak('时间到，我们看下一个', false);
-            setTimeout(() => { if (gameActive) goToNextRound(); }, 800);
-          }
-        }, 200);
-
-        reminderTimeouts.push(setTimeout(() => {
-          if (roundActive && gameActive) showReminder('⏰ 已经10秒啦，指一指卡片吧');
-        }, 10000));
-        reminderTimeouts.push(setTimeout(() => {
-          if (roundActive && gameActive) showReminder('⏰ 还剩10秒，加油完成！');
-        }, 20000));
-
-        autoNextTimeout = setTimeout(() => {
-          if (roundActive && gameActive) {
-            roundActive = false;
-            clearTimers();
-            stats.timeout++;
-            updateErrorDisplay();
-            inlineFeedback.innerHTML = `⏳ 时间到，进入下一题`;
-            inlineFeedback.style.color = '#B27A4A';
-            speak('时间到', false);
-            setTimeout(() => { if (gameActive) goToNextRound(); }, 800);
-          }
-        }, MAX_TIME * 1000 + 100);
-      }
-
-      function highlightCorrect() {
-        document.querySelectorAll('.item-card').forEach(card => {
-          if (card.dataset.item === currentTarget) {
-            card.classList.add('correct-glow');
-            setTimeout(() => card.classList.remove('correct-glow'), 1200);
-          }
-        });
-      }
-
-      function handleCorrect() {
-        if (!roundActive || !gameActive) return;
-        roundActive = false;
-        clearTimers();
-
-        const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
-        roundTimes.push(elapsed);
-        totalTimeSpent += elapsed;
-
-        stats.correct++;
-        stats.totalClicks++;
-        successSpan.textContent = stats.correct;
-
-        highlightCorrect();
-        inlineFeedback.innerHTML = `🎉 太棒了！正确指出了"${currentTarget}"！`;
-        inlineFeedback.style.color = '#7F9A6B';
-        speak(currentTarget, true);
-
-        setTimeout(() => {
-          if (gameActive) {
-            if (currentRound < TOTAL_ROUNDS) goToNextRound();
-            else finishGame();
-          }
-        }, 1200);
-      }
-
-      function handleWrong(cardElement) {
-        if (!roundActive || !gameActive) return;
-
-        stats.totalClicks++;
-        stats.wrongClick++;
-        roundErrorCount++;
-        updateErrorDisplay();
-
-        // 抖动效果
-        cardElement.classList.add('wrong-shake');
-        setTimeout(() => cardElement.classList.remove('wrong-shake'), 300);
-
-        inlineFeedback.innerHTML = `🌱 再试试看，"${currentTarget}"在哪里？ (${roundErrorCount}/${MAX_ERRORS_PER_ROUND})`;
-        inlineFeedback.style.color = '#B27A4A';
-        speak('再找找看', false);
-
-        // 错误超过3次自动跳转
-        if (roundErrorCount >= MAX_ERRORS_PER_ROUND) {
-          roundActive = false;
-          clearTimers();
-          inlineFeedback.innerHTML = `📝 已经尝试${MAX_ERRORS_PER_ROUND}次了，我们看下一题吧`;
-          inlineFeedback.style.color = '#B27A4A';
-          speak('没关系，我们看下一个', false);
-          setTimeout(() => {
-            if (gameActive) {
-              if (currentRound < TOTAL_ROUNDS) goToNextRound();
-              else finishGame();
-            }
-          }, 1000);
-        }
+      function finalizeRound(isSuccess) {
+        if (isSuccess) stats.correctRounds++;
+        else stats.wrongRounds++;
+        updateErrorTotalDisplay();
       }
 
       function goToNextRound() {
@@ -912,121 +769,179 @@
         if (currentRound >= TOTAL_ROUNDS) { finishGame(); return; }
         currentRound++;
         let newTarget;
-        do { newTarget = ITEMS[Math.floor(Math.random() * ITEMS.length)].name; }
-        while (newTarget === currentTarget && ITEMS.length > 1);
+        do { newTarget = ITEMS[Math.floor(Math.random() * ITEMS.length)].name; } while (newTarget === currentTarget && ITEMS.length > 1);
         setTarget(newTarget);
         roundActive = true;
+        roundErrorCount = 0;
+        updateRoundErrorUI();
         updateRoundUI();
         timerSpan.textContent = '0';
         startRound();
+      }
+
+      function startRound() {
+        clearTimers();
+        roundErrorCount = 0;
+        updateRoundErrorUI();
+        roundStartTime = Date.now();
+        timerSpan.textContent = '0';
+
+        timerInterval = setInterval(() => {
+          if (!roundActive || !gameActive) return;
+          const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
+          timerSpan.textContent = elapsed;
+          if (elapsed >= MAX_TIME && roundActive) {
+            roundActive = false; clearTimers();
+            stats.timeoutCount++;
+            const elapsedSec = Math.floor((Date.now() - roundStartTime) / 1000);
+            roundTimes.push(elapsedSec); totalTimeSpent += elapsedSec;
+            finalizeRound(false);
+            inlineFeedback.innerHTML = `⏳ 30秒已到，自动进入下一题`;
+            inlineFeedback.style.color = '#B27A4A';
+            speak('时间到，我们看下一个', false);
+            setTimeout(() => { if (gameActive) goToNextRound(); }, 800);
+          }
+        }, 200);
+
+        reminderTimeouts.push(setTimeout(() => { if (roundActive && gameActive) showReminder('⏰ 已经10秒啦，指一指卡片吧'); }, 10000));
+        reminderTimeouts.push(setTimeout(() => { if (roundActive && gameActive) showReminder('⏰ 还剩10秒，加油完成！'); }, 20000));
+
+        autoNextTimeout = setTimeout(() => {
+          if (roundActive && gameActive) {
+            roundActive = false; clearTimers();
+            stats.timeoutCount++;
+            const elapsedSec = Math.floor((Date.now() - roundStartTime) / 1000);
+            roundTimes.push(elapsedSec); totalTimeSpent += elapsedSec;
+            finalizeRound(false);
+            inlineFeedback.innerHTML = `⏳ 时间到，进入下一题`;
+            inlineFeedback.style.color = '#B27A4A';
+            speak('时间到', false);
+            setTimeout(() => { if (gameActive) goToNextRound(); }, 800);
+          }
+        }, MAX_TIME * 1000 + 100);
+      }
+
+      function showReminder(msg) { reminderText.textContent = msg; reminderPopup.classList.add('show'); if (popupTimeout) clearTimeout(popupTimeout); popupTimeout = setTimeout(() => reminderPopup.classList.remove('show'), 2000); }
+
+      function highlightCorrect() { document.querySelectorAll('.item-card').forEach(card => { if (card.dataset.item === currentTarget) { card.classList.add('correct-glow'); setTimeout(() => card.classList.remove('correct-glow'), 1200); } }); }
+
+      function handleCorrect() {
+        if (!roundActive || !gameActive) return;
+        roundActive = false; clearTimers();
+        const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
+        roundTimes.push(elapsed); totalTimeSpent += elapsed;
+        stats.correctClicks++; stats.totalClicks++;
+        finalizeRound(true);
+        highlightCorrect();
+        inlineFeedback.innerHTML = `🎉 太棒了！正确指出了"${currentTarget}"！`;
+        inlineFeedback.style.color = '#7F9A6B';
+        speak(currentTarget, true);
+        setTimeout(() => { if (gameActive) { if (currentRound < TOTAL_ROUNDS) goToNextRound(); else finishGame(); } }, 1200);
+      }
+
+      function handleWrong(cardElement) {
+        if (!roundActive || !gameActive) return;
+        stats.totalClicks++; stats.wrongClicks++; roundErrorCount++;
+        updateRoundErrorUI();
+        cardElement.classList.add('wrong-shake'); setTimeout(() => cardElement.classList.remove('wrong-shake'), 300);
+        inlineFeedback.innerHTML = `🌱 再试试看，"${currentTarget}"在哪里？ (${roundErrorCount}/${MAX_ERRORS_PER_ROUND})`;
+        inlineFeedback.style.color = '#B27A4A';
+        speak('再找找看', false);
+        if (roundErrorCount >= MAX_ERRORS_PER_ROUND) {
+          roundActive = false; clearTimers();
+          const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
+          roundTimes.push(elapsed); totalTimeSpent += elapsed;
+          finalizeRound(false);
+          inlineFeedback.innerHTML = `📝 已经尝试${MAX_ERRORS_PER_ROUND}次了，我们看下一题吧`;
+          inlineFeedback.style.color = '#B27A4A';
+          speak('没关系，我们看下一个', false);
+          setTimeout(() => { if (gameActive) { if (currentRound < TOTAL_ROUNDS) goToNextRound(); else finishGame(); } }, 1000);
+        }
       }
 
       function skipRound() {
         if (!roundActive || !gameActive) return;
-        roundActive = false;
-        clearTimers();
-        stats.skip++;
-        updateErrorDisplay();
+        roundActive = false; clearTimers();
+        stats.skipCount++;
+        const elapsed = Math.floor((Date.now() - roundStartTime) / 1000);
+        roundTimes.push(elapsed); totalTimeSpent += elapsed;
+        finalizeRound(false);
+        updateRoundErrorUI();
         inlineFeedback.innerHTML = `⏩ 已跳过本轮`;
         inlineFeedback.style.color = '#B27A4A';
         speak('跳过本轮', false);
-        setTimeout(() => {
-          if (gameActive) {
-            if (currentRound < TOTAL_ROUNDS) goToNextRound();
-            else finishGame();
-          }
-        }, 500);
+        setTimeout(() => { if (gameActive) { if (currentRound < TOTAL_ROUNDS) goToNextRound(); else finishGame(); } }, 500);
+      }
+
+      function generateAnalysis() {
+        const totalRoundsCompleted = stats.correctRounds + stats.wrongRounds;
+        const roundAcc = totalRoundsCompleted > 0 ? (stats.correctRounds / totalRoundsCompleted) * 100 : 0;
+        const clickRateVal = stats.totalClicks > 0 ? (stats.correctClicks / stats.totalClicks) * 100 : 0;
+        let suggestion = "";
+        if (roundAcc >= 85) suggestion = "太出色了！孩子对物品指认掌握非常扎实，继续保持正向激励✨";
+        else if (roundAcc >= 60) suggestion = "表现良好！偶尔需要提示，建议多给予语音鼓励和手指辅助示范💪";
+        else suggestion = "正在逐步熟悉中，建议多重复几轮游戏，家长可一起指认提升兴趣🍀";
+        if (stats.timeoutCount > 2) suggestion += " 出现较多超时，可适当缩短每轮预期或提前提醒。";
+        if (stats.skipCount > 1) suggestion += " 跳过次数较多，下次可以降低难度或增加趣味性。";
+        return `✅ 轮次正确率 ${Math.round(roundAcc)}% ，点击准确率 ${Math.round(clickRateVal)}% 。${suggestion}`;
+      }
+
+      function updateReportModal() {
+        const totalRoundsCompleted = stats.correctRounds + stats.wrongRounds;
+        const roundAccuracy = totalRoundsCompleted > 0 ? Math.round((stats.correctRounds / totalRoundsCompleted) * 100) : 0;
+        const clickRate = stats.totalClicks > 0 ? Math.round((stats.correctClicks / stats.totalClicks) * 100) : 0;
+        const avgRoundTime = roundTimes.length > 0 ? (roundTimes.reduce((a, b) => a + b, 0) / roundTimes.length).toFixed(1) : '0';
+        finalTotalClicks.textContent = stats.totalClicks;
+        finalCorrectClicks.textContent = stats.correctClicks;
+        finalWrongClicks.textContent = stats.wrongClicks;
+        finalCorrectRounds.textContent = stats.correctRounds;
+        finalWrongRounds.textContent = stats.wrongRounds;
+        finalClickRate.textContent = clickRate;
+        finalRoundAccuracy.textContent = roundAccuracy;
+        finalAvgTime.textContent = avgRoundTime;
+        finalTimeout.textContent = stats.timeoutCount;
+        finalSkip.textContent = stats.skipCount;
+        analysisTextSpan.textContent = generateAnalysis();
       }
 
       function finishGame() {
         if (!gameActive) return;
-        gameActive = false;
-        roundActive = false;
-        clearTimers();
-
-        // 计算统计数据
-        const totalErrors = stats.wrongClick + stats.timeout + stats.skip;
-        const accuracy = stats.correct + totalErrors > 0
-          ? Math.round((stats.correct / (stats.correct + totalErrors)) * 100)
-          : 0;
-        const avgTime = roundTimes.length > 0
-          ? (roundTimes.reduce((a, b) => a + b, 0) / roundTimes.length).toFixed(1)
-          : '0';
-
-        // 显示统计
-        finalCorrect.textContent = stats.correct;
-        finalWrong.textContent = totalErrors;
-        finalClicks.textContent = stats.totalClicks;
-        finalAccuracy.textContent = accuracy;
-        finalTimeout.textContent = stats.timeout;
-        finalAvgTime.textContent = avgTime;
-        finalSkip.textContent = stats.skip;
-        finalTotalTime.textContent = totalTimeSpent;
-
+        gameActive = false; roundActive = false; clearTimers();
+        updateReportModal();
         resultModal.classList.add('show');
-        inlineFeedback.innerHTML = `🎯 练习结束！正确率 ${accuracy}%`;
-        inlineFeedback.style.color = '#7F9A6B';
+        inlineFeedback.innerHTML = `🎯 练习结束！ 轮次正确率 ${finalRoundAccuracy.textContent}%`;
         speak('练习完成，你真棒！', true);
       }
 
+      // 返回首页 - 跳转到 mainPart
+      function goToMainPart() {
+        // 跳转到主页 mainPart 界面
+        window.location.href = '#mainPart';
+      }
+
       function resetGame() {
-        gameActive = true;
-        currentRound = 1;
-        currentTarget = '苹果';
-        roundActive = true;
-        roundErrorCount = 0;
-        totalTimeSpent = 0;
-        roundTimes = [];
-
-        stats = {
-          correct: 0,
-          wrongClick: 0,
-          totalClicks: 0,
-          timeout: 0,
-          skip: 0
-        };
-
-        successSpan.textContent = '0';
-        errorSpan.textContent = '0';
-        setTarget('苹果');
-        updateRoundUI();
-        updateErrorDisplay();
-        timerSpan.textContent = '0';
-        updateFeedbackMessage();
-        clearTimers();
-        startRound();
+        gameActive = true; currentRound = 1; currentTarget = '苹果'; roundActive = true; roundErrorCount = 0;
+        totalTimeSpent = 0; roundTimes = [];
+        stats = { totalClicks: 0, correctClicks: 0, wrongClicks: 0, correctRounds: 0, wrongRounds: 0, timeoutCount: 0, skipCount: 0 };
+        successSpan.textContent = '0'; errorSpan.textContent = '0';
+        setTarget('苹果'); updateRoundUI(); updateRoundErrorUI(); timerSpan.textContent = '0';
+        clearTimers(); startRound();
         resultModal.classList.remove('show');
       }
 
-      // 网格点击
+      // 事件绑定
       itemsGrid.addEventListener('click', (e) => {
         const card = e.target.closest('.item-card');
         if (!card || !gameActive || !roundActive) return;
-        const item = card.dataset.item;
-        if (item === currentTarget) handleCorrect();
-        else handleWrong(card);
+        if (card.dataset.item === currentTarget) handleCorrect(); else handleWrong(card);
       });
+      skipBtn.addEventListener('click', () => { if (gameActive && roundActive) skipRound(); });
+      endBtn.addEventListener('click', () => { if (gameActive && confirm('确定结束练习吗？')) finishGame(); });
+      homeBtn.addEventListener('click', () => { if (confirm('返回主页会重新开始游戏，确定吗？')) resetGame(); });
 
-      skipBtn.addEventListener('click', () => {
-        if (gameActive && roundActive) skipRound();
-      });
+      // 训练报告中的返回首页 - 跳转到 mainPart
+      homeReturnBtn.addEventListener('click', () => { goToMainPart(); });
 
-      endBtn.addEventListener('click', () => {
-        if (gameActive && confirm('确定结束练习吗？')) finishGame();
-      });
-
-      homeBtn.addEventListener('click', () => {
-        if (confirm('返回主页会重新开始游戏，确定吗？')) {
-          resetGame();
-        }
-      });
-
-      closeModalBtn.addEventListener('click', () => {
-        resultModal.classList.remove('show');
-        resetGame();
-      });
-
-      // 初始化
       resetGame();
     })();
   </script>
