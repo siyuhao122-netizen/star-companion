@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>星伴 · 家长树洞 | 匿名倾诉 · AI暖心回复</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #D9CBBF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+      padding: 12px;
+    }
+
+    /* 主容器 - 固定1024x600 */
+    .treehole-container {
+      width: 1024px;
+      height: 600px;
+      background: linear-gradient(145deg, #FFFCF7 0%, #FEF8F2 100%);
+      border-radius: 48px;
+      box-shadow: 0 30px 40px -20px rgba(60, 40, 28, 0.3), 0 0 0 1px rgba(235, 216, 190, 0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 头部 */
+    .treehole-header {
+      padding: 20px 28px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #F0DDCB;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title i {
+      font-size: 30px;
+      color: #D9A066;
+    }
+
+    .header-title h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #6C4F32;
+    }
+
+    .header-title span {
+      font-size: 13px;
+      color: #B89A78;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .anonymous-badge {
+      background: #E8D4BE;
+      padding: 8px 18px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6C4E32;
+    }
+
+    .anonymous-badge i {
+      color: #9BBF7A;
+    }
+
+    .message-count {
+      background: #F5EDE4;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 14px;
+      color: #8F6A44;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 主要内容区 - 左右布局 */
+    .treehole-main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      padding: 18px 24px 12px;
+      gap: 24px;
+    }
+
+    /* 左侧留言列表 */
+    .messages-section {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    .section-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #6C4F32;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-header h3 i {
+      color: #D9A066;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      background: #F5EDE4;
+      padding: 3px;
+      border-radius: 36px;
+    }
+
+    .filter-tab {
+      padding: 6px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 32px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-tab.active {
+      background: #FFFFFF;
+      color: #D9A066;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .messages-list {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #D4B99B #F3EBE2;
+    }
+
+    .messages-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .messages-list::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
+    /* 留言卡片 */
+    .message-card {
+      background: #FEFCF9;
+      border-radius: 24px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      border: 1.5px solid #F0DDCB;
+      transition: all 0.15s;
+    }
+
+    .message-card:hover {
+      border-color: #E0CDB8;
+      box-shadow: 0 4px 12px rgba(160, 120, 80, 0.06);
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(145deg, #F5EDE4, #EDDFD0);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #B88B5C;
+      border: 1.5px solid #EADACA;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #6C4F32;
+    }
+
+    .message-time {
+      font-size: 10px;
+      color: #B89A78;
+      margin-top: 2px;
+    }
+
+    .message-tag {
+      background: #FDF5EC;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #9B7B5E;
+    }
+
+    .message-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #5F4230;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* AI回复 */
+    .ai-reply {
+      background: linear-gradient(135deg, #F8F2E8 0%, #F2E8D8 100%);
+      border-radius: 22px;
+      padding: 12px 14px;
+      margin-top: 6px;
+      border-left: 4px solid #9BBF7A;
+    }
+
+    .ai-reply-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .ai-reply-header i {
+      font-size: 16px;
+      color: #9BBF7A;
+    }
+
+    .ai-reply-header span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7C9A5E;
+    }
+
+    .ai-badge {
+      background: #9BBF7A;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 16px;
+      font-size: 9px;
+      margin-left: 6px;
+    }
+
+    .ai-reply-content {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #6C4F32;
+    }
+
+    .message-footer {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .message-action {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #9B846C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .message-action:hover {
+      color: #D9A066;
+    }
+
+    .message-action i {
+      font-size: 13px;
+    }
+
+    /* 右侧发布区 */
+    .publish-section {
+      flex: 0.8;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .publish-card {
+      background: #FEFCF9;
+      border-radius: 32px;
+      padding: 20px 22px;
+      border: 1.5px solid #F0DDCB;
+    }
+
+    .publish-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .publish-header i {
+      font-size: 24px;
+      color: #D9A066;
+    }
+
+    .publish-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6C4F32;
+    }
+
+    .publish-header p {
+      font-size: 11px;
+      color: #B89A78;
+      margin-top: 2px;
+    }
+
+    .publish-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: #FEF8F2;
+      border: 2px solid #F0DDCB;
+      border-radius: 24px;
+      font-size: 13px;
+      color: #5F4230;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      margin-bottom: 14px;
+      transition: all 0.15s;
+    }
+
+    .publish-textarea:focus {
+      border-color: #D9A066;
+      background: #FFFCF7;
+      box-shadow: 0 0 0 3px rgba(217, 160, 102, 0.1);
+    }
+
+    .publish-textarea::placeholder {
+      color: #C4A88B;
+      line-height: 1.5;
+    }
+
+    .anonymous-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 8px 0;
+    }
+
+    .anonymous-option label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #6C4F32;
+      cursor: pointer;
+    }
+
+    .anonymous-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: #D9A066;
+      cursor: pointer;
+    }
+
+    .tag-selector {
+      margin-bottom: 18px;
+    }
+
+    .tag-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7C5F48;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-item {
+      padding: 7px 14px;
+      background: #F5EDE4;
+      border: 1.5px solid #F0DDCB;
+      border-radius: 32px;
+      font-size: 12px;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tag-item.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+      color: #5E422C;
+    }
+
+    .publish-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      border: none;
+      border-radius: 44px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #6C4E32;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 0 #C6AA8A;
+      border: 1.5px solid #DDBB9A;
+      margin-bottom: 14px;
+    }
+
+    .publish-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #C6AA8A;
+    }
+
+    .publish-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 0 #C6AA8A;
+    }
+
+    .warm-tip {
+      text-align: center;
+      font-size: 11px;
+      color: #B89A78;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .warm-tip i {
+      color: #9BBF7A;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #E0CDB8;
+      margin-bottom: 14px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      color: #B89A78;
+    }
+
+    /* ========= 底部导航栏 - 与首页完全一致的图片风格 ========= */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #FFFDF9;
+      border-top: 1px solid #EFE4D8;
+      padding: 12px 0 16px 0;
+      z-index: 100;
+    }
+
+    .nav-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item i {
+      font-size: 24px;
+      color: #B7A089;
+      transition: all 0.2s;
+    }
+
+    .nav-item span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #A68A6F;
+      transition: all 0.2s;
+    }
+
+    /* 激活状态 - 只有颜色变化，无背景框 */
+    .nav-item.active i {
+      color: #D9A066;
+    }
+
+    .nav-item.active span {
+      color: #B47C44;
+    }
+
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+
+    /* 提示弹窗 */
+    .toast-message {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      padding: 10px 26px;
+      border-radius: 56px;
+      font-weight: 600;
+      color: #B4753E;
+      font-size: 14px;
+      z-index: 200;
+      box-shadow: 0 10px 24px rgba(100, 70, 30, 0.15);
+      border: 1.5px solid #FFE4CA;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="treehole-container">
+    <!-- 头部 -->
+    <div class="treehole-header">
+      <div class="header-title">
+        <i class="fas fa-tree"></i>
+        <h1>家长树洞</h1>
+        <span>· 匿名倾诉 · AI暖心陪伴</span>
+      </div>
+      <div class="header-right">
+        <div class="anonymous-badge">
+          <i class="fas fa-user-secret"></i>
+          <span>匿名模式已开启</span>
+        </div>
+        <div class="message-count">
+          <i class="fas fa-comments"></i>
+          <span id="messageCount">4</span> 条留言
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容 -->
+    <div class="treehole-main">
+      <!-- 左侧留言区 -->
+      <div class="messages-section">
+        <div class="section-header">
+          <h3><i class="fas fa-comment-dots"></i> 树洞留言</h3>
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">全部</button>
+            <button class="filter-tab" data-filter="latest">最新</button>
+            <button class="filter-tab" data-filter="hot">最热</button>
+          </div>
+        </div>
+        <div class="messages-list" id="messagesList">
+          <!-- 留言会动态渲染到这里 -->
+        </div>
+      </div>
+
+      <!-- 右侧发布区 -->
+      <div class="publish-section">
+        <div class="publish-card">
+          <div class="publish-header">
+            <i class="fas fa-feather-alt"></i>
+            <div>
+              <h3>写下你的心事</h3>
+              <p>这里永远有人倾听</p>
+            </div>
+          </div>
+
+          <textarea class="publish-textarea" id="messageInput" rows="4"
+            placeholder="今天想说什么？无论是焦虑、疲惫还是困惑，都可以在这里说出来…"></textarea>
+
+          <div class="anonymous-option">
+            <label>
+              <input type="checkbox" id="anonymousCheck" checked>
+              <i class="fas fa-user-secret"></i> 匿名发布
+            </label>
+          </div>
+
+          <div class="tag-selector">
+            <div class="tag-label"><i class="fas fa-tag"></i> 选择标签（可选）</div>
+            <div class="tag-list" id="tagList">
+              <span class="tag-item active" data-tag="日常倾诉">😊 日常倾诉</span>
+              <span class="tag-item" data-tag="育儿困惑">🤔 育儿困惑</span>
+              <span class="tag-item" data-tag="情绪压力">😔 情绪压力</span>
+              <span class="tag-item" data-tag="家庭关系">🏠 家庭关系</span>
+            </div>
+          </div>
+
+          <button class="publish-btn" id="publishBtn">
+            <i class="fas fa-paper-plane"></i> 匿名发布
+          </button>
+
+          <div class="warm-tip">
+            <i class="fas fa-heart"></i>
+            <span>每一条留言都会收到AI的暖心回复</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航栏 - 与首页完全一致的图片风格 -->
+    <div class="bottom-nav">
+      <div class="nav-items">
+        <div class="nav-item" data-nav="home">
+          <i class="fas fa-home"></i>
+          <span>首页</span>
+        </div>
+        <div class="nav-item" data-nav="dashboard">
+          <i class="fas fa-chart-bar"></i>
+          <span>数据看板</span>
+        </div>
+        <div class="nav-item" data-nav="treehole">
+          <i class="fas fa-tree"></i>
+          <span>家长树洞</span>
+        </div>
+        <div class="nav-item" data-nav="survey">
+          <i class="fas fa-clipboard-list"></i>
+          <span>问卷筛查</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // AI回复模板
+      const aiReplies = {
+        default: [
+          "亲爱的家长，我能感受到你此刻的心情。养育孩子的路上，有这样的感受太正常了。你已经做得很好了，给自己一点时间和空间，一切都会慢慢好起来的。",
+          "听到你的心声，想给你一个温暖的拥抱。每个家长都会有疲惫和困惑的时候，这不是你的问题。记得照顾好自己，你值得被温柔以待。",
+          "感谢你愿意在这里分享。教育孩子确实不容易，但请相信，你的每一份付出都在孩子心里种下了爱的种子。"
+        ],
+        '育儿困惑': [
+          "关于育儿的困惑，其实每个家长都会遇到。没有标准答案，但你对孩子的关注和思考，已经是最好的教育了。慢慢来，和孩子一起成长。",
+          "能感受到你对孩子深深的爱。育儿问题往往没有唯一解，相信你的直觉，也给孩子一些探索的空间。你做得很好！"
+        ],
+        '情绪压力': [
+          "压力大的时候，记得先照顾好自己的情绪。你不需要做完美的家长，只需要做真实的自己。深呼吸，慢慢来，一切都会过去的。",
+          "能感受到你肩上的重担。请记住，适当的休息不是偷懒，而是为了更好地陪伴。"
+        ],
+        '家庭关系': [
+          "家庭关系确实需要用心经营。沟通是桥梁，但也要记得保护好自己的边界。你已经很努力在平衡了，给自己一些肯定吧。",
+          "每个家庭都有自己的节奏和模式，找到适合你们的方式最重要。"
+        ]
+      };
+
+      // 预设留言数据 - 全部使用匿名昵称
+      let messages = [
+        {
+          id: 1,
+          user: '树洞小熊',
+          avatar: '🧸',
+          time: '10分钟前',
+          tag: '育儿困惑',
+          content: '孩子最近总是注意力不集中，教他认东西一会儿就跑开了，有时候真的很焦虑，不知道是不是自己做得不够好...',
+          aiReply: '亲爱的，孩子的注意力时间本来就比较短，这是正常的发育特点。你愿意花时间陪伴和教导，已经是非常棒的家长了！试着把学习变成游戏，每次5-10分钟就足够了。你做得很好，请相信自己。',
+          likes: 24,
+          comments: 5
+        },
+        {
+          id: 2,
+          user: '树洞小兔',
+          avatar: '🐰',
+          time: '1小时前',
+          tag: '情绪压力',
+          content: '今天带孩子做康复训练，看到他不太配合，我突然就崩溃哭了。有时候真的觉得好累，但又不敢停下来...',
+          aiReply: '哭出来没关系的，你不需要一直坚强。长期照顾孩子确实会消耗大量的精力，你的感受是完全正常的。记得也要照顾好自己的情绪，偶尔给自己放个小假。你已经非常了不起了，真的。',
+          likes: 56,
+          comments: 12
+        },
+        {
+          id: 3,
+          user: '树洞小猫',
+          avatar: '🐱',
+          time: '3小时前',
+          tag: '日常倾诉',
+          content: '今天宝贝主动叫了一声"妈妈"，虽然发音还不太清楚，但我真的激动得哭了。这一路走来太不容易了，想和树洞里的大家分享这份喜悦。',
+          aiReply: '太为你开心了！这一刻的感动值得被永远珍藏。每一个小小的进步背后，都是你和孩子无数次的努力。请继续相信，未来还会有更多惊喜等着你们。',
+          likes: 89,
+          comments: 15
+        },
+        {
+          id: 4,
+          user: '树洞小鹿',
+          avatar: '🦌',
+          time: '昨天',
+          tag: '家庭关系',
+          content: '和另一半在教育理念上总是有分歧，我觉得应该多干预，他觉得顺其自然就好。经常为这个争吵，感觉很无力...',
+          aiReply: '教育理念的差异在很多家庭都存在，你们都是为了孩子好，只是方式不同。或许可以找个时间坐下来，不带评判地聊聊各自的想法，找到一个折中的平衡点。你们都深爱着孩子，这就是最好的基础。',
+          likes: 42,
+          comments: 8
+        }
+      ];
+
+      let selectedTag = '日常倾诉';
+      let currentFilter = 'all';
+
+      const messagesList = document.getElementById('messagesList');
+      const messageInput = document.getElementById('messageInput');
+      const publishBtn = document.getElementById('publishBtn');
+      const messageCountSpan = document.getElementById('messageCount');
+      const tagItems = document.querySelectorAll('.tag-item');
+      const filterTabs = document.querySelectorAll('.filter-tab');
+
+      function getAIReply(tag, content) {
+        const repliesForTag = aiReplies[tag] || aiReplies.default;
+        const randomIndex = Math.floor(Math.random() * repliesForTag.length);
+        return repliesForTag[randomIndex];
+      }
+
+      function renderMessages(filter = 'all') {
+        let filteredMessages = [...messages];
+
+        if (filter === 'latest') {
+          filteredMessages.sort((a, b) => b.id - a.id);
+        } else if (filter === 'hot') {
+          filteredMessages.sort((a, b) => b.likes - a.likes);
+        }
+
+        if (filteredMessages.length === 0) {
+          messagesList.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-tree"></i>
+              <p>还没有留言，来做第一个倾诉的人吧~</p>
+            </div>
+          `;
+        } else {
+          messagesList.innerHTML = filteredMessages.map(msg => `
+            <div class="message-card">
+              <div class="message-header">
+                <div class="user-avatar">${msg.avatar}</div>
+                <div class="user-info">
+                  <div class="user-name">${msg.user}</div>
+                  <div class="message-time">${msg.time}</div>
+                </div>
+                <span class="message-tag">${msg.tag}</span>
+              </div>
+              <div class="message-content">${msg.content}</div>
+              <div class="ai-reply">
+                <div class="ai-reply-header">
+                  <i class="fas fa-robot"></i>
+                  <span>星伴AI</span>
+                  <span class="ai-badge">暖心回复</span>
+                </div>
+                <div class="ai-reply-content">${msg.aiReply}</div>
+              </div>
+              <div class="message-footer">
+                <span class="message-action" data-id="${msg.id}" data-action="like">
+                  <i class="far fa-heart"></i> ${msg.likes} 暖心
+                </span>
+                <span class="message-action" data-id="${msg.id}" data-action="comment">
+                  <i class="far fa-comment"></i> ${msg.comments} 回复
+                </span>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        messageCountSpan.textContent = messages.length;
+
+        document.querySelectorAll('.message-action[data-action="like"]').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = parseInt(this.dataset.id);
+            const msg = messages.find(m => m.id === id);
+            if (msg) {
+              msg.likes++;
+              renderMessages(currentFilter);
+              showToast('❤️ 感谢你的暖心支持');
+            }
+          });
+        });
+      }
+
+      function showToast(msg, bg = '#FEF3E2') {
+        let existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML = `<i class="fas fa-star"></i> ${msg}`;
+        toast.style.background = bg;
+        document.querySelector('.treehole-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      function publishMessage() {
+        const content = messageInput.value.trim();
+        if (!content) {
+          showToast('💭 写下你想说的话吧', '#FCE8E8');
+          return;
+        }
+
+        if (content.length < 5) {
+          showToast('💭 再多说一点吧，至少5个字~', '#FCE8E8');
+          return;
+        }
+
+        // 全部使用匿名昵称
+        const anonymousNames = ['树洞小熊', '树洞小兔', '树洞小猫', '树洞小鹿', '树洞小象', '树洞狐狸', '树洞熊猫', '树洞企鹅'];
+        const anonymousAvatars = ['🧸', '🐰', '🐱', '🦌', '🐘', '🦊', '🐼', '🐧'];
+        const randomIndex = Math.floor(Math.random() * anonymousNames.length);
+
+        const newMessage = {
+          id: messages.length + 1,
+          user: anonymousNames[randomIndex],
+          avatar: anonymousAvatars[randomIndex],
+          time: '刚刚',
+          tag: selectedTag,
+          content: content,
+          aiReply: getAIReply(selectedTag, content),
+          likes: Math.floor(Math.random() * 5),
+          comments: 0
+        };
+
+        messages.unshift(newMessage);
+        messageInput.value = '';
+        renderMessages(currentFilter);
+        messagesList.scrollTop = 0;
+        showToast('🌳 你的心事已放入树洞，AI正在暖心回复中...', '#E8F0D8');
+
+        publishBtn.disabled = true;
+        publishBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> AI正在回复...';
+
+        setTimeout(() => {
+          publishBtn.disabled = false;
+          publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 匿名发布';
+        }, 1500);
+      }
+
+      tagItems.forEach(tag => {
+        tag.addEventListener('click', function () {
+          tagItems.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          selectedTag = this.dataset.tag;
+        });
+      });
+
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentFilter = this.dataset.filter;
+          renderMessages(currentFilter);
+        });
+      });
+
+      publishBtn.addEventListener('click', publishMessage);
+
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          publishMessage();
+        }
+      });
+
+      // ========= 底部导航栏 - 与首页完全一致的跳转逻辑 =========
+      const navItems = document.querySelectorAll('.nav-item');
+
+      // 设置激活样式（只有颜色变化）
+      function setActiveNav(activeNavName) {
+        navItems.forEach(item => {
+          const itemName = item.getAttribute('data-nav');
+          if (itemName === activeNavName) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+
+      // 绑定导航点击事件 - 跳转到对应页面
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const navValue = item.getAttribute('data-nav');
+          if (navValue === 'home') {
+            location.href = 'mainPart.html';
+          } else if (navValue === 'dashboard') {
+            location.href = 'dataLook.html';
+          } else if (navValue === 'treehole') {
+            location.href = 'seniorHole.html';  // 刷新当前页，保持一致性
+          } else if (navValue === 'survey') {
+            location.href = 'askQuestions.html';
+          }
+        });
+      });
+
+      // 根据当前页面高亮对应的导航项
+      function highlightCurrentNav() {
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'mainPart.html') {
+          setActiveNav('home');
+        } else if (currentPage === 'dataLook.html') {
+          setActiveNav('dashboard');
+        } else if (currentPage === 'seniorHole.html') {
+          setActiveNav('treehole');
+        } else if (currentPage === 'askQuestions.html') {
+          setActiveNav('survey');
+        }
+      }
+      highlightCurrentNav();
+
+      renderMessages();
+    })();
+  </script>
+</body>
+
+</html>

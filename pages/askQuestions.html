@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>星伴 · 问卷筛查 | 发育情况自评</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #D9CBBF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+      padding: 12px;
+    }
+
+    /* 主容器 - 固定1024x600 */
+    .survey-container {
+      width: 1024px;
+      height: 600px;
+      background: linear-gradient(145deg, #FFFCF7 0%, #FEF8F2 100%);
+      border-radius: 48px;
+      box-shadow: 0 30px 40px -20px rgba(60, 40, 28, 0.3), 0 0 0 1px rgba(235, 216, 190, 0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 头部 */
+    .survey-header {
+      padding: 16px 28px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #F0DDCB;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title i {
+      font-size: 26px;
+      color: #D9A066;
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #6C4F32;
+    }
+
+    .header-title span {
+      font-size: 12px;
+      color: #B89A78;
+      margin-left: 6px;
+      font-weight: 400;
+    }
+
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #8F6A44;
+      background: #FDF5EC;
+      padding: 6px 16px;
+      border-radius: 30px;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .progress-dot {
+      width: 28px;
+      height: 5px;
+      background: #E0CDB8;
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+
+    .progress-dot.active {
+      background: #D9A066;
+      width: 40px;
+    }
+
+    .progress-dot.completed {
+      background: #9BBF7A;
+    }
+
+    /* 主要内容 - 滚动区域，底部留出导航栏空间 */
+    .survey-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 32px 60px 32px;
+      scrollbar-width: thin;
+    }
+
+    .survey-main::-webkit-scrollbar {
+      width: 5px;
+      background: #F2EBE0;
+    }
+
+    .survey-main::-webkit-scrollbar-thumb {
+      background: #D9CAB5;
+      border-radius: 10px;
+    }
+
+    /* 问卷区域 */
+    .question-container {
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .question-header {
+      margin-bottom: 16px;
+    }
+
+    .question-number {
+      font-size: 12px;
+      color: #B89A78;
+      margin-bottom: 4px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #5E422C;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .question-desc {
+      font-size: 13px;
+      color: #9B846C;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin: 16px 0 20px;
+    }
+
+    .option-item {
+      background: #FEFCF9;
+      border: 2px solid #F0DDCB;
+      border-radius: 40px;
+      padding: 11px 22px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .option-item:hover {
+      border-color: #E0CDB8;
+      background: #FFFDFA;
+    }
+
+    .option-item.selected {
+      background: #FDF5EC;
+      border-color: #D9A066;
+    }
+
+    .option-radio {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #E0CDB8;
+      border-radius: 9px;
+      margin-right: 16px;
+      position: relative;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .option-item.selected .option-radio {
+      border-color: #D9A066;
+      background: #D9A066;
+    }
+
+    .option-item.selected .option-radio::after {
+      content: '';
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: white;
+      border-radius: 4px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .option-content {
+      flex: 1;
+    }
+
+    .option-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #6C4F32;
+      margin-bottom: 2px;
+    }
+
+    .option-hint {
+      font-size: 11px;
+      color: #B89A78;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      border-radius: 40px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      color: #6C4E32;
+      box-shadow: 0 4px 0 #C6AA8A;
+      border: 1.5px solid #DDBB9A;
+    }
+
+    .nav-btn.primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #C6AA8A;
+    }
+
+    .nav-btn.primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 0 #C6AA8A;
+    }
+
+    .nav-btn.secondary {
+      background: #F5EDE4;
+      color: #8B6A4C;
+      border: 1.5px solid #E6D2C0;
+    }
+
+    .nav-btn.secondary:active {
+      background: #E4D2BF;
+    }
+
+    /* 结果页面 - 紧凑设计，确保按钮完整显示 */
+    .result-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    .result-icon {
+      font-size: 36px;
+      color: #9BBF7A;
+      margin-bottom: 4px;
+    }
+
+    .result-header h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #6C4F32;
+      margin-bottom: 2px;
+    }
+
+    .result-header p {
+      font-size: 11px;
+      color: #B89A78;
+    }
+
+    .result-content {
+      flex: 1;
+      display: flex;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .result-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-summary {
+      background: linear-gradient(135deg, #F8F2E8 0%, #F2E8D8 100%);
+      border-radius: 20px;
+      padding: 12px 16px;
+      border-left: 5px solid #D9A066;
+      flex-shrink: 0;
+    }
+
+    .summary-level {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .level-label {
+      font-size: 13px;
+      color: #6C4F32;
+    }
+
+    .level-value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .level-value.level-low {
+      color: #9BBF7A;
+    }
+
+    .level-value.level-medium {
+      color: #D9A066;
+    }
+
+    .level-value.level-high {
+      color: #D4A0A0;
+    }
+
+    .summary-text {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #5F4230;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 10px;
+      color: #B89A78;
+      padding: 8px 10px;
+      background: #FDF5EC;
+      border-radius: 20px;
+      margin-top: 10px;
+      flex-shrink: 0;
+    }
+
+    .disclaimer i {
+      margin-right: 4px;
+      color: #D9A066;
+    }
+
+    .result-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .suggestion-cards {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      padding-right: 3px;
+    }
+
+    .suggestion-card {
+      background: #FEFCF9;
+      border-radius: 16px;
+      padding: 8px 12px;
+      border: 1.5px solid #F0DDCB;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .suggestion-icon {
+      width: 28px;
+      height: 28px;
+      background: #FDF5EC;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #D9A066;
+      flex-shrink: 0;
+    }
+
+    .suggestion-content h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #6C4F32;
+      margin-bottom: 2px;
+    }
+
+    .suggestion-content p {
+      font-size: 10px;
+      color: #9B846C;
+      line-height: 1.4;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .result-btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 38px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .result-btn.primary {
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      color: #6C4E32;
+      box-shadow: 0 3px 0 #C6AA8A;
+      border: 1.5px solid #DDBB9A;
+    }
+
+    .result-btn.primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #C6AA8A;
+    }
+
+    .result-btn.secondary {
+      background: #F5EDE4;
+      color: #8B6A4C;
+      border: 1.5px solid #E6D2C0;
+    }
+
+    /* ========= 底部导航栏 - 与首页完全一致的图片风格 ========= */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #FFFDF9;
+      border-top: 1px solid #EFE4D8;
+      padding: 12px 0 16px 0;
+      z-index: 100;
+    }
+
+    .nav-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item i {
+      font-size: 24px;
+      color: #B7A089;
+      transition: all 0.2s;
+    }
+
+    .nav-item span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #A68A6F;
+      transition: all 0.2s;
+    }
+
+    /* 激活状态 - 只有颜色变化，无背景框 */
+    .nav-item.active i {
+      color: #D9A066;
+    }
+
+    .nav-item.active span {
+      color: #B47C44;
+    }
+
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+
+    /* 提示弹窗 */
+    .toast-message {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      padding: 9px 24px;
+      border-radius: 44px;
+      font-weight: 600;
+      color: #B4753E;
+      font-size: 13px;
+      z-index: 200;
+      box-shadow: 0 8px 20px rgba(100, 70, 30, 0.15);
+      border: 1.5px solid #FFE4CA;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* 滚动条 */
+    .suggestion-cards::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .suggestion-cards::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="survey-container">
+    <!-- 头部 -->
+    <div class="survey-header">
+      <div class="header-title">
+        <i class="fas fa-clipboard-list"></i>
+        <h1>问卷筛查</h1>
+        <span>· 发育情况自评</span>
+      </div>
+      <div class="progress-indicator" id="progressIndicator">
+        <span class="progress-text" id="progressText">第 1 / 5 题</span>
+        <div class="progress-dots" id="progressDots">
+          <span class="progress-dot active"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容 - 可滚动区域，底部留出导航栏空间 -->
+    <div class="survey-main" id="surveyMain">
+      <div id="questionArea" style="width:100%;"></div>
+      <div id="resultArea" style="display:none; width:100%;"></div>
+    </div>
+
+    <!-- 底部导航栏 - 与首页完全一致的图片风格 -->
+    <div class="bottom-nav">
+      <div class="nav-items">
+        <div class="nav-item" data-nav="home">
+          <i class="fas fa-home"></i>
+          <span>首页</span>
+        </div>
+        <div class="nav-item" data-nav="dashboard">
+          <i class="fas fa-chart-bar"></i>
+          <span>数据看板</span>
+        </div>
+        <div class="nav-item" data-nav="treehole">
+          <i class="fas fa-tree"></i>
+          <span>家长树洞</span>
+        </div>
+        <div class="nav-item" data-nav="survey">
+          <i class="fas fa-clipboard-list"></i>
+          <span>问卷筛查</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const questions = [
+        {
+          id: 1,
+          title: '叫名反应',
+          desc: '当您叫宝贝的名字时，宝贝通常会有怎样的反应？',
+          options: [
+            { text: '几乎每次都会转头或看向我', hint: '反应迅速且稳定', score: 4 },
+            { text: '经常会回应，但有时需要多叫几次', hint: '反应较好，偶有延迟', score: 3 },
+            { text: '偶尔会回应，需要很大声或很近', hint: '反应不稳定', score: 2 },
+            { text: '很少或几乎没有反应', hint: '需要特别关注', score: 1 }
+          ]
+        },
+        {
+          id: 2,
+          title: '眼神交流',
+          desc: '宝贝与您或其他家人互动时，眼神交流的情况如何？',
+          options: [
+            { text: '经常主动注视，眼神交流自然', hint: '社交意愿强', score: 4 },
+            { text: '有眼神交流，但持续时间较短', hint: '有一定社交意愿', score: 3 },
+            { text: '偶尔有短暂的眼神接触', hint: '眼神交流较少', score: 2 },
+            { text: '很少或几乎不看人', hint: '需要特别关注', score: 1 }
+          ]
+        },
+        {
+          id: 3,
+          title: '语言表达',
+          desc: '宝贝目前的语言表达能力如何？',
+          options: [
+            { text: '能说出简单词语或短句', hint: '语言发展良好', score: 4 },
+            { text: '会说一些单词，有时模仿大人', hint: '有语言基础', score: 3 },
+            { text: '偶尔发出声音，但词汇很少', hint: '语言发展稍慢', score: 2 },
+            { text: '很少发声，或几乎不说话', hint: '需要特别关注', score: 1 }
+          ]
+        },
+        {
+          id: 4,
+          title: '模仿能力',
+          desc: '宝贝是否会模仿您的动作、表情或声音？',
+          options: [
+            { text: '经常主动模仿，学得很快', hint: '模仿能力强', score: 4 },
+            { text: '有时会模仿简单的动作或声音', hint: '有一定的模仿意识', score: 3 },
+            { text: '偶尔模仿，需要多次示范', hint: '模仿能力较弱', score: 2 },
+            { text: '几乎没有模仿行为', hint: '需要特别关注', score: 1 }
+          ]
+        },
+        {
+          id: 5,
+          title: '情绪表达',
+          desc: '宝贝是否能表达开心、不开心等情绪？',
+          options: [
+            { text: '情绪表达丰富，能明确表达', hint: '情绪表达能力好', score: 4 },
+            { text: '有基本的情绪表达，如笑、哭', hint: '情绪表达正常', score: 3 },
+            { text: '情绪表达较少，不太容易察觉', hint: '情绪表达偏少', score: 2 },
+            { text: '很难判断宝贝的情绪状态', hint: '需要特别关注', score: 1 }
+          ]
+        }
+      ];
+
+      let currentQuestionIndex = 0;
+      let answers = {};
+      let selectedOption = null;
+
+      const surveyMain = document.getElementById('surveyMain');
+      const questionArea = document.getElementById('questionArea');
+      const resultArea = document.getElementById('resultArea');
+      const progressText = document.getElementById('progressText');
+      const progressDots = document.getElementById('progressDots');
+
+      function showToast(msg, bg = '#FEF3E2') {
+        let existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML = `<i class="fas fa-star"></i> ${msg}`;
+        toast.style.background = bg;
+        document.querySelector('.survey-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      function updateProgress() {
+        progressText.textContent = `第 ${currentQuestionIndex + 1} / 5 题`;
+        const dots = progressDots.querySelectorAll('.progress-dot');
+        dots.forEach((dot, index) => {
+          dot.classList.remove('active', 'completed');
+          if (index < currentQuestionIndex) {
+            dot.classList.add('completed');
+          } else if (index === currentQuestionIndex) {
+            dot.classList.add('active');
+          }
+        });
+      }
+
+      function renderQuestion() {
+        const question = questions[currentQuestionIndex];
+        const savedAnswer = answers[question.id];
+        selectedOption = savedAnswer !== undefined ? savedAnswer : null;
+
+        const html = `
+          <div class="question-container">
+            <div class="question-header">
+              <div class="question-number">问题 ${question.id} / 5</div>
+              <div class="question-title">${question.title}</div>
+              <div class="question-desc">${question.desc}</div>
+            </div>
+            <div class="options-list">
+              ${question.options.map((option, index) => `
+                <div class="option-item ${selectedOption === index ? 'selected' : ''}" data-option-index="${index}">
+                  <div class="option-radio"></div>
+                  <div class="option-content">
+                    <div class="option-text">${option.text}</div>
+                    <div class="option-hint">${option.hint}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="nav-buttons">
+              ${currentQuestionIndex > 0 ? `
+                <button class="nav-btn secondary" id="prevBtn">
+                  <i class="fas fa-arrow-left"></i> 上一题
+                </button>
+              ` : ''}
+              <button class="nav-btn primary" id="nextBtn" ${selectedOption === null ? 'disabled' : ''}>
+                ${currentQuestionIndex === 4 ? '查看结果' : '下一题'} 
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        `;
+
+        questionArea.innerHTML = html;
+        questionArea.style.display = 'block';
+        resultArea.style.display = 'none';
+        updateProgress();
+
+        // 滚动到顶部
+        surveyMain.scrollTop = 0;
+
+        document.querySelectorAll('.option-item').forEach(item => {
+          item.addEventListener('click', function () {
+            const optionIndex = parseInt(this.dataset.optionIndex);
+            selectedOption = optionIndex;
+            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            document.getElementById('nextBtn').disabled = false;
+          });
+        });
+
+        const prevBtn = document.getElementById('prevBtn');
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+              saveAnswer();
+              currentQuestionIndex--;
+              renderQuestion();
+            }
+          });
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+          if (selectedOption !== null) {
+            saveAnswer();
+            if (currentQuestionIndex < 4) {
+              currentQuestionIndex++;
+              renderQuestion();
+            } else {
+              showResult();
+            }
+          }
+        });
+      }
+
+      function saveAnswer() {
+        if (selectedOption !== null) {
+          answers[questions[currentQuestionIndex].id] = selectedOption;
+        }
+      }
+
+      function calculateResult() {
+        let totalScore = 0;
+        const maxScore = questions.length * 4;
+
+        questions.forEach(q => {
+          const answerIndex = answers[q.id];
+          if (answerIndex !== undefined) {
+            totalScore += q.options[answerIndex].score;
+          }
+        });
+
+        const percentage = (totalScore / maxScore) * 100;
+
+        let level, levelClass, summary, suggestions;
+
+        if (percentage >= 75) {
+          level = '发展良好';
+          levelClass = 'level-low';
+          summary = '宝贝在各项能力上表现良好，社交互动和沟通能力发展符合或接近同龄水平。';
+          suggestions = [
+            { icon: '🎯', title: '保持互动', desc: '坚持每日亲子互动游戏，巩固社交回应能力。' },
+            { icon: '📚', title: '丰富语言', desc: '多与宝贝说话、讲故事，鼓励模仿发音。' },
+            { icon: '🌟', title: '正向鼓励', desc: '多给予正向肯定，增强自信心。' }
+          ];
+        } else if (percentage >= 50) {
+          level = '需要关注';
+          levelClass = 'level-medium';
+          summary = '宝贝在某些方面表现尚可，但部分领域需要更多引导。';
+          suggestions = [
+            { icon: '🎮', title: '增加互动', desc: '每天15-20分钟互动游戏，如叫名、指物。' },
+            { icon: '👀', title: '眼神交流', desc: '蹲下与宝贝平视，用夸张表情吸引注意。' },
+            { icon: '💬', title: '鼓励发声', desc: '多玩声音模仿，积极回应任何发声。' },
+            { icon: '📋', title: '专业评估', desc: '如有持续担忧，建议咨询专业医生。' }
+          ];
+        } else {
+          level = '建议重视';
+          levelClass = 'level-high';
+          summary = '宝贝在多个方面可能需要特别关注。早期发现是帮助宝贝的第一步。';
+          suggestions = [
+            { icon: '🏥', title: '专业评估', desc: '建议尽快到发育行为儿科进行专业评估。' },
+            { icon: '🎯', title: '每日训练', desc: '坚持叫名、对视、模仿等基础训练。' },
+            { icon: '📝', title: '记录观察', desc: '记录日常表现，为评估提供参考。' },
+            { icon: '❤️', title: '照顾好自己', desc: '请照顾好自己的情绪，可以来树洞倾诉。' }
+          ];
+        }
+
+        return { level, levelClass, summary, suggestions };
+      }
+
+      function showResult() {
+        const result = calculateResult();
+
+        const html = `
+          <div class="result-container">
+            <div class="result-header">
+              <div class="result-icon"><i class="fas fa-clipboard-check"></i></div>
+              <h2>评估结果</h2>
+              <p>基于您的填写生成，仅供参考</p>
+            </div>
+            
+            <div class="result-content">
+              <div class="result-left">
+                <div class="result-summary">
+                  <div class="summary-level">
+                    <span class="level-label">综合评估：</span>
+                    <span class="level-value ${result.levelClass}">${result.level}</span>
+                  </div>
+                  <div class="summary-text">${result.summary}</div>
+                </div>
+                <div class="disclaimer">
+                  <i class="fas fa-info-circle"></i>
+                  本问卷仅为初步筛查参考，不能替代专业医学诊断。
+                </div>
+              </div>
+              
+              <div class="result-right">
+                <div class="suggestion-cards">
+                  ${result.suggestions.map(s => `
+                    <div class="suggestion-card">
+                      <div class="suggestion-icon">${s.icon}</div>
+                      <div class="suggestion-content">
+                        <h4>${s.title}</h4>
+                        <p>${s.desc}</p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            
+            <div class="result-actions">
+              <button class="result-btn secondary" id="retakeBtn">
+                <i class="fas fa-redo-alt"></i> 重新填写
+              </button>
+              <button class="result-btn primary" id="homeBtn">
+                <i class="fas fa-home"></i> 返回主页
+              </button>
+            </div>
+          </div>
+        `;
+
+        questionArea.style.display = 'none';
+        resultArea.style.display = 'block';
+        resultArea.innerHTML = html;
+
+        progressText.textContent = '已完成';
+        const dots = progressDots.querySelectorAll('.progress-dot');
+        dots.forEach(dot => {
+          dot.classList.remove('active');
+          dot.classList.add('completed');
+        });
+
+        // 滚动到顶部
+        surveyMain.scrollTop = 0;
+
+        document.getElementById('retakeBtn').addEventListener('click', () => {
+          currentQuestionIndex = 0;
+          answers = {};
+          selectedOption = null;
+          renderQuestion();
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+          location.href = 'mainPart.html';
+        });
+      }
+
+      // ========= 底部导航栏 - 与首页完全一致的跳转逻辑 =========
+      const navItems = document.querySelectorAll('.nav-item');
+
+      // 设置激活样式（只有颜色变化）
+      function setActiveNav(activeNavName) {
+        navItems.forEach(item => {
+          const itemName = item.getAttribute('data-nav');
+          if (itemName === activeNavName) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+
+      // 绑定导航点击事件 - 跳转到对应页面
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const navValue = item.getAttribute('data-nav');
+          if (navValue === 'home') {
+            location.href = 'mainPart.html';
+          } else if (navValue === 'dashboard') {
+            location.href = 'dataLook.html';
+          } else if (navValue === 'treehole') {
+            location.href = 'seniorHole.html';
+          } else if (navValue === 'survey') {
+            location.href = 'askQuestions.html';
+          }
+        });
+      });
+
+      // 根据当前页面高亮对应的导航项
+      function highlightCurrentNav() {
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'mainPart.html') {
+          setActiveNav('home');
+        } else if (currentPage === 'dataLook.html') {
+          setActiveNav('dashboard');
+        } else if (currentPage === 'seniorHole.html') {
+          setActiveNav('treehole');
+        } else if (currentPage === 'askQuestions.html') {
+          setActiveNav('survey');
+        }
+      }
+      highlightCurrentNav();
+
+      renderQuestion();
+    })();
+  </script>
+</body>
+
+</html>

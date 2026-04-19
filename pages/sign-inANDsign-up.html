@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>星伴 · 家长登录 | 暖愈成长空间</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      background: #D9CBBF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+      padding: 12px;
+    }
+
+    /* 主容器 - 固定1024x600 */
+    .auth-container {
+      width: 1024px;
+      height: 600px;
+      background: linear-gradient(145deg, #FFFCF7 0%, #FEF8F2 100%);
+      border-radius: 48px;
+      box-shadow: 0 30px 40px -20px rgba(60, 40, 28, 0.3), 0 0 0 1px rgba(235, 216, 190, 0.6);
+      overflow: hidden;
+      display: flex;
+      position: relative;
+    }
+
+    /* 左侧品牌区 - 4份 */
+    .brand-section {
+      flex: 4;
+      background: linear-gradient(160deg, #F2E2D0 0%, #E8D4BE 100%);
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .decor-circle {
+      position: absolute;
+      top: -120px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255, 250, 240, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .logo-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #FFFCF5, #F8ECDE);
+      border-radius: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      color: #D9A066;
+      box-shadow: 0 8px 0 #C6AA8A, 0 16px 32px rgba(160, 110, 60, 0.15);
+      border: 2px solid #EDD9C6;
+    }
+
+    .logo-text h1 {
+      font-size: 52px;
+      font-weight: 800;
+      color: #5E422C;
+      letter-spacing: 6px;
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 14px;
+      color: #8F6A44;
+      font-weight: 500;
+      letter-spacing: 6px;
+      margin-top: 4px;
+    }
+
+    .brand-slogan {
+      padding: 0 10px;
+    }
+
+    .brand-slogan p {
+      font-size: 26px;
+      font-weight: 600;
+      color: #4A3220;
+      line-height: 1.5;
+    }
+
+    .brand-slogan .highlight {
+      color: #B87A4A;
+      font-weight: 700;
+      background: linear-gradient(145deg, #FFF8F0, #FCE8D6);
+      padding: 2px 16px;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* 右侧表单区 - 6份 */
+    .form-section {
+      flex: 6;
+      padding: 36px 44px;
+      display: flex;
+      flex-direction: column;
+      background: #FFFCF7;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #D4B99B #F3EBE2;
+    }
+
+    .form-section::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .form-section::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
+    .form-header {
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .form-header h3 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #6C4F32;
+      margin-bottom: 6px;
+    }
+
+    .form-header p {
+      font-size: 14px;
+      color: #B89A78;
+    }
+
+    /* 标签页 */
+    .auth-tabs {
+      display: flex;
+      gap: 10px;
+      background: #F5EDE4;
+      padding: 5px;
+      border-radius: 52px;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      background: transparent;
+      border-radius: 44px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: #D9A066;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 表单 */
+    .form-container {
+      flex: 1;
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #7C5F48;
+      margin-bottom: 8px;
+    }
+
+    .input-label i {
+      color: #D9A066;
+      font-size: 16px;
+      width: 20px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 13px 18px;
+      background: #FEF8F2;
+      border: 2px solid #F0DDCB;
+      border-radius: 44px;
+      font-size: 15px;
+      color: #5F4230;
+      outline: none;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .input-field:focus {
+      border-color: #D9A066;
+      background: #FFFCF7;
+      box-shadow: 0 0 0 3px rgba(217, 160, 102, 0.1);
+    }
+
+    .input-field::placeholder {
+      color: #C4A88B;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #C4A88B;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .code-wrapper {
+      display: flex;
+      gap: 12px;
+    }
+
+    .code-wrapper .input-field {
+      flex: 1;
+    }
+
+    .code-btn {
+      width: 120px;
+      padding: 13px 0;
+      background: #F0E2D4;
+      border: 1.5px solid #E6D2C0;
+      border-radius: 44px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .code-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 16px 0 22px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #8F6A44;
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      width: 18px;
+      height: 18px;
+      accent-color: #D9A066;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      font-size: 14px;
+      color: #D9A066;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .row-inputs {
+      display: flex;
+      gap: 16px;
+    }
+
+    .row-inputs .input-group {
+      flex: 1;
+    }
+
+    .age-selector {
+      display: flex;
+      gap: 10px;
+    }
+
+    .age-btn {
+      flex: 1;
+      padding: 13px 0;
+      background: #F5EDE4;
+      border: 2px solid #F0DDCB;
+      border-radius: 44px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .age-btn.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+      color: #5E422C;
+    }
+
+    .avatar-selector {
+      display: flex;
+      gap: 16px;
+      margin: 8px 0 4px;
+    }
+
+    .avatar-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 0;
+      background: #F5EDE4;
+      border: 2px solid #F0DDCB;
+      border-radius: 28px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .avatar-option i {
+      font-size: 36px;
+      color: #B88B5C;
+    }
+
+    .avatar-option span {
+      font-size: 13px;
+      color: #8B6A4C;
+    }
+
+    .avatar-option.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+    }
+
+    .gender-selector {
+      display: flex;
+      gap: 16px;
+    }
+
+    .gender-btn {
+      flex: 1;
+      padding: 13px 0;
+      background: #F5EDE4;
+      border: 2px solid #F0DDCB;
+      border-radius: 44px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .gender-btn.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+      color: #5E422C;
+    }
+
+    .interest-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .interest-tag {
+      padding: 10px 18px;
+      background: #F5EDE4;
+      border: 2px solid #F0DDCB;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .interest-tag.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+      color: #5E422C;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      border: none;
+      border-radius: 52px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #6C4E32;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 0 #C6AA8A;
+      border: 1.5px solid #DDBB9A;
+    }
+
+    .login-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #C6AA8A;
+    }
+
+    /* 登录方式切换按钮 */
+    .login-method {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .method-btn {
+      flex: 1;
+      padding: 11px 0;
+      background: transparent;
+      border: 1.5px solid #F0DDCB;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .method-btn.active {
+      background: #EAD1BB;
+      border-color: #D9A066;
+      color: #5E422C;
+    }
+
+    .method-btn i {
+      font-size: 14px;
+    }
+
+    /* 注册步骤按钮 - 居中加宽 */
+    .step-btn {
+      width: 100%;
+      padding: 15px 0;
+      border: none;
+      border-radius: 48px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .step-btn.primary {
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      color: #6C4E32;
+      box-shadow: 0 5px 0 #C6AA8A;
+      border: 1.5px solid #DDBB9A;
+    }
+
+    .step-btn.primary:hover {
+      background: linear-gradient(145deg, #EEDBC8, #E5CEB4);
+    }
+
+    .step-btn.primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #C6AA8A;
+    }
+
+    .step-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .step-buttons .step-btn {
+      flex: 1;
+    }
+
+    .step-btn.secondary {
+      background: #F5EDE4;
+      color: #8B6A4C;
+      border: 1.5px solid #E6D2C0;
+      box-shadow: 0 3px 0 #D4C4B0;
+    }
+
+    .step-btn.secondary:hover {
+      background: #EDDFD0;
+    }
+
+    .step-btn.secondary:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #D4C4B0;
+    }
+
+    .step-btn i {
+      font-size: 16px;
+    }
+
+    /* 步骤标题 */
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6C4F32;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F0DDCB;
+    }
+
+    .step-title i {
+      color: #D9A066;
+      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      background: #FDF5EC;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .third-party {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .third-party p {
+      font-size: 13px;
+      color: #B89A78;
+      margin-bottom: 14px;
+    }
+
+    .third-icons {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .third-icon {
+      width: 48px;
+      height: 48px;
+      background: #F5EDE4;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1.5px solid #F0DDCB;
+    }
+
+    .third-icon:hover {
+      background: #EAD1BB;
+      color: #6C4E32;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      color: #9BBF7A;
+      margin-bottom: 20px;
+    }
+
+    .success-message h4 {
+      font-size: 24px;
+      color: #6C4F32;
+      margin-bottom: 10px;
+    }
+
+    .success-message p {
+      font-size: 15px;
+      color: #9B846C;
+      margin-bottom: 28px;
+    }
+
+    /* 提示弹窗 */
+    .toast-message {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      padding: 12px 28px;
+      border-radius: 56px;
+      font-weight: 600;
+      color: #B4753E;
+      font-size: 15px;
+      z-index: 200;
+      box-shadow: 0 10px 24px rgba(100, 70, 30, 0.15);
+      border: 1.5px solid #FFE4CA;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    button {
+      font-family: inherit;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-container">
+    <!-- 左侧品牌区 - 4份 -->
+    <div class="brand-section">
+      <div class="decor-circle"></div>
+
+      <div class="brand-content">
+        <div class="logo-wrapper">
+          <div class="logo-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="logo-text">
+            <h1>星伴</h1>
+            <p>Stellar Companion</p>
+          </div>
+        </div>
+
+        <div class="brand-slogan">
+          <p>
+            今天的陪伴，<br>
+            是孩子明天心里<br>
+            <span class="highlight">最暖的光</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧表单区 - 6份 -->
+    <div class="form-section">
+      <div class="form-header">
+        <h3 id="formTitle">家长登录</h3>
+        <p id="formSubtitle">登录后查看宝贝的成长数据</p>
+      </div>
+
+      <div class="auth-tabs" id="authTabs">
+        <button class="tab-btn active" data-tab="login">登录</button>
+        <button class="tab-btn" data-tab="register">注册</button>
+      </div>
+
+      <div class="form-container">
+        <!-- 登录表单 -->
+        <div class="form-step active" id="loginStep">
+          <div class="login-method" id="loginMethod">
+            <button class="method-btn active" data-method="password" id="passwordMethodBtn">
+              <i class="fas fa-lock"></i> 密码登录
+            </button>
+            <button class="method-btn" data-method="code" id="codeMethodBtn">
+              <i class="fas fa-message"></i> 验证码登录
+            </button>
+          </div>
+
+          <div id="passwordLogin">
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
+              <input type="tel" class="input-field" id="loginPhone" placeholder="请输入手机号" value="13800138000">
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-lock"></i>密码</div>
+              <div class="password-wrapper">
+                <input type="password" class="input-field" id="loginPassword" placeholder="请输入密码" value="123456">
+                <i class="fas fa-eye toggle-password" data-target="loginPassword"></i>
+              </div>
+            </div>
+            <div class="remember-row">
+              <label class="remember-me">
+                <input type="checkbox" id="rememberMe" checked> 记住账号
+              </label>
+              <a href="#" class="forgot-link" id="forgotPassword">忘记密码？</a>
+            </div>
+            <button class="login-btn" id="loginBtn"><i class="fas fa-arrow-right-to-bracket"></i> 登录星伴</button>
+          </div>
+
+          <div id="codeLogin" style="display:none;">
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
+              <input type="tel" class="input-field" id="codePhone" placeholder="请输入手机号" value="13800138000">
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-shield"></i>验证码</div>
+              <div class="code-wrapper">
+                <input type="text" class="input-field" id="smsCode" placeholder="请输入验证码">
+                <button class="code-btn" id="getCodeBtn">获取验证码</button>
+              </div>
+            </div>
+            <button class="login-btn" id="codeLoginBtn"><i class="fas fa-message"></i> 验证码登录</button>
+          </div>
+
+          <div class="third-party">
+            <p>其他登录方式</p>
+            <div class="third-icons">
+              <div class="third-icon"><i class="fab fa-weixin"></i></div>
+              <div class="third-icon"><i class="fab fa-apple"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 注册表单 -->
+        <div class="form-step" id="registerStep">
+          <div id="regStep1">
+            <div class="step-title"><i class="fas fa-user"></i> 家长信息</div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
+              <input type="tel" class="input-field" id="regPhone" placeholder="请输入手机号">
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-shield"></i>验证码</div>
+              <div class="code-wrapper">
+                <input type="text" class="input-field" id="regSmsCode" placeholder="请输入验证码">
+                <button class="code-btn" id="regGetCodeBtn">获取验证码</button>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-lock"></i>设置密码</div>
+              <div class="password-wrapper">
+                <input type="password" class="input-field" id="regPassword" placeholder="8-16位字母数字组合">
+                <i class="fas fa-eye toggle-password" data-target="regPassword"></i>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-check-circle"></i>确认密码</div>
+              <div class="password-wrapper">
+                <input type="password" class="input-field" id="regConfirmPassword" placeholder="再次输入密码">
+                <i class="fas fa-eye toggle-password" data-target="regConfirmPassword"></i>
+              </div>
+            </div>
+            <button class="step-btn primary" id="regNextStep1"><i class="fas fa-arrow-right"></i> 下一步</button>
+          </div>
+
+          <div id="regStep2" style="display:none;">
+            <div class="step-title"><i class="fas fa-child"></i> 宝贝信息</div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-child"></i>宝贝昵称</div>
+              <input type="text" class="input-field" id="regChildName" placeholder="宝贝的小名">
+            </div>
+            <div class="row-inputs">
+              <div class="input-group">
+                <div class="input-label"><i class="fas fa-cake-candles"></i>年龄</div>
+                <div class="age-selector">
+                  <div class="age-btn" data-age="2">2岁</div>
+                  <div class="age-btn active" data-age="3">3岁</div>
+                  <div class="age-btn" data-age="4">4岁</div>
+                </div>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-venus-mars"></i>性别</div>
+              <div class="gender-selector">
+                <div class="gender-btn active" data-gender="boy"><i class="fas fa-mars"></i> 男孩</div>
+                <div class="gender-btn" data-gender="girl"><i class="fas fa-venus"></i> 女孩</div>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-face-smile"></i>选择头像</div>
+              <div class="avatar-selector">
+                <div class="avatar-option active" data-avatar="bear">
+                  <i class="fas fa-face-smile"></i><span>小熊</span>
+                </div>
+                <div class="avatar-option" data-avatar="cat">
+                  <i class="fas fa-cat"></i><span>小猫</span>
+                </div>
+                <div class="avatar-option" data-avatar="dog">
+                  <i class="fas fa-dog"></i><span>小狗</span>
+                </div>
+              </div>
+            </div>
+            <div class="step-buttons">
+              <button class="step-btn secondary" id="regPrevStep2"><i class="fas fa-arrow-left"></i> 上一步</button>
+              <button class="step-btn primary" id="regNextStep2">下一步 <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <div id="regStep3" style="display:none;">
+            <div class="step-title"><i class="fas fa-heart"></i> 关注领域</div>
+            <div class="input-group">
+              <div class="input-label">您最关注宝贝的哪些方面？（可多选）</div>
+              <div class="interest-tags">
+                <div class="interest-tag active" data-interest="social">🤝 社交互动</div>
+                <div class="interest-tag active" data-interest="language">💬 语言表达</div>
+                <div class="interest-tag" data-interest="cognitive">🧠 认知能力</div>
+                <div class="interest-tag" data-interest="emotion">😊 情绪行为</div>
+              </div>
+            </div>
+            <div class="step-buttons">
+              <button class="step-btn secondary" id="regPrevStep3"><i class="fas fa-arrow-left"></i> 上一步</button>
+              <button class="step-btn primary" id="regNextStep3"><i class="fas fa-check"></i> 完成注册</button>
+            </div>
+          </div>
+
+          <div id="regStep4" style="display:none;">
+            <div class="success-message">
+              <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+              <h4>注册成功！</h4>
+              <p id="welcomeMessage">欢迎加入星伴大家庭</p>
+              <button class="step-btn primary" id="goToLoginBtn"><i class="fas fa-arrow-right-to-bracket"></i>
+                去登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let currentTab = 'login';
+      let loginMethod = 'password';
+      let regStep = 1;
+      let selectedAge = '3';
+      let selectedGender = 'boy';
+      let selectedAvatar = 'bear';
+
+      const authTabs = document.getElementById('authTabs');
+      const loginStep = document.getElementById('loginStep');
+      const registerStep = document.getElementById('registerStep');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      const passwordLogin = document.getElementById('passwordLogin');
+      const codeLogin = document.getElementById('codeLogin');
+      const passwordMethodBtn = document.getElementById('passwordMethodBtn');
+      const codeMethodBtn = document.getElementById('codeMethodBtn');
+
+      // 方法按钮样式 - 默认密码登录有底色
+      function setActiveMethod(method) {
+        loginMethod = method;
+        if (method === 'password') {
+          passwordMethodBtn.classList.add('active');
+          codeMethodBtn.classList.remove('active');
+          passwordLogin.style.display = 'block';
+          codeLogin.style.display = 'none';
+        } else {
+          codeMethodBtn.classList.add('active');
+          passwordMethodBtn.classList.remove('active');
+          passwordLogin.style.display = 'none';
+          codeLogin.style.display = 'block';
+        }
+      }
+
+      passwordMethodBtn.addEventListener('click', () => setActiveMethod('password'));
+      codeMethodBtn.addEventListener('click', () => setActiveMethod('code'));
+
+      // 切换标签页
+      function switchTab(tab) {
+        currentTab = tab;
+        authTabs.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        authTabs.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+        if (tab === 'login') {
+          loginStep.classList.add('active');
+          registerStep.classList.remove('active');
+          formTitle.innerText = '家长登录';
+          formSubtitle.innerText = '登录后查看宝贝的成长数据';
+        } else {
+          loginStep.classList.remove('active');
+          registerStep.classList.add('active');
+          formTitle.innerText = '注册账号';
+          formSubtitle.innerText = '创建账号，开始陪伴之旅';
+          showRegStep(1);
+        }
+      }
+
+      authTabs.addEventListener('click', (e) => {
+        const tab = e.target.closest('.tab-btn');
+        if (!tab) return;
+        switchTab(tab.dataset.tab);
+      });
+
+      // 密码显示切换
+      document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const targetId = this.dataset.target;
+          const input = document.getElementById(targetId);
+          input.type = input.type === 'password' ? 'text' : 'password';
+          this.className = input.type === 'password' ? 'fas fa-eye toggle-password' : 'fas fa-eye-slash toggle-password';
+        });
+      });
+
+      // 年龄选择
+      document.querySelectorAll('.age-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          selectedAge = this.dataset.age;
+        });
+      });
+
+      // 性别选择
+      document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          selectedGender = this.dataset.gender;
+        });
+      });
+
+      // 头像选择
+      document.querySelectorAll('.avatar-option').forEach(opt => {
+        opt.addEventListener('click', function () {
+          document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('active'));
+          this.classList.add('active');
+          selectedAvatar = this.dataset.avatar;
+        });
+      });
+
+      // 兴趣标签
+      document.querySelectorAll('.interest-tag').forEach(tag => {
+        tag.addEventListener('click', function () {
+          this.classList.toggle('active');
+        });
+      });
+
+      function showToast(msg, bg = '#FEF3E2') {
+        let existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML = `<i class="fas fa-star"></i> ${msg}`;
+        toast.style.background = bg;
+        document.querySelector('.auth-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      function showRegStep(step) {
+        regStep = step;
+        ['regStep1', 'regStep2', 'regStep3', 'regStep4'].forEach((id, i) => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = i + 1 === step ? 'block' : 'none';
+        });
+      }
+
+      // 登录 - 跳转到 mainPart.html
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        const phone = document.getElementById('loginPhone').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+        if (!password) { showToast('请输入密码', '#FCE8E8'); return; }
+
+        showToast('✨ 登录成功！正在进入星伴世界...', '#E8F0D8');
+        setTimeout(() => {
+          window.location.href = 'mainPart.html';
+        }, 800);
+      });
+
+      // 验证码登录 - 跳转到 mainPart.html
+      document.getElementById('codeLoginBtn').addEventListener('click', () => {
+        const phone = document.getElementById('codePhone').value;
+        const code = document.getElementById('smsCode').value;
+
+        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+        if (!code) { showToast('请输入验证码', '#FCE8E8'); return; }
+
+        showToast('✨ 登录成功！', '#E8F0D8');
+        setTimeout(() => {
+          window.location.href = 'mainPart.html';
+        }, 500);
+      });
+
+      // 获取验证码
+      function startCodeCountdown(btn) {
+        let countdown = 60;
+        btn.disabled = true;
+
+        const timer = setInterval(() => {
+          countdown--;
+          btn.innerText = `${countdown}秒后重试`;
+          if (countdown <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.innerText = '获取验证码';
+          }
+        }, 1000);
+
+        showToast('📱 验证码已发送');
+      }
+
+      document.getElementById('getCodeBtn').addEventListener('click', function () {
+        const phone = document.getElementById('codePhone').value;
+        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+        startCodeCountdown(this);
+      });
+
+      document.getElementById('regGetCodeBtn').addEventListener('click', function () {
+        const phone = document.getElementById('regPhone').value;
+        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+        startCodeCountdown(this);
+      });
+
+      // 注册步骤
+      document.getElementById('regNextStep1').addEventListener('click', () => {
+        const phone = document.getElementById('regPhone').value;
+        const code = document.getElementById('regSmsCode').value;
+        const pwd = document.getElementById('regPassword').value;
+        const confirmPwd = document.getElementById('regConfirmPassword').value;
+
+        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+        if (!code) { showToast('请输入验证码', '#FCE8E8'); return; }
+        if (!pwd) { showToast('请设置密码', '#FCE8E8'); return; }
+        if (pwd !== confirmPwd) { showToast('两次密码不一致', '#FCE8E8'); return; }
+
+        showRegStep(2);
+      });
+
+      document.getElementById('regPrevStep2').addEventListener('click', () => showRegStep(1));
+
+      document.getElementById('regNextStep2').addEventListener('click', () => {
+        const childName = document.getElementById('regChildName').value;
+        if (!childName) { showToast('请输入宝贝昵称', '#FCE8E8'); return; }
+        showRegStep(3);
+      });
+
+      document.getElementById('regPrevStep3').addEventListener('click', () => showRegStep(2));
+
+      document.getElementById('regNextStep3').addEventListener('click', () => {
+        const childName = document.getElementById('regChildName').value;
+        document.getElementById('welcomeMessage').innerHTML = `${childName}宝贝，开始成长陪伴之旅吧！`;
+        showRegStep(4);
+      });
+
+      // 注册完成后跳转到登录界面
+      document.getElementById('goToLoginBtn').addEventListener('click', () => {
+        document.getElementById('regPhone').value = '';
+        document.getElementById('regSmsCode').value = '';
+        document.getElementById('regPassword').value = '';
+        document.getElementById('regConfirmPassword').value = '';
+        document.getElementById('regChildName').value = '';
+
+        switchTab('login');
+        showToast('🎉 注册成功！请登录您的账号', '#E8F0D8');
+      });
+
+      document.getElementById('forgotPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('📧 重置密码链接已发送至您的手机');
+      });
+
+      document.querySelectorAll('.third-icon').forEach(icon => {
+        icon.addEventListener('click', () => {
+          const type = icon.querySelector('.fa-weixin') ? '微信' : 'Apple';
+          showToast(`🔐 正在跳转${type}登录...`);
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
