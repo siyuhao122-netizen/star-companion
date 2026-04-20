@@ -101,26 +101,161 @@
       letter-spacing: 3px;
     }
 
-    .center-title-wrapper {
-      text-align: center;
-    }
-
-    .main-title-center {
-      font-size: 24px;
-      font-weight: 700;
-      color: #6C4F32;
-      display: inline-flex;
+    /* ========= 孩子信息卡片 ========= */
+    .child-info-card {
+      display: flex;
       align-items: center;
-      gap: 10px;
-      background: #FCF4EA;
-      padding: 8px 24px;
-      border-radius: 48px;
-      border: 1px solid #EDDDCF;
+      gap: 16px;
+      background: linear-gradient(135deg, #FCF8F2, #F7EFE6);
+      border-radius: 56px;
+      padding: 8px 18px 8px 12px;
+      border: 2px solid #F0E2D4;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      margin-left: 20px;
     }
 
-    .main-title-center i {
-      color: #D9A066;
+    .child-info-card:hover {
+      background: #FDF5EC;
+      border-color: #E5CEB8;
+    }
+
+    .child-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #FFF3E8, #FDE8D6);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #C28958;
+      border: 2px solid #EDD9C6;
+    }
+
+    .child-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .child-name-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .child-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #5E422C;
+      line-height: 1.3;
+    }
+
+    .child-age {
+      font-size: 14px;
+      font-weight: 600;
+      color: #B47C44;
+      background: #FDF5EC;
+      padding: 2px 10px;
+      border-radius: 24px;
+      border: 1px solid #EAD1BB;
+    }
+
+    .switch-hint {
+      font-size: 11px;
+      color: #A68A6F;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .switch-hint i {
+      font-size: 10px;
+    }
+
+    /* 孩子切换下拉菜单 */
+    .child-switch-dropdown {
+      position: absolute;
+      top: 62px;
+      right: 0;
+      background: #FFFFFF;
+      border-radius: 32px;
+      box-shadow: 0 12px 28px rgba(90, 60, 40, 0.15);
+      border: 2px solid #F0E2D4;
+      min-width: 220px;
+      z-index: 1000;
+      display: none;
+      padding: 8px 6px;
+    }
+
+    .child-switch-dropdown.show {
+      display: block;
+    }
+
+    .dropdown-header {
+      padding: 12px 16px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #9B846C;
+      border-bottom: 1.5px solid #F0E2D4;
+    }
+
+    .child-list {
+      list-style: none;
+      padding: 4px 0;
+    }
+
+    .child-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: 28px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .child-list-item:hover {
+      background: #FDF5EC;
+    }
+
+    .child-list-item.active {
+      background: #F5E8DA;
+    }
+
+    .list-avatar {
+      width: 40px;
+      height: 40px;
+      background: #FDF5EC;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 22px;
+      color: #C28958;
+      border: 1.5px solid #EDD9C6;
+    }
+
+    .list-info {
+      flex: 1;
+    }
+
+    .list-name {
+      font-weight: 700;
+      color: #5E422C;
+      font-size: 15px;
+    }
+
+    .list-age {
+      font-size: 12px;
+      color: #B47C44;
+    }
+
+    .active-indicator {
+      color: #D9A066;
+      font-size: 14px;
     }
 
     .parent-avatar {
@@ -128,6 +263,7 @@
       justify-content: flex-end;
       align-items: center;
       cursor: pointer;
+      margin-left: 12px;
     }
 
     .avatar-circle {
@@ -189,6 +325,12 @@
       transition: all 0.2s;
     }
 
+    .skill-item:hover {
+      background: #FDF5EC;
+      border-color: #D9A066;
+      transform: translateY(-2px);
+    }
+
     .skill-item:active {
       transform: scale(0.98);
     }
@@ -223,6 +365,9 @@
     /* 今日推荐区域 */
     .rec-section-header {
       margin: 4px 0 14px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .rec-section-header h2 {
@@ -237,6 +382,17 @@
     .rec-section-header h2 i {
       font-size: 20px;
       color: #D9A066;
+    }
+
+    .recommend-tip {
+      font-size: 13px;
+      color: #9B846C;
+      background: #F5EDE4;
+      padding: 5px 14px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .rec-cards {
@@ -254,6 +410,12 @@
       transition: all 0.15s;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
+    }
+
+    .rec-card:hover {
+      border-color: #D9A066;
+      box-shadow: 0 4px 12px rgba(217, 160, 102, 0.1);
     }
 
     .rec-card:active {
@@ -282,14 +444,14 @@
 
     .rec-title {
       font-weight: 700;
-      font-size: 15px;
+      font-size: 16px;
       color: #5E422C;
       line-height: 1.3;
     }
 
     .success-chip {
       background: #F8F2EA;
-      padding: 6px 14px;
+      padding: 8px 14px;
       border-radius: 40px;
       display: inline-flex;
       align-items: center;
@@ -331,11 +493,15 @@
       border: 1.5px solid #DDBB9A;
     }
 
+    .train-btn:hover {
+      background: linear-gradient(145deg, #EEDBC8, #E5CEB4);
+    }
+
     .train-btn:active {
       transform: scale(0.97);
     }
 
-    /* ========= 底部导航栏 - 图片风格 ========= */
+    /* ========= 底部导航栏 ========= */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -378,7 +544,6 @@
       transition: all 0.2s;
     }
 
-    /* 激活状态 */
     .nav-item.active i {
       color: #D9A066;
     }
@@ -391,15 +556,53 @@
       transform: scale(0.95);
     }
 
-    /* 额外留白 */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .spacer {
       height: 8px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      display: none;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .toast-message {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      padding: 12px 28px;
+      border-radius: 56px;
+      font-weight: 600;
+      color: #B4753E;
+      font-size: 15px;
+      z-index: 1000;
+      box-shadow: 0 10px 24px rgba(100, 70, 30, 0.15);
+      border: 1.5px solid #FFE4CA;
+      white-space: nowrap;
     }
   </style>
 </head>
 
 <body>
   <div class="dashboard">
+    <div class="overlay" id="overlay"></div>
+
     <!-- 滚动内容区域 -->
     <div class="scrollable-area">
       <!-- 头部区域 -->
@@ -414,39 +617,61 @@
           </div>
         </div>
 
-        <div class="center-title-wrapper">
-          <div class="main-title-center">
-            <i class="fas fa-heart"></i>
-            <span>暖愈成长空间</span>
+        <!-- 右侧区域 -->
+        <div class="header-right">
+          <!-- 孩子信息卡片 -->
+          <div class="child-info-card" id="childInfoCard">
+            <div class="child-avatar" id="currentChildAvatar">
+              <i class="fas fa-face-smile"></i>
+            </div>
+            <div class="child-details">
+              <div class="child-name-row">
+                <span class="child-name" id="currentChildName">乐乐</span>
+                <span class="child-age" id="currentChildAge">3岁</span>
+              </div>
+              <div class="switch-hint">
+                <i class="fas fa-chevron-down"></i>
+                <span>切换宝贝</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="parent-avatar" id="parentAvatarBtn">
-          <div class="avatar-circle">
-            <i class="fas fa-user-circle"></i>
+          <!-- 孩子切换下拉菜单 -->
+          <div class="child-switch-dropdown" id="childDropdown">
+            <div class="dropdown-header">
+              <i class="fas fa-users"></i> 我的宝贝们
+            </div>
+            <ul class="child-list" id="childList"></ul>
+          </div>
+
+          <!-- 家长头像 -->
+          <div class="parent-avatar" id="parentAvatarBtn">
+            <div class="avatar-circle">
+              <i class="fas fa-user-circle"></i>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- 金句横幅 -->
-      <div class="quote-banner">
+      <div class="quote-banner" id="quoteBanner">
         <i class="fas fa-leaf"></i>
-        <span>今天的陪伴，是孩子明天心里最暖的光</span>
+        <span id="quoteText">今天的陪伴，是孩子明天心里最暖的光</span>
       </div>
 
       <!-- 三大核心技能卡片 -->
       <div class="skills-wrapper">
-        <div class="skill-item" data-skill="叫名反应">
+        <div class="skill-item" data-game="name">
           <div class="skill-icon-bg"><i class="fas fa-ear-listen"></i></div>
           <h3>叫名反应</h3>
           <p>听觉·社交回应</p>
         </div>
-        <div class="skill-item" data-skill="指物练习">
+        <div class="skill-item" data-game="point">
           <div class="skill-icon-bg"><i class="fas fa-hand-peace"></i></div>
           <h3>指物练习</h3>
           <p>共同注意·表达</p>
         </div>
-        <div class="skill-item" data-skill="声音小话筒">
+        <div class="skill-item" data-game="mic">
           <div class="skill-icon-bg"><i class="fas fa-microphone-alt"></i></div>
           <h3>声音小话筒</h3>
           <p>发声启蒙·语言意愿</p>
@@ -456,59 +681,20 @@
       <!-- 今日推荐区域 -->
       <div class="rec-section-header">
         <h2><i class="fas fa-calendar-alt"></i> 今日推荐</h2>
+        <div class="recommend-tip" id="recommendTip">
+          <i class="fas fa-lightbulb"></i>
+          <span id="tipText">根据宝贝情况智能推荐</span>
+        </div>
       </div>
 
-      <div class="rec-cards">
-        <!-- 推荐1 叫名反应 -->
-        <div class="rec-card">
-          <div class="rec-top">
-            <div class="rec-icon-lg"><i class="fas fa-ear-deaf"></i></div>
-            <div class="rec-title">叫名反应<br>进阶游戏</div>
-          </div>
-          <div class="success-chip">
-            <i class="fas fa-chart-line"></i>
-            <span>上次成功率：<span class="rate-number">50%</span></span>
-          </div>
-          <button class="train-btn" data-training="叫名反应 · 进阶游戏">
-            <i class="fas fa-play-circle"></i> 开始训练
-          </button>
-        </div>
-
-        <!-- 推荐2 指物练习 -->
-        <div class="rec-card">
-          <div class="rec-top">
-            <div class="rec-icon-lg"><i class="fas fa-hand-peace"></i></div>
-            <div class="rec-title">指物练习<br>趣味指认</div>
-          </div>
-          <div class="success-chip">
-            <i class="fas fa-chart-line"></i>
-            <span>上次成功率：<span class="rate-number">62.5%</span></span>
-          </div>
-          <button class="train-btn" data-training="指物练习 · 趣味指认">
-            <i class="fas fa-play-circle"></i> 开始训练
-          </button>
-        </div>
-
-        <!-- 推荐3 声音小话筒 -->
-        <div class="rec-card">
-          <div class="rec-top">
-            <div class="rec-icon-lg"><i class="fas fa-microphone-alt"></i></div>
-            <div class="rec-title">声音小话筒<br>发声启蒙</div>
-          </div>
-          <div class="success-chip">
-            <i class="fas fa-chart-line"></i>
-            <span>上次成功率：<span class="rate-number">58.3%</span></span>
-          </div>
-          <button class="train-btn" data-training="声音小话筒 · 发声启蒙">
-            <i class="fas fa-play-circle"></i> 开始训练
-          </button>
-        </div>
+      <div class="rec-cards" id="recCardsContainer">
+        <!-- 动态生成推荐卡片 -->
       </div>
 
       <div class="spacer"></div>
     </div>
 
-    <!-- 底部导航栏 - 图片风格 -->
+    <!-- 底部导航栏 -->
     <div class="bottom-nav">
       <div class="nav-items">
         <div class="nav-item active" data-nav="首页">
@@ -532,50 +718,276 @@
   </div>
 
   <script>
-    // 获取所有导航项
-    const navItems = document.querySelectorAll('.nav-item');
+    (function () {
+      // 孩子数据
+      const childrenData = [
+        {
+          id: 1,
+          name: '乐乐',
+          age: '3岁',
+          birth: '2023-03-15',
+          icon: 'fa-face-smile',
+          quote: '乐乐在叫名反应上进步空间很大，今天多练练吧！'
+        },
+        {
+          id: 2,
+          name: '朵朵',
+          age: '2岁',
+          birth: '2024-01-20',
+          icon: 'fa-cat',
+          quote: '朵朵还小，叫名反应需要多些耐心和趣味引导哦~'
+        },
+        {
+          id: 3,
+          name: '阳阳',
+          age: '5岁',
+          birth: '2021-06-10',
+          icon: 'fa-dog',
+          quote: '阳阳表现很棒！今天可以挑战更高难度的练习~'
+        }
+      ];
 
-    // 设置激活样式
-    function setActiveNav(activeNavName) {
+      // 游戏映射
+      const gameMap = {
+        name: { title: '叫名反应', page: 'askName.html', icon: 'fa-ear-deaf' },
+        point: { title: '指物练习', page: 'touchGame.html', icon: 'fa-hand-peace' },
+        mic: { title: '声音小话筒', page: 'voice.html', icon: 'fa-microphone-alt' }
+      };
+
+      // 各孩子各游戏的模拟成功率
+      const gameRates = {
+        1: { name: '50%', point: '62.5%', mic: '58.3%' },
+        2: { name: '45%', point: '70%', mic: '52%' },
+        3: { name: '65%', point: '85%', mic: '68%' }
+      };
+
+      // 每个孩子的推荐顺序
+      const childRecommendations = {
+        1: { tip: '🎯 今日重点：叫名反应', cards: ['name', 'mic', 'point'] },
+        2: { tip: '🌟 今日重点：叫名反应', cards: ['name', 'point', 'mic'] },
+        3: { tip: '🏆 今日重点：声音小话筒', cards: ['mic', 'name', 'point'] }
+      };
+
+      let currentChildId = 1;
+
+      const childInfoCard = document.getElementById('childInfoCard');
+      const childDropdown = document.getElementById('childDropdown');
+      const overlay = document.getElementById('overlay');
+      const currentChildName = document.getElementById('currentChildName');
+      const currentChildAge = document.getElementById('currentChildAge');
+      const currentChildAvatar = document.getElementById('currentChildAvatar');
+      const childList = document.getElementById('childList');
+      const quoteText = document.getElementById('quoteText');
+      const tipText = document.getElementById('tipText');
+      const recCardsContainer = document.getElementById('recCardsContainer');
+
+      // 渲染推荐卡片
+      function renderRecommendationCards(childId) {
+        const child = childrenData.find(c => c.id === childId);
+        const recConfig = childRecommendations[childId];
+        const rates = gameRates[childId];
+
+        if (!recConfig || !rates) return;
+
+        tipText.textContent = recConfig.tip;
+
+        let cardsHtml = '';
+        recConfig.cards.forEach(gameKey => {
+          const game = gameMap[gameKey];
+          const rate = rates[gameKey];
+
+          cardsHtml += `
+            <div class="rec-card" data-game="${gameKey}">
+              <div class="rec-top">
+                <div class="rec-icon-lg"><i class="fas ${game.icon}"></i></div>
+                <div class="rec-title">${game.title}</div>
+              </div>
+              <div class="success-chip">
+                <i class="fas fa-chart-line"></i>
+                <span>上次成功率：<span class="rate-number" data-game="${gameKey}">${rate}</span></span>
+              </div>
+              <button class="train-btn" data-game="${gameKey}">
+                <i class="fas fa-play-circle"></i> 开始训练
+              </button>
+            </div>
+          `;
+        });
+
+        recCardsContainer.innerHTML = cardsHtml;
+        bindCardEvents();
+      }
+
+      // 更新当前显示的孩子信息
+      function updateCurrentChildDisplay(childId) {
+        const child = childrenData.find(c => c.id === childId);
+        if (!child) return;
+
+        currentChildName.textContent = child.name;
+        currentChildAge.textContent = child.age;
+
+        const avatarIcon = currentChildAvatar.querySelector('i');
+        if (avatarIcon) {
+          avatarIcon.className = `fas ${child.icon}`;
+        }
+
+        quoteText.textContent = child.quote;
+        renderRecommendationCards(childId);
+      }
+
+      // 渲染孩子列表
+      function renderChildList() {
+        childList.innerHTML = '';
+
+        childrenData.forEach(child => {
+          const li = document.createElement('li');
+          li.className = `child-list-item ${child.id === currentChildId ? 'active' : ''}`;
+          li.setAttribute('data-child-id', child.id);
+
+          li.innerHTML = `
+            <div class="list-avatar">
+              <i class="fas ${child.icon}"></i>
+            </div>
+            <div class="list-info">
+              <div class="list-name">${child.name}</div>
+              <div class="list-age">${child.age}</div>
+            </div>
+            ${child.id === currentChildId ? '<i class="fas fa-check-circle active-indicator"></i>' : ''}
+          `;
+
+          li.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newChildId = child.id;
+            if (newChildId !== currentChildId) {
+              currentChildId = newChildId;
+              updateCurrentChildDisplay(currentChildId);
+              renderChildList();
+            }
+            closeDropdown();
+            showToast(`✨ 已切换到${child.name}宝贝`);
+          });
+
+          childList.appendChild(li);
+        });
+      }
+
+      function showToast(msg) {
+        const existingToast = document.querySelector('.toast-message');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.style.cssText = `
+          position: absolute;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #FEF3E2;
+          padding: 12px 28px;
+          border-radius: 56px;
+          font-weight: 600;
+          color: #B4753E;
+          font-size: 15px;
+          z-index: 1000;
+          box-shadow: 0 10px 24px rgba(100, 70, 30, 0.15);
+          border: 1.5px solid #FFE4CA;
+          white-space: nowrap;
+        `;
+        toast.innerHTML = `<i class="fas fa-star"></i> ${msg}`;
+        document.querySelector('.dashboard').appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      function goToGame(gameKey) {
+        const child = childrenData.find(c => c.id === currentChildId);
+        const game = gameMap[gameKey];
+
+        if (game) {
+          showToast(`🎮 ${child.name}宝贝 · 进入${game.title}训练`);
+          setTimeout(() => {
+            location.href = game.page + `?childId=${currentChildId}&game=${gameKey}`;
+          }, 500);
+        }
+      }
+
+      function toggleDropdown(e) {
+        e.stopPropagation();
+        childDropdown.classList.toggle('show');
+        overlay.classList.toggle('show');
+      }
+
+      function closeDropdown() {
+        childDropdown.classList.remove('show');
+        overlay.classList.remove('show');
+      }
+
+      function bindCardEvents() {
+        document.querySelectorAll('.rec-card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            if (e.target.closest('.train-btn')) return;
+            e.stopPropagation();
+            const gameKey = card.getAttribute('data-game');
+            if (gameKey) goToGame(gameKey);
+          });
+        });
+
+        document.querySelectorAll('.train-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const gameKey = btn.getAttribute('data-game');
+            if (gameKey) goToGame(gameKey);
+          });
+        });
+      }
+
+      childInfoCard.addEventListener('click', toggleDropdown);
+      overlay.addEventListener('click', closeDropdown);
+
+      document.addEventListener('click', (e) => {
+        if (!childInfoCard.contains(e.target) && !childDropdown.contains(e.target)) {
+          closeDropdown();
+        }
+      });
+
+      document.querySelectorAll('.skill-item').forEach(card => {
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const gameKey = card.getAttribute('data-game');
+          if (gameKey) goToGame(gameKey);
+        });
+      });
+
+      const navItems = document.querySelectorAll('.nav-item');
       navItems.forEach(item => {
-        const itemName = item.getAttribute('data-nav');
-        if (itemName === activeNavName) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const navValue = item.getAttribute('data-nav');
+          if (navValue === '首页') {
+            location.href = 'mainPart.html';
+          } else if (navValue === '数据看板') {
+            location.href = 'dataLook.html';
+          } else if (navValue === '家长树洞') {
+            location.href = 'seniorHole.html';
+          } else if (navValue === '问卷筛查') {
+            location.href = 'askQuestions.html';
+          }
+        });
       });
-    }
 
-    // 绑定导航点击事件
-    navItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const navValue = item.getAttribute('data-nav');
-        // 根据 data-nav 的值跳转到对应 HTML 文件
-        if (navValue === '首页') {
-          location.href = 'mainPart.html';
-        } else if (navValue === '数据看板') {
-          location.href = 'dataLook.html';
-        } else if (navValue === '家长树洞') {
-          location.href = 'seniorHole.html';
-        } else if (navValue === '问卷筛查') {
-          location.href = 'askQuestions.html';
-        }
-      });
-    });
+      const parentAvatarBtn = document.getElementById('parentAvatarBtn');
+      if (parentAvatarBtn) {
+        parentAvatarBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          location.href = 'peopleHome.html';
+        });
+      }
 
-    // 个人头像点击跳转到 peopleHome.html
-    const parentAvatarBtn = document.getElementById('parentAvatarBtn');
-    if (parentAvatarBtn) {
-      parentAvatarBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        location.href = 'peopleHome.html';
-      });
-    }
+      // 初始化
+      renderChildList();
+      updateCurrentChildDisplay(currentChildId);
+      bindCardEvents();
 
-    console.log('✅ 底部导航栏 | 图片风格 | 无圆角无边框');
-    console.log('✅ 个人头像点击跳转 | peopleHome.html');
+      console.log('✅ 主界面 - 个性化推荐已启用');
+    })();
   </script>
 </body>
 

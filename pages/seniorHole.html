@@ -95,7 +95,7 @@
       color: #9BBF7A;
     }
 
-    .message-count {
+    .history-btn {
       background: #F5EDE4;
       padding: 8px 18px;
       border-radius: 40px;
@@ -104,6 +104,14 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .history-btn:hover {
+      background: #EDDFD0;
+      border-color: #DDBB9A;
     }
 
     /* 主要内容区 - 左右布局 */
@@ -230,6 +238,18 @@
       font-size: 14px;
       font-weight: 700;
       color: #6C4F32;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .my-message-badge {
+      background: #D9A066;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 9px;
+      font-weight: 600;
     }
 
     .message-time {
@@ -319,6 +339,14 @@
 
     .message-action i {
       font-size: 13px;
+    }
+
+    .delete-action {
+      margin-left: auto;
+    }
+
+    .delete-action:hover {
+      color: #C06060;
     }
 
     /* 右侧发布区 */
@@ -509,6 +537,150 @@
       color: #B89A78;
     }
 
+    /* 历史记录弹窗 */
+    .history-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(60, 40, 28, 0.3);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .history-modal.show {
+      display: flex;
+    }
+
+    .history-panel {
+      background: #FFFDF9;
+      border-radius: 36px;
+      padding: 24px;
+      max-width: 480px;
+      width: 90%;
+      max-height: 500px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .history-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6C4F32;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-header h3 i {
+      color: #D9A066;
+    }
+
+    .close-history {
+      width: 36px;
+      height: 36px;
+      background: #F5EDE4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B88B5C;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+    }
+
+    .close-history:hover {
+      background: #EDDFD0;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
+    .history-item {
+      background: #FEFCF9;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      border: 1.5px solid #F0DDCB;
+    }
+
+    .history-item-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .history-tag {
+      background: #FDF5EC;
+      padding: 3px 10px;
+      border-radius: 16px;
+      font-size: 11px;
+      color: #9B7B5E;
+    }
+
+    .history-time {
+      font-size: 11px;
+      color: #B89A78;
+      margin-left: auto;
+    }
+
+    .history-content {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #5F4230;
+      margin-bottom: 10px;
+    }
+
+    .history-ai-reply {
+      background: linear-gradient(135deg, #F8F2E8 0%, #F2E8D8 100%);
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #6C4F32;
+      border-left: 3px solid #9BBF7A;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #B89A78;
+    }
+
+    .history-empty i {
+      font-size: 40px;
+      color: #E0CDB8;
+      margin-bottom: 12px;
+    }
+
     /* ========= 底部导航栏 - 与首页完全一致的图片风格 ========= */
     .bottom-nav {
       position: absolute;
@@ -605,9 +777,9 @@
           <i class="fas fa-user-secret"></i>
           <span>匿名模式已开启</span>
         </div>
-        <div class="message-count">
-          <i class="fas fa-comments"></i>
-          <span id="messageCount">4</span> 条留言
+        <div class="history-btn" id="historyBtn">
+          <i class="fas fa-history"></i>
+          <span>历史记录</span>
         </div>
       </div>
     </div>
@@ -672,6 +844,21 @@
       </div>
     </div>
 
+    <!-- 历史记录弹窗 -->
+    <div class="history-modal" id="historyModal">
+      <div class="history-panel">
+        <div class="history-header">
+          <h3><i class="fas fa-history"></i> 我的历史记录</h3>
+          <button class="close-history" id="closeHistoryBtn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="history-list" id="historyList">
+          <!-- 历史记录会动态渲染到这里 -->
+        </div>
+      </div>
+    </div>
+
     <!-- 底部导航栏 - 与首页完全一致的图片风格 -->
     <div class="bottom-nav">
       <div class="nav-items">
@@ -718,7 +905,25 @@
         ]
       };
 
-      // 预设留言数据 - 全部使用匿名昵称
+      // 家长自己发布的历史记录
+      let myHistory = [
+        {
+          id: 101,
+          time: '昨天 14:23',
+          tag: '育儿困惑',
+          content: '孩子最近不爱说话，叫他也经常不理，有点担心是不是发育迟缓...',
+          aiReply: '每个孩子的发展节奏都不同，有些孩子确实会慢一些。建议可以多观察，如果持续担心，可以咨询专业医生做个评估。你已经很细心了，别太焦虑。'
+        },
+        {
+          id: 102,
+          time: '3天前 09:15',
+          tag: '情绪压力',
+          content: '最近工作压力大，回家还要照顾孩子，感觉快要撑不住了...',
+          aiReply: '你真的很不容易，同时兼顾工作和家庭是很大的挑战。记得给自己留一点喘息的时间，哪怕只是喝杯茶、听首歌。照顾好自己才能更好地照顾孩子。'
+        }
+      ];
+
+      // 预设留言数据 - 社区留言
       let messages = [
         {
           id: 1,
@@ -729,7 +934,8 @@
           content: '孩子最近总是注意力不集中，教他认东西一会儿就跑开了，有时候真的很焦虑，不知道是不是自己做得不够好...',
           aiReply: '亲爱的，孩子的注意力时间本来就比较短，这是正常的发育特点。你愿意花时间陪伴和教导，已经是非常棒的家长了！试着把学习变成游戏，每次5-10分钟就足够了。你做得很好，请相信自己。',
           likes: 24,
-          comments: 5
+          comments: 5,
+          isMine: false
         },
         {
           id: 2,
@@ -740,7 +946,8 @@
           content: '今天带孩子做康复训练，看到他不太配合，我突然就崩溃哭了。有时候真的觉得好累，但又不敢停下来...',
           aiReply: '哭出来没关系的，你不需要一直坚强。长期照顾孩子确实会消耗大量的精力，你的感受是完全正常的。记得也要照顾好自己的情绪，偶尔给自己放个小假。你已经非常了不起了，真的。',
           likes: 56,
-          comments: 12
+          comments: 12,
+          isMine: false
         },
         {
           id: 3,
@@ -751,7 +958,8 @@
           content: '今天宝贝主动叫了一声"妈妈"，虽然发音还不太清楚，但我真的激动得哭了。这一路走来太不容易了，想和树洞里的大家分享这份喜悦。',
           aiReply: '太为你开心了！这一刻的感动值得被永远珍藏。每一个小小的进步背后，都是你和孩子无数次的努力。请继续相信，未来还会有更多惊喜等着你们。',
           likes: 89,
-          comments: 15
+          comments: 15,
+          isMine: false
         },
         {
           id: 4,
@@ -762,7 +970,8 @@
           content: '和另一半在教育理念上总是有分歧，我觉得应该多干预，他觉得顺其自然就好。经常为这个争吵，感觉很无力...',
           aiReply: '教育理念的差异在很多家庭都存在，你们都是为了孩子好，只是方式不同。或许可以找个时间坐下来，不带评判地聊聊各自的想法，找到一个折中的平衡点。你们都深爱着孩子，这就是最好的基础。',
           likes: 42,
-          comments: 8
+          comments: 8,
+          isMine: false
         }
       ];
 
@@ -772,9 +981,12 @@
       const messagesList = document.getElementById('messagesList');
       const messageInput = document.getElementById('messageInput');
       const publishBtn = document.getElementById('publishBtn');
-      const messageCountSpan = document.getElementById('messageCount');
       const tagItems = document.querySelectorAll('.tag-item');
       const filterTabs = document.querySelectorAll('.filter-tab');
+      const historyBtn = document.getElementById('historyBtn');
+      const historyModal = document.getElementById('historyModal');
+      const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+      const historyList = document.getElementById('historyList');
 
       function getAIReply(tag, content) {
         const repliesForTag = aiReplies[tag] || aiReplies.default;
@@ -804,7 +1016,10 @@
               <div class="message-header">
                 <div class="user-avatar">${msg.avatar}</div>
                 <div class="user-info">
-                  <div class="user-name">${msg.user}</div>
+                  <div class="user-name">
+                    ${msg.user}
+                    ${msg.isMine ? '<span class="my-message-badge">我的留言</span>' : ''}
+                  </div>
                   <div class="message-time">${msg.time}</div>
                 </div>
                 <span class="message-tag">${msg.tag}</span>
@@ -825,12 +1040,15 @@
                 <span class="message-action" data-id="${msg.id}" data-action="comment">
                   <i class="far fa-comment"></i> ${msg.comments} 回复
                 </span>
+                ${msg.isMine ? `
+                  <span class="message-action delete-action" data-id="${msg.id}" data-action="delete">
+                    <i class="far fa-trash-alt"></i> 删除
+                  </span>
+                ` : ''}
               </div>
             </div>
           `).join('');
         }
-
-        messageCountSpan.textContent = messages.length;
 
         document.querySelectorAll('.message-action[data-action="like"]').forEach(btn => {
           btn.addEventListener('click', function () {
@@ -843,6 +1061,50 @@
             }
           });
         });
+
+        document.querySelectorAll('.message-action[data-action="delete"]').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = parseInt(this.dataset.id);
+            const index = messages.findIndex(m => m.id === id);
+            if (index !== -1) {
+              // 同时从历史记录中删除
+              const historyIndex = myHistory.findIndex(h => h.id === id);
+              if (historyIndex !== -1) {
+                myHistory.splice(historyIndex, 1);
+              }
+              messages.splice(index, 1);
+              renderMessages(currentFilter);
+              renderHistory();
+              showToast('🗑️ 留言已删除');
+            }
+          });
+        });
+      }
+
+      function renderHistory() {
+        if (myHistory.length === 0) {
+          historyList.innerHTML = `
+            <div class="history-empty">
+              <i class="fas fa-inbox"></i>
+              <p>暂无历史记录</p>
+              <p style="font-size:12px; margin-top:6px;">发布留言后会在这里显示</p>
+            </div>
+          `;
+        } else {
+          historyList.innerHTML = myHistory.map(item => `
+            <div class="history-item">
+              <div class="history-item-header">
+                <span class="history-tag">${item.tag}</span>
+                <span class="history-time">${item.time}</span>
+              </div>
+              <div class="history-content">${item.content}</div>
+              <div class="history-ai-reply">
+                <i class="fas fa-robot" style="margin-right: 6px; color: #9BBF7A;"></i>
+                ${item.aiReply}
+              </div>
+            </div>
+          `).join('');
+        }
       }
 
       function showToast(msg, bg = '#FEF3E2') {
@@ -868,26 +1130,38 @@
           return;
         }
 
-        // 全部使用匿名昵称
-        const anonymousNames = ['树洞小熊', '树洞小兔', '树洞小猫', '树洞小鹿', '树洞小象', '树洞狐狸', '树洞熊猫', '树洞企鹅'];
-        const anonymousAvatars = ['🧸', '🐰', '🐱', '🦌', '🐘', '🦊', '🐼', '🐧'];
-        const randomIndex = Math.floor(Math.random() * anonymousNames.length);
+        const isAnonymous = document.getElementById('anonymousCheck').checked;
+        const newId = Math.max(...messages.map(m => m.id), 0) + 1;
+        const aiReply = getAIReply(selectedTag, content);
+        const now = new Date();
+        const timeStr = '刚刚';
 
         const newMessage = {
-          id: messages.length + 1,
-          user: anonymousNames[randomIndex],
-          avatar: anonymousAvatars[randomIndex],
-          time: '刚刚',
+          id: newId,
+          user: isAnonymous ? '树洞小星' : '我',
+          avatar: isAnonymous ? '🌟' : '👤',
+          time: timeStr,
           tag: selectedTag,
           content: content,
-          aiReply: getAIReply(selectedTag, content),
-          likes: Math.floor(Math.random() * 5),
-          comments: 0
+          aiReply: aiReply,
+          likes: 0,
+          comments: 0,
+          isMine: true
         };
+
+        // 添加到历史记录
+        myHistory.unshift({
+          id: newId,
+          time: `${now.getMonth() + 1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`,
+          tag: selectedTag,
+          content: content,
+          aiReply: aiReply
+        });
 
         messages.unshift(newMessage);
         messageInput.value = '';
         renderMessages(currentFilter);
+        renderHistory();
         messagesList.scrollTop = 0;
         showToast('🌳 你的心事已放入树洞，AI正在暖心回复中...', '#E8F0D8');
 
@@ -926,10 +1200,25 @@
         }
       });
 
-      // ========= 底部导航栏 - 与首页完全一致的跳转逻辑 =========
+      // 历史记录弹窗
+      historyBtn.addEventListener('click', () => {
+        renderHistory();
+        historyModal.classList.add('show');
+      });
+
+      closeHistoryBtn.addEventListener('click', () => {
+        historyModal.classList.remove('show');
+      });
+
+      historyModal.addEventListener('click', (e) => {
+        if (e.target === historyModal) {
+          historyModal.classList.remove('show');
+        }
+      });
+
+      // ========= 底部导航栏 =========
       const navItems = document.querySelectorAll('.nav-item');
 
-      // 设置激活样式（只有颜色变化）
       function setActiveNav(activeNavName) {
         navItems.forEach(item => {
           const itemName = item.getAttribute('data-nav');
@@ -941,7 +1230,6 @@
         });
       }
 
-      // 绑定导航点击事件 - 跳转到对应页面
       navItems.forEach(item => {
         item.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -951,14 +1239,13 @@
           } else if (navValue === 'dashboard') {
             location.href = 'dataLook.html';
           } else if (navValue === 'treehole') {
-            location.href = 'seniorHole.html';  // 刷新当前页，保持一致性
+            location.href = 'seniorHole.html';
           } else if (navValue === 'survey') {
             location.href = 'askQuestions.html';
           }
         });
       });
 
-      // 根据当前页面高亮对应的导航项
       function highlightCurrentNav() {
         const currentPage = window.location.pathname.split('/').pop();
         if (currentPage === 'mainPart.html') {
@@ -974,6 +1261,7 @@
       highlightCurrentNav();
 
       renderMessages();
+      renderHistory();
     })();
   </script>
 </body>

@@ -3,891 +3,891 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>星伴 · 叫名反应训练 | 高保真游戏界面</title>
-  <!-- 字体与图标库 -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>星伴 · 叫名反应训练</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      user-select: none;
     }
 
     body {
-      background: #F2EFEA;
+      background: #D9CBBF;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-      padding: 20px;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      padding: 12px;
     }
 
+    /* 固定容器 1024×600 */
     .game-container {
-      max-width: 780px;
-      width: 100%;
-      background: #FFFCF8;
-      border-radius: 52px;
-      box-shadow: 0 25px 45px -12px rgba(68, 48, 28, 0.25), 0 0 0 1px rgba(239, 222, 198, 0.5);
-      overflow: hidden;
-      transition: all 0.2s;
-    }
-
-    .game-main {
-      padding: 24px 28px 32px;
+      width: 1024px;
+      height: 600px;
+      background: #FFFDF9;
+      border-radius: 48px;
+      box-shadow: 0 30px 45px -12px rgba(78, 55, 36, 0.2);
+      padding: 20px 28px;
+      border: 1px solid #F0E2D4;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      overflow: hidden;
     }
 
+    /* 头部 */
     .game-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
       gap: 12px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
-    /* 新增游戏名称区域 */
-    .game-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, #FDF5EC 0%, #FFF8F2 100%);
-      padding: 6px 20px 6px 16px;
-      border-radius: 60px;
-      border: 1.5px solid #F0DCC8;
-      box-shadow: 0 4px 8px rgba(168, 122, 82, 0.06);
-    }
-
-    .game-title i {
-      font-size: 26px;
-      color: #D49B6A;
-    }
-
-    .game-title h1 {
-      font-size: 20px;
-      font-weight: 700;
-      color: #5C3F2B;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-    }
-
-    .game-title .sub-icon {
-      font-size: 22px;
-      margin-left: 4px;
-    }
-
-    .back-btn,
-    .settings-btn {
-      background: #F5EFE8;
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 30px;
+    .back-btn {
+      width: 42px;
+      height: 42px;
+      background: #F5E8DA;
+      border-radius: 21px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      color: #B18B60;
+      font-size: 18px;
+      color: #B47C44;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.2s;
+      border: 1.5px solid #EDD9C6;
+      text-decoration: none;
+      flex-shrink: 0;
     }
 
-    .back-btn:active,
-    .settings-btn:active {
-      background: #EADCCE;
-      transform: scale(0.95);
+    .back-btn:hover {
+      background: #EDD9C6;
     }
 
-    .game-status {
-      display: flex;
-      gap: 16px;
-      background: #F8F2EA;
-      padding: 8px 18px;
-      border-radius: 40px;
+    .game-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #5E422C;
     }
 
-    .game-status span {
-      font-size: 14px;
-      font-weight: 600;
-      color: #8B6F4C;
+    .child-badge {
+      margin-left: auto;
+      background: #FDF5EC;
+      padding: 6px 16px;
+      border-radius: 30px;
+      border: 1.5px solid #EDD9C6;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .game-status i {
-      font-size: 14px;
+    .child-badge i {
+      color: #D9A066;
+      font-size: 18px;
     }
 
-    .record-dot {
-      width: 10px;
-      height: 10px;
-      background: #E55A4A;
-      border-radius: 10px;
-      display: inline-block;
-      animation: pulse 1.2s infinite;
+    .child-badge span {
+      font-weight: 600;
+      color: #5E422C;
+      font-size: 15px;
     }
 
-    @keyframes pulse {
-      0% {
-        opacity: 0.4;
-        transform: scale(0.8);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1.2);
-      }
-    }
-
-    .interaction-area {
+    /* 两列布局 */
+    .two-column-layout {
       display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+      margin-bottom: 12px;
     }
 
-    .camera-preview {
-      flex: 1.2;
-      background: #2C241A;
-      border-radius: 36px;
-      overflow: hidden;
-      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
-      position: relative;
-      aspect-ratio: 4 / 3;
-      border: 2px solid #F0DFCE;
-    }
-
-    .camera-placeholder {
-      width: 100%;
-      height: 100%;
-      background: #1E1914;
+    /* 左侧摄像头区域 - 占60% */
+    .camera-area {
+      flex: 6;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #DBC8B2;
-      font-size: 14px;
+      gap: 8px;
+    }
+
+    .camera-card {
+      background: #F5E8DA;
+      border-radius: 24px;
+      padding: 12px;
+      border: 2px solid #EDD9C6;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-wrapper {
       position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #2A1F16;
+      flex: 1;
+      min-height: 0;
     }
 
     #videoElement {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scaleX(-1);
-      display: none;
+      display: block;
     }
 
-    .detection-overlay {
+    #canvasElement {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(6px);
-      padding: 6px 12px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #FFE5C4;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .face-mesh-tip {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(79, 70, 229, 0.8);
-      padding: 4px 10px;
-      border-radius: 40px;
-      font-size: 10px;
-      color: white;
-      font-weight: 600;
-      backdrop-filter: blur(4px);
-      pointer-events: none;
-    }
-
-    .character-area {
-      flex: 1;
-      background: #FEF7EF;
-      border-radius: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 16px;
-      box-shadow: inset 0 0 0 1px #FFF3E6, 0 8px 20px rgba(0, 0, 0, 0.02);
-      border: 1px solid #F2E3D4;
-    }
-
-    .character-icon {
-      font-size: 88px;
-      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.1));
-      margin-bottom: 8px;
-    }
-
-    .callout-text {
-      font-size: 28px;
-      font-weight: 800;
-      color: #A57248;
-      background: #FFF1E2;
-      padding: 12px 24px;
-      border-radius: 60px;
-      margin: 12px 0;
-      letter-spacing: 2px;
-    }
-
-    .voice-hint {
-      font-size: 16px;
-      color: #C29A6B;
-      background: #FFF3E6;
-      padding: 8px 20px;
-      border-radius: 40px;
-      font-weight: 500;
-    }
-
-    .stats-panel {
-      background: #FBF7F2;
-      border-radius: 36px;
-      padding: 20px;
-      border: 1px solid #F0E4D8;
-    }
-
-    .round-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      font-weight: 700;
-      color: #5E432E;
-    }
-
-    .progress-bar-bg {
-      background: #EADDCB;
-      border-radius: 20px;
-      height: 12px;
-      overflow: hidden;
-      margin: 10px 0 14px;
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: #D9A56C;
-      border-radius: 20px;
-      transition: width 0.3s;
-    }
-
-    .success-badge {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .skip-btn {
-      background: #F0E2D4;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 48px;
-      font-weight: 700;
-      font-size: 16px;
-      color: #A57248;
-      width: 100%;
-      margin-top: 16px;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-
-    .skip-btn:active {
-      background: #E3D1BF;
-      transform: scale(0.97);
-    }
-
-    /* 结果弹窗 */
-    .result-modal-overlay {
-      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(30, 25, 20, 0.6);
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 0.25s ease, visibility 0.25s;
+      pointer-events: none;
     }
 
-    .result-modal {
-      background: #FFFCF8;
-      max-width: 400px;
-      width: 90%;
-      border-radius: 48px;
-      padding: 32px 28px;
-      box-shadow: 0 35px 50px -20px #2f1e0e;
-      text-align: center;
-      border: 1px solid #F2DBC8;
-      transform: scale(0.96);
-      transition: transform 0.2s;
-    }
-
-    .result-modal-overlay.show {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .result-modal-overlay.show .result-modal {
-      transform: scale(1);
-    }
-
-    .name-response-icon {
-      font-size: 70px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      background: #FDF2E5;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 8px 28px;
-      border-radius: 60px;
-      box-shadow: 0 6px 0 #EAD1BA;
-    }
-
-    .name-response-icon i {
-      font-size: 52px;
-      color: #D49B6A;
-      filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.05));
-    }
-
-    .name-response-icon span {
-      font-size: 48px;
-      line-height: 1;
-    }
-
-    .result-title {
-      font-size: 28px;
-      font-weight: 800;
-      color: #5A3F2B;
-      margin: 18px 0 12px;
-    }
-
-    .result-stats {
-      background: #F9EFE6;
-      border-radius: 30px;
-      padding: 18px 10px;
-      margin: 20px 0 24px;
-    }
-
-    .stat-row {
+    .camera-status-bar {
       display: flex;
       justify-content: space-between;
-      font-size: 18px;
-      padding: 8px 16px;
-      font-weight: 500;
-      color: #6F4F32;
+      align-items: center;
+      margin-top: 8px;
+      padding: 0 4px;
     }
 
-    .stat-highlight {
-      font-size: 38px;
-      font-weight: 800;
-      color: #C28550;
-      line-height: 1.2;
-    }
-
-    .modal-actions {
+    .status-badge {
       display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #8F6A44;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    /* 右侧信息区 - 占40% */
+    .info-area {
+      flex: 4;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .modal-btn {
+    /* 呼唤卡片 */
+    .prompt-card {
+      background: linear-gradient(135deg, #FFF3E8, #FDE8D6);
+      border-radius: 24px;
+      padding: 18px 16px;
+      border: 2px solid #F0D5BD;
+      text-align: center;
+    }
+
+    .call-message {
+      font-size: 28px;
+      font-weight: 700;
+      color: #B47C44;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .call-sub {
+      font-size: 14px;
+      color: #9B846C;
+    }
+
+    /* 统计卡片 */
+    .stats-grid {
+      display: flex;
+      gap: 10px;
+    }
+
+    .stat-card {
       flex: 1;
-      padding: 16px 0;
-      border-radius: 60px;
-      border: none;
+      background: #FEFCF8;
+      border-radius: 20px;
+      padding: 14px 8px;
+      text-align: center;
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #9B846C;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #D9A066;
+      line-height: 1.2;
+    }
+
+    .stat-unit {
+      font-size: 12px;
+      color: #A68A6F;
+      margin-left: 2px;
+    }
+
+    /* 检测结果面板 */
+    .result-panel {
+      background: #FCF8F2;
+      border-radius: 20px;
+      padding: 14px 16px;
+      border: 1.5px solid #F0E2D4;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #5E422C;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .result-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .detection-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #CCC;
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-indicator.active {
+      background: #4CAF50;
+    }
+
+    .status-indicator.success {
+      background: #FF9800;
+    }
+
+    .status-text {
+      font-size: 15px;
+      color: #5E422C;
+      font-weight: 500;
+    }
+
+    .progress-bar-container {
+      margin-top: 8px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8F6A44;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: #EDD9C6;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #D9A066, #E7B87B);
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* 操作按钮 */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 36px;
       font-weight: 700;
-      font-size: 18px;
-      background: #F5E6D9;
-      color: #7B5B3F;
+      font-size: 14px;
       cursor: pointer;
-      transition: 0.15s;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
     }
 
-    .modal-btn.primary {
-      background: #D4A373;
-      color: white;
-      box-shadow: 0 6px 0 #A57B52;
+    .btn-primary {
+      background: linear-gradient(145deg, #EADBCA, #E0CDB6);
+      color: #6C4E32;
+      border: 1.5px solid #DDBB9A;
     }
 
-    .modal-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 4px 0 #A57B52;
+    .btn-primary:hover {
+      background: linear-gradient(145deg, #EEDBC8, #E5CEB4);
     }
 
-    .feedback-toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #FEF1E2;
-      backdrop-filter: blur(12px);
-      padding: 12px 28px;
-      border-radius: 60px;
-      font-weight: 700;
-      color: #B5723E;
-      font-size: 18px;
-      z-index: 200;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      border: 1px solid #FFE3C9;
-      pointer-events: none;
-      white-space: nowrap;
+    .btn-secondary {
+      background: #F5E8DA;
+      color: #8F6A44;
+      border: 1.5px solid #EDD9C6;
     }
 
-    @media (max-width: 650px) {
-      .game-main {
-        padding: 18px;
+    .btn-secondary:hover {
+      background: #EDD9C6;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* 底部提示 */
+    .footer-tip {
+      padding: 8px 16px;
+      background: #FCF8F2;
+      border-radius: 20px;
+      color: #8F6A44;
+      font-size: 12px;
+      text-align: center;
+      border: 1px solid #F0E2D4;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
       }
 
-      .game-title h1 {
-        font-size: 16px;
-        white-space: normal;
+      50% {
+        opacity: 0.5;
       }
+    }
 
-      .callout-text {
-        font-size: 20px;
-        padding: 8px 16px;
-      }
-
-      .character-icon {
-        font-size: 64px;
-      }
+    .fa-spin {
+      animation: fa-spin 1s infinite linear;
     }
   </style>
+  <!-- MediaPipe 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
   <div class="game-container">
-    <div class="game-main">
-      <!-- 头部：左侧返回 + 游戏名称(新增) + 右侧状态与暂停 -->
-      <div class="game-header">
-        <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+    <!-- 头部 -->
+    <div class="game-header">
+      <a href="mainPart.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1>⭐ 叫名反应训练</h1>
+      <div class="child-badge" id="childBadge">
+        <i class="fas fa-face-smile"></i>
+        <span id="childDisplayName">乐乐</span>
+      </div>
+    </div>
 
-        <!-- 游戏名称区域（醒目） -->
-        <div class="game-title">
-          <i class="fas fa-cat"></i>
-          <h1>星伴 · 叫名反应训练</h1>
-          <span class="sub-icon">🧸</span>
-        </div>
-
-        <div style="display: flex; gap: 12px;">
-          <div class="game-status">
-            <span><i class="fas fa-video"></i> 录制中 <span class="record-dot"></span></span>
-            <span><i class="fas fa-hourglass-half"></i> 约3-5分钟</span>
+    <!-- 两列布局 -->
+    <div class="two-column-layout">
+      <!-- 左侧：摄像头 -->
+      <div class="camera-area">
+        <div class="camera-card">
+          <div class="video-wrapper">
+            <video id="videoElement" autoplay playsinline></video>
+            <canvas id="canvasElement"></canvas>
           </div>
-          <button class="settings-btn" id="pauseBtn"><i class="fas fa-pause"></i></button>
+          <div class="camera-status-bar">
+            <div class="status-badge" id="cameraStatus">
+              <i class="fas fa-video"></i>
+              <span>等待摄像头授权...</span>
+            </div>
+            <div class="status-badge" id="headPoseStatus">
+              <i class="fas fa-user"></i>
+              <span>等待检测</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="interaction-area">
-        <div class="camera-preview">
-          <div class="camera-placeholder" id="cameraPlaceholder">
-            <i class="fas fa-camera" style="font-size: 36px; margin-bottom: 8px;"></i>
-            <span>等待摄像头授权...</span>
+      <!-- 右侧：信息面板 -->
+      <div class="info-area">
+        <!-- 呼唤卡片 -->
+        <div class="prompt-card">
+          <div class="call-message" id="callMessage">
+            <i class="fas fa-star"></i> 乐乐！看这里~
           </div>
-          <video id="videoElement" autoplay playsinline muted></video>
-          <div class="detection-overlay" id="detectionStatus">
-            <i class="fas fa-circle-nodes"></i> 头部检测: 等待中
-          </div>
-          <div class="face-mesh-tip">
-            <i class="fas fa-face-smile"></i> MediaPipe 实时分析
+          <div class="call-sub" id="callSubMessage">
+            <i class="fas fa-cat"></i> 小猫正在叫你
           </div>
         </div>
 
-        <div class="character-area" id="characterArea">
-          <div class="character-icon" id="characterIcon">🐱</div>
-          <div class="callout-text" id="calloutText">小明！看这里～</div>
-          <div class="voice-hint" id="voiceHint"><i class="fas fa-volume-up"></i> 小猫正在叫你</div>
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">本轮</div>
+            <div class="stat-value" id="roundDisplay">1/8</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">成功</div>
+            <div class="stat-value" id="successCount">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">反应</div>
+            <div class="stat-value" id="reactionTime">—<span class="stat-unit">秒</span></div>
+          </div>
         </div>
-      </div>
 
-      <div class="stats-panel">
-        <div class="round-info">
-          <span>🎯 本轮训练</span>
-          <span id="roundCounter">第 1 / 8 轮</span>
+        <!-- 检测结果面板 -->
+        <div class="result-panel">
+          <div class="result-title">
+            <i class="fas fa-chart-line"></i> 实时检测结果
+          </div>
+          <div class="result-content">
+            <div class="detection-status">
+              <div class="status-indicator" id="statusIndicator"></div>
+              <span class="status-text" id="detectionResultText">等待开始训练</span>
+            </div>
+
+            <div class="progress-bar-container">
+              <div class="progress-label">
+                <span>训练进度</span>
+                <span id="progressPercent">0%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div style="margin-top: 12px; font-size: 13px; color: #8F6A44;" id="additionalInfo">
+              <i class="fas fa-info-circle"></i> 等待宝贝转头回应
+            </div>
+          </div>
         </div>
-        <div class="progress-bar-bg">
-          <div class="progress-fill" id="progressFill" style="width: 12.5%;"></div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="skipBtn">
+            <i class="fas fa-forward"></i> 跳过本轮
+          </button>
+          <button class="btn btn-primary" id="startBtn">
+            <i class="fas fa-play"></i> 开始训练
+          </button>
         </div>
-        <div class="success-badge">
-          <span><i class="fas fa-check-circle"></i> 成功次数: <strong id="successCount">0</strong></span>
-          <span><i class="fas fa-stopwatch"></i> 本轮反应: <span id="reactionTime">—</span> 秒</span>
-        </div>
-        <button class="skip-btn" id="skipBtn"><i class="fas fa-forward-step"></i> 跳过本轮</button>
       </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="footer-tip">
+      <i class="fas fa-lightbulb"></i> 让宝贝面对镜头，当听到名字时转头看向屏幕
     </div>
   </div>
 
-  <!-- 结果弹窗（居中，带叫名反应图标） -->
-  <div class="result-modal-overlay" id="resultModalOverlay">
-    <div class="result-modal">
-      <div class="name-response-icon">
-        <i class="fas fa-ear-listen"></i>
-        <span>🧸</span>
-        <i class="fas fa-face-smile-wink"></i>
-      </div>
-      <div class="result-title" id="resultTitle">✨ 训练完成 ✨</div>
-      <div class="result-stats">
-        <div class="stat-row"><span>成功次数</span> <span id="modalSuccess">0/8</span></div>
-        <div class="stat-row" style="margin-top: 10px;"><span>叫名反应率</span> <span class="stat-highlight"
-            id="modalRate">0%</span></div>
-        <div class="stat-row"><span>平均反应时间</span> <span id="modalAvgTime">—</span></div>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn" id="modalReplay"><i class="fas fa-rotate-right"></i> 再来一次</button>
-        <button class="modal-btn primary" id="modalBackHome"><i class="fas fa-home"></i> 返回主页</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script>
     (function () {
-      "use strict";
+      // 获取URL参数
+      const urlParams = new URLSearchParams(window.location.search);
+      const childId = urlParams.get('childId') || '1';
+      const gameType = urlParams.get('game') || 'name';
 
+      // 孩子数据
+      const childrenData = {
+        1: { name: '乐乐', icon: 'fa-face-smile' },
+        2: { name: '朵朵', icon: 'fa-cat' },
+        3: { name: '阳阳', icon: 'fa-dog' }
+      };
+
+      // 更新显示的孩子信息
+      const child = childrenData[childId] || childrenData[1];
+      document.getElementById('childDisplayName').textContent = child.name;
+      const badgeIcon = document.querySelector('#childBadge i');
+      if (badgeIcon) {
+        badgeIcon.className = `fas ${child.icon}`;
+      }
+
+      // DOM元素
       const videoElement = document.getElementById('videoElement');
-      const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-      const detectionStatusSpan = document.getElementById('detectionStatus');
-      const roundCounterSpan = document.getElementById('roundCounter');
-      const progressFill = document.getElementById('progressFill');
-      const successCountSpan = document.getElementById('successCount');
-      const reactionTimeSpan = document.getElementById('reactionTime');
+      const canvasElement = document.getElementById('canvasElement');
+      const canvasCtx = canvasElement.getContext('2d');
+      const cameraStatus = document.querySelector('#cameraStatus span');
+      const headPoseStatus = document.querySelector('#headPoseStatus span');
+      const callMessage = document.getElementById('callMessage');
+      const callSubMessage = document.getElementById('callSubMessage');
+      const roundDisplay = document.getElementById('roundDisplay');
+      const successCountDisplay = document.getElementById('successCount');
+      const reactionTimeDisplay = document.getElementById('reactionTime');
+      const startBtn = document.getElementById('startBtn');
       const skipBtn = document.getElementById('skipBtn');
-      const backBtn = document.getElementById('backBtn');
-      const pauseBtn = document.getElementById('pauseBtn');
-      const characterIcon = document.getElementById('characterIcon');
-      const calloutText = document.getElementById('calloutText');
-      const resultModalOverlay = document.getElementById('resultModalOverlay');
-      const modalSuccess = document.getElementById('modalSuccess');
-      const modalRate = document.getElementById('modalRate');
-      const modalAvgTime = document.getElementById('modalAvgTime');
-      const modalReplay = document.getElementById('modalReplay');
-      const modalBackHome = document.getElementById('modalBackHome');
+      const detectionResultText = document.getElementById('detectionResultText');
+      const statusIndicator = document.getElementById('statusIndicator');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercent = document.getElementById('progressPercent');
+      const additionalInfo = document.getElementById('additionalInfo');
 
+      // 更新呼唤消息中的名字
+      callMessage.innerHTML = `<i class="fas fa-star"></i> ${child.name}！看这里~`;
+
+      // 状态变量
+      let faceMesh = null;
+      let isCameraReady = false;
+      let isTraining = false;
       let currentRound = 1;
       const totalRounds = 8;
-      let successRounds = 0;
-      let roundActive = true;
-      let roundStartTime = 0;
-      let detectionTimer = null;
-      let isPaused = false;
-      let isGameActive = true;
-      let hasTurnedThisRound = false;
-      let reactionTimesList = [];
+      let successCount = 0;
+      let callStartTime = 0;
+      let hasResponded = false;
+      let roundTimeout = null;
+      let animationFrame = null;
+      let lastHeadTurnDetected = false;
+      let lastDetectionTime = 0;
 
-      let faceMesh = null;
-      let camera = null;
+      // 头部转向检测阈值
+      const HEAD_TURN_THRESHOLD = 0.3;
 
-      function showFloatingMessage(msg, isSuccess = false) {
-        const existingToast = document.querySelector('.feedback-toast');
-        if (existingToast) existingToast.remove();
-        const toast = document.createElement('div');
-        toast.className = 'feedback-toast';
-        toast.innerHTML = msg;
-        if (isSuccess) {
-          toast.style.background = "#E8F3E6";
-          toast.style.color = "#5E8742";
-          toast.style.border = "1px solid #CBE5BC";
-        }
-        document.body.appendChild(toast);
-        setTimeout(() => {
-          toast.style.opacity = '0';
-          toast.style.transition = '0.2s';
-          setTimeout(() => toast.remove(), 200);
-        }, 1800);
+      // 更新进度条
+      function updateProgress() {
+        const progress = (currentRound - 1) / totalRounds * 100;
+        progressBar.style.width = progress + '%';
+        progressPercent.textContent = Math.round(progress) + '%';
       }
 
-      function updateUI() {
-        roundCounterSpan.innerText = `第 ${currentRound} / ${totalRounds} 轮`;
-        const percent = (currentRound / totalRounds) * 100;
-        progressFill.style.width = `${percent}%`;
-        successCountSpan.innerText = successRounds;
-      }
-
-      function handleSuccess(reactionMs) {
-        if (!roundActive) return;
-        roundActive = false;
-        const reactionSec = (reactionMs / 1000).toFixed(2);
-        reactionTimeSpan.innerText = reactionSec;
-        reactionTimesList.push(reactionMs);
-        successRounds++;
-        updateUI();
-
-        characterIcon.innerHTML = "🎉🎉🎉";
-        calloutText.innerHTML = "太棒了！转头成功！";
-        document.getElementById('voiceHint').innerHTML = '<i class="fas fa-star"></i> 好厉害！继续加油～';
-        showFloatingMessage(`✨ 成功！反应时间 ${reactionSec} 秒 ✨`, true);
-
-        const overlayDiv = document.getElementById('detectionStatus');
-        overlayDiv.innerHTML = '<i class="fas fa-check-circle"></i> 检测到转头！🎉';
-        overlayDiv.style.background = "rgba(80, 160, 80, 0.85)";
-        setTimeout(() => {
-          if (!isGameActive) return;
-          overlayDiv.innerHTML = '<i class="fas fa-circle-nodes"></i> 头部检测: 等待下一轮';
-          overlayDiv.style.background = "rgba(0,0,0,0.65)";
-        }, 1500);
-
-        setTimeout(() => {
-          if (currentRound >= totalRounds) {
-            endGame();
-          } else {
-            nextRound();
-          }
-        }, 2200);
-      }
-
-      function handleTimeout() {
-        if (!roundActive) return;
-        roundActive = false;
-        reactionTimeSpan.innerText = '—';
-        characterIcon.innerHTML = "😿💪";
-        calloutText.innerHTML = "没关系的，再试试～";
-        document.getElementById('voiceHint').innerHTML = '<i class="fas fa-heart"></i> 下次听到名字转过来就有星星哦';
-        showFloatingMessage("💪 没关系，再试一次，加油！", false);
-
-        setTimeout(() => {
-          if (currentRound >= totalRounds) {
-            endGame();
-          } else {
-            nextRound();
-          }
-        }, 2000);
-      }
-
-      function nextRound() {
-        currentRound++;
-        if (currentRound > totalRounds) {
-          endGame();
-          return;
-        }
-        roundActive = true;
-        hasTurnedThisRound = false;
-        characterIcon.innerHTML = "🐱";
-        calloutText.innerHTML = currentRound % 2 === 0 ? "小明！看这里～" : "宝贝，转头看看小猫～";
-        document.getElementById('voiceHint').innerHTML = '<i class="fas fa-volume-up"></i> 小猫正在叫你';
-        reactionTimeSpan.innerText = '—';
-        updateUI();
-        detectionStatusSpan.innerHTML = '<i class="fas fa-circle-nodes"></i> 头部检测: 等待叫名';
-        detectionStatusSpan.style.background = "rgba(0,0,0,0.65)";
-        roundStartTime = Date.now();
-
-        if (detectionTimer) clearTimeout(detectionTimer);
-        detectionTimer = setTimeout(() => {
-          if (roundActive && isGameActive && !isPaused) handleTimeout();
-        }, 5000);
-
-        speakNameCall();
-      }
-
-      function speakNameCall() {
-        if (!window.speechSynthesis) return;
-        const utterance = new SpeechSynthesisUtterance(currentRound % 2 === 0 ? "小明！" : "宝贝，看这里");
-        utterance.lang = 'zh-CN';
-        utterance.rate = 0.9;
-        utterance.pitch = 1.2;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      }
-
-      function endGame() {
-        isGameActive = false;
-        if (detectionTimer) clearTimeout(detectionTimer);
-
-        const successRate = totalRounds > 0 ? Math.round((successRounds / totalRounds) * 100) : 0;
-        let avgTimeStr = '—';
-        if (reactionTimesList.length > 0) {
-          const sum = reactionTimesList.reduce((a, b) => a + b, 0);
-          const avgSec = (sum / reactionTimesList.length / 1000).toFixed(2);
-          avgTimeStr = `${avgSec} 秒`;
-        }
-
-        modalSuccess.innerText = `${successRounds}/${totalRounds}`;
-        modalRate.innerText = `${successRate}%`;
-        modalAvgTime.innerText = avgTimeStr;
-
-        resultModalOverlay.classList.add('show');
-        if (camera) camera.stop();
-      }
-
-      function resetAndStart() {
-        currentRound = 1;
-        successRounds = 0;
-        roundActive = true;
-        hasTurnedThisRound = false;
-        isPaused = false;
-        isGameActive = true;
-        reactionTimesList = [];
-        pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-
-        updateUI();
-        roundStartTime = Date.now();
-
-        characterIcon.innerHTML = "🐱";
-        calloutText.innerHTML = "小明！看这里～";
-        document.getElementById('voiceHint').innerHTML = '<i class="fas fa-volume-up"></i> 小猫正在叫你';
-        detectionStatusSpan.innerHTML = '<i class="fas fa-circle-nodes"></i> 头部检测: 等待叫名';
-
-        if (detectionTimer) clearTimeout(detectionTimer);
-        detectionTimer = setTimeout(() => {
-          if (roundActive && isGameActive && !isPaused) handleTimeout();
-        }, 5000);
-
-        speakNameCall();
-        if (camera) {
-          try { camera.start(); } catch (e) { }
+      // 更新检测结果显示
+      function updateDetectionDisplay(isHeadTurned, hasFace) {
+        if (!hasFace) {
+          statusIndicator.className = 'status-indicator';
+          detectionResultText.textContent = '未检测到人脸';
+          headPoseStatus.textContent = '未检测到人脸';
+        } else if (isHeadTurned) {
+          statusIndicator.className = 'status-indicator success';
+          detectionResultText.textContent = '检测到转头 ✓';
+          headPoseStatus.textContent = '已转头';
+        } else {
+          statusIndicator.className = 'status-indicator active';
+          detectionResultText.textContent = '正对镜头';
+          headPoseStatus.textContent = '正对镜头';
         }
       }
 
-      function initMediaPipe() {
-        faceMesh = new FaceMesh({
-          locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-        });
-        faceMesh.setOptions({
-          maxNumFaces: 1,
-          refineLandmarks: true,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5
-        });
-        faceMesh.onResults(onFaceResults);
+      // 初始化 MediaPipe Face Mesh
+      async function initFaceMesh() {
+        try {
+          faceMesh = new FaceMesh({
+            locateFile: (file) => {
+              return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+            }
+          });
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-              videoElement.srcObject = stream;
-              videoElement.style.display = "block";
-              cameraPlaceholder.style.display = "none";
-              videoElement.play();
+          faceMesh.setOptions({
+            maxNumFaces: 1,
+            refineLandmarks: true,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+          });
 
-              camera = new Camera(videoElement, {
-                onFrame: async () => {
-                  if (!isGameActive || isPaused) return;
-                  await faceMesh.send({ image: videoElement });
-                },
-                width: 640,
-                height: 480
-              });
-              camera.start();
-              detectionStatusSpan.innerHTML = '<i class="fas fa-circle-nodes"></i> 头部检测: 就绪，等待叫名';
-            })
-            .catch(() => {
-              cameraPlaceholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 摄像头不可用<br>请检查权限';
-            });
+          faceMesh.onResults(onFaceMeshResults);
+
+          console.log('✅ MediaPipe Face Mesh 初始化成功');
+          return true;
+        } catch (error) {
+          console.error('❌ MediaPipe 初始化失败:', error);
+          return false;
         }
       }
 
-      function onFaceResults(results) {
-        if (!roundActive || isPaused || !isGameActive) return;
-        if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
-          detectionStatusSpan.innerHTML = '<i class="fas fa-circle-nodes"></i> 未检测到面部，请面对摄像头';
-          return;
-        }
-        const landmarks = results.multiFaceLandmarks[0];
-        const noseTip = landmarks[1];
-        const leftEyeCorner = landmarks[33];
-        const rightEyeCorner = landmarks[263];
-        if (noseTip && leftEyeCorner && rightEyeCorner) {
-          const leftDist = Math.abs(noseTip.x - leftEyeCorner.x);
-          const rightDist = Math.abs(rightEyeCorner.x - noseTip.x);
-          let yawEstimate = (rightDist - leftDist) * 100;
-          const isTurning = Math.abs(yawEstimate) > 0.12;
+      // 处理人脸检测结果
+      function onFaceMeshResults(results) {
+        if (!canvasElement || !videoElement) return;
 
-          if (isTurning && !hasTurnedThisRound && roundActive && (Date.now() - roundStartTime > 400)) {
-            hasTurnedThisRound = true;
-            const reactionMs = Date.now() - roundStartTime;
-            if (roundActive && reactionMs <= 5000) {
-              if (detectionTimer) clearTimeout(detectionTimer);
-              handleSuccess(reactionMs);
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+        const hasFace = results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0;
+        let isHeadTurned = false;
+
+        if (hasFace) {
+          const landmarks = results.multiFaceLandmarks[0];
+
+          // 绘制人脸关键点
+          drawFaceMesh(landmarks);
+
+          // 检测头部转向
+          isHeadTurned = detectHeadTurn(landmarks);
+
+          // 训练中的响应检测
+          if (isTraining && callStartTime > 0 && !hasResponded) {
+            if (isHeadTurned) {
+              if (!lastHeadTurnDetected) {
+                const reactionTime = (Date.now() - callStartTime) / 1000;
+                handleResponse(reactionTime);
+              }
+              lastHeadTurnDetected = true;
+            } else {
+              lastHeadTurnDetected = false;
             }
           }
-          const direction = yawEstimate > 0.08 ? "👉 向右转头" : (yawEstimate < -0.08 ? "👈 向左转头" : "正面");
-          detectionStatusSpan.innerHTML = `<i class="fas fa-face-smile"></i> 头部姿态: ${direction} ${isTurning ? '(检测到转动✓)' : ''}`;
+        }
+
+        // 更新检测显示
+        updateDetectionDisplay(isHeadTurned, hasFace);
+
+        canvasCtx.restore();
+      }
+
+      // 绘制人脸网格
+      function drawFaceMesh(landmarks) {
+        // 绘制人脸轮廓线
+        canvasCtx.strokeStyle = '#D9A066';
+        canvasCtx.lineWidth = 2;
+
+        // 绘制眼睛和鼻子的关键点
+        canvasCtx.fillStyle = '#4CAF50';
+        const keyPoints = [33, 133, 362, 263, 1, 61, 291];
+        landmarks.forEach((landmark, index) => {
+          if (keyPoints.includes(index)) {
+            const x = landmark.x * canvasElement.width;
+            const y = landmark.y * canvasElement.height;
+            canvasCtx.beginPath();
+            canvasCtx.arc(x, y, 3, 0, 2 * Math.PI);
+            canvasCtx.fill();
+          }
+        });
+
+        // 绘制鼻子到眼睛的连线，显示头部方向
+        const noseTip = landmarks[1];
+        const leftEye = landmarks[33];
+        const rightEye = landmarks[263];
+
+        if (noseTip && leftEye && rightEye) {
+          const eyeCenterX = (leftEye.x + rightEye.x) / 2 * canvasElement.width;
+          const eyeCenterY = (leftEye.y + rightEye.y) / 2 * canvasElement.height;
+          const noseX = noseTip.x * canvasElement.width;
+          const noseY = noseTip.y * canvasElement.height;
+
+          canvasCtx.beginPath();
+          canvasCtx.moveTo(eyeCenterX, eyeCenterY);
+          canvasCtx.lineTo(noseX, noseY);
+          canvasCtx.strokeStyle = '#FF9800';
+          canvasCtx.lineWidth = 2;
+          canvasCtx.stroke();
         }
       }
 
-      function skipRound() {
-        if (!roundActive || !isGameActive || isPaused) return;
-        if (detectionTimer) clearTimeout(detectionTimer);
-        roundActive = false;
-        showFloatingMessage("⏩ 已跳过本轮", false);
-        setTimeout(() => {
-          if (currentRound >= totalRounds) endGame();
-          else nextRound();
-        }, 500);
+      // 检测头部是否转向侧面
+      function detectHeadTurn(landmarks) {
+        if (!landmarks || landmarks.length < 468) return false;
+
+        const noseTip = landmarks[1];
+        const leftEye = landmarks[33];
+        const rightEye = landmarks[263];
+
+        if (!noseTip || !leftEye || !rightEye) return false;
+
+        const eyeCenterX = (leftEye.x + rightEye.x) / 2;
+        const noseOffsetX = Math.abs(noseTip.x - eyeCenterX);
+
+        return noseOffsetX > HEAD_TURN_THRESHOLD;
       }
 
+      // 处理响应
+      function handleResponse(reactionTime) {
+        hasResponded = true;
+        successCount++;
+        successCountDisplay.textContent = successCount;
+        reactionTimeDisplay.innerHTML = reactionTime.toFixed(1) + '<span class="stat-unit">秒</span>';
+
+        callMessage.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> 太棒了！';
+        callSubMessage.innerHTML = '<i class="fas fa-heart"></i> 宝贝反应真快！';
+        additionalInfo.innerHTML = '<i class="fas fa-trophy" style="color: #FF9800;"></i> 成功！反应时间 ' + reactionTime.toFixed(1) + ' 秒';
+        detectionResultText.textContent = '✓ 成功转头！';
+        statusIndicator.className = 'status-indicator success';
+
+        clearTimeout(roundTimeout);
+        setTimeout(() => nextRound(), 1500);
+      }
+
+      // 开始新一轮
+      function startRound() {
+        if (!isTraining) return;
+        if (currentRound > totalRounds) {
+          finishTraining();
+          return;
+        }
+
+        hasResponded = false;
+        lastHeadTurnDetected = false;
+        roundDisplay.textContent = `${currentRound}/${totalRounds}`;
+        reactionTimeDisplay.innerHTML = '—<span class="stat-unit">秒</span>';
+        updateProgress();
+
+        callMessage.innerHTML = `<i class="fas fa-star"></i> ${child.name}！看这里~`;
+        callSubMessage.innerHTML = '<i class="fas fa-cat"></i> 小猫正在叫你';
+        additionalInfo.innerHTML = '<i class="fas fa-hourglass-half"></i> 第 ' + currentRound + ' 轮 · 等待宝贝转头回应...';
+        detectionResultText.textContent = '等待转头...';
+
+        callStartTime = Date.now();
+
+        roundTimeout = setTimeout(() => {
+          if (!hasResponded && isTraining) {
+            additionalInfo.innerHTML = '<i class="fas fa-clock"></i> 本轮超时，继续加油哦';
+            detectionResultText.textContent = '超时';
+            statusIndicator.className = 'status-indicator';
+            setTimeout(() => nextRound(), 1000);
+          }
+        }, 5000);
+      }
+
+      // 下一轮
+      function nextRound() {
+        clearTimeout(roundTimeout);
+        currentRound++;
+        startRound();
+      }
+
+      // 跳过本轮
+      function skipRound() {
+        if (!isTraining) return;
+        clearTimeout(roundTimeout);
+        additionalInfo.innerHTML = '<i class="fas fa-forward"></i> 已跳过本轮';
+        detectionResultText.textContent = '已跳过';
+        setTimeout(() => nextRound(), 800);
+      }
+
+      // 完成训练
+      function finishTraining() {
+        isTraining = false;
+        startBtn.innerHTML = '<i class="fas fa-play"></i> 开始训练';
+        startBtn.disabled = false;
+        skipBtn.disabled = true;
+
+        updateProgress();
+        callMessage.innerHTML = '<i class="fas fa-party-horn"></i> 训练完成！';
+        callSubMessage.innerHTML = '宝贝太棒了！';
+        additionalInfo.innerHTML = `<i class="fas fa-star" style="color: #FF9800;"></i> 完成 ${totalRounds} 轮训练，成功 ${successCount} 次！`;
+        detectionResultText.textContent = `训练完成 · 成功率 ${Math.round(successCount / totalRounds * 100)}%`;
+        statusIndicator.className = 'status-indicator success';
+
+        console.log(`训练完成: ${successCount}/${totalRounds}`);
+      }
+
+      // 开始训练
+      function startTraining() {
+        if (!isCameraReady) {
+          alert('请先允许摄像头权限');
+          return;
+        }
+
+        isTraining = true;
+        currentRound = 1;
+        successCount = 0;
+        successCountDisplay.textContent = '0';
+        startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 训练中...';
+        startBtn.disabled = true;
+        skipBtn.disabled = false;
+
+        updateProgress();
+        startRound();
+      }
+
+      // 初始化摄像头
+      async function initCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: 640,
+              height: 480,
+              facingMode: 'user'
+            }
+          });
+
+          videoElement.srcObject = stream;
+          videoElement.onloadedmetadata = () => {
+            videoElement.play();
+
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+
+            isCameraReady = true;
+            cameraStatus.textContent = '摄像头已就绪';
+            document.querySelector('#cameraStatus i').style.color = '#4CAF50';
+
+            startDetection();
+          };
+        } catch (error) {
+          console.error('摄像头访问失败:', error);
+          cameraStatus.textContent = '摄像头访问失败，请允许权限';
+          detectionResultText.textContent = '摄像头未授权';
+        }
+      }
+
+      // 开始检测循环
+      async function startDetection() {
+        const faceMeshReady = await initFaceMesh();
+        if (!faceMeshReady) {
+          cameraStatus.textContent = '人脸检测初始化失败';
+          detectionResultText.textContent = '检测初始化失败';
+          return;
+        }
+
+        function detectFrame() {
+          if (videoElement.readyState >= 2 && faceMesh) {
+            faceMesh.send({ image: videoElement });
+          }
+          animationFrame = requestAnimationFrame(detectFrame);
+        }
+
+        detectFrame();
+      }
+
+      // 事件绑定
+      startBtn.addEventListener('click', startTraining);
       skipBtn.addEventListener('click', skipRound);
 
-      pauseBtn.addEventListener('click', () => {
-        if (!isGameActive) return;
-        isPaused = !isPaused;
-        pauseBtn.innerHTML = isPaused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
-        showFloatingMessage(isPaused ? "⏸ 游戏已暂停" : "▶️ 继续训练", false);
-        if (!isPaused && roundActive && !detectionTimer) {
-          const remaining = 5000 - (Date.now() - roundStartTime);
-          detectionTimer = setTimeout(() => { if (roundActive && isGameActive && !isPaused) handleTimeout(); }, Math.max(500, remaining));
+      // 返回按钮
+      document.querySelector('.back-btn').addEventListener('click', (e) => {
+        if (isTraining) {
+          if (!confirm('训练尚未完成，确定要退出吗？')) {
+            e.preventDefault();
+          }
         }
       });
 
-      backBtn.addEventListener('click', () => {
-        if (confirm("返回主界面将退出当前游戏，确定吗？")) {
-          window.location.href = "#";
-        }
-      });
-
-      modalReplay.addEventListener('click', () => {
-        resultModalOverlay.classList.remove('show');
-        resetAndStart();
-        if (camera) {
-          try { camera.start(); } catch (e) { }
-        }
-      });
-
-      modalBackHome.addEventListener('click', () => {
-        resultModalOverlay.classList.remove('show');
-        showFloatingMessage("返回主界面 (演示)", false);
-      });
-
-      resultModalOverlay.addEventListener('click', (e) => {
-        if (e.target === resultModalOverlay) {
-          resultModalOverlay.classList.remove('show');
-        }
-      });
-
-      initMediaPipe();
-      setTimeout(() => {
-        resetAndStart();
-      }, 800);
-
+      // 清理资源
       window.addEventListener('beforeunload', () => {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+        }
+        if (videoElement.srcObject) {
+          videoElement.srcObject.getTracks().forEach(track => track.stop());
+        }
       });
+
+      // 初始化
+      initCamera();
+
+      // 禁用跳过按钮直到训练开始
+      skipBtn.disabled = true;
     })();
   </script>
 </body>

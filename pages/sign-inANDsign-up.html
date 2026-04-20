@@ -246,8 +246,25 @@
       box-shadow: 0 0 0 3px rgba(217, 160, 102, 0.1);
     }
 
+    .input-field.error {
+      border-color: #D4A0A0;
+      background: #FEF8F8;
+    }
+
     .input-field::placeholder {
       color: #C4A88B;
+    }
+
+    .error-message {
+      font-size: 12px;
+      color: #C06060;
+      margin-top: 5px;
+      margin-left: 16px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
     }
 
     .password-wrapper {
@@ -331,69 +348,167 @@
       flex: 1;
     }
 
-    .age-selector {
+    /* 出生年月 - 下拉选择器 */
+    .birth-selector {
       display: flex;
       gap: 10px;
     }
 
-    .age-btn {
+    .birth-select {
       flex: 1;
-      padding: 13px 0;
-      background: #F5EDE4;
+      padding: 13px 16px;
+      background: #FEF8F2;
       border: 2px solid #F0DDCB;
       border-radius: 44px;
       font-size: 14px;
-      font-weight: 600;
-      color: #8B6A4C;
+      color: #5F4230;
+      outline: none;
+      font-family: inherit;
       cursor: pointer;
-      transition: all 0.15s;
-      text-align: center;
     }
 
-    .age-btn.active {
-      background: #EAD1BB;
+    .birth-select:focus {
       border-color: #D9A066;
-      color: #5E422C;
     }
 
-    .avatar-selector {
+    /* ========== 头像区域 ========== */
+    .avatar-section {
+      margin-top: 4px;
+    }
+
+    .avatar-presets {
       display: flex;
-      gap: 16px;
-      margin: 8px 0 4px;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 18px;
     }
 
-    .avatar-option {
-      flex: 1;
+    .preset-avatar {
+      width: 70px;
+      height: 70px;
+      background: #FBF4EB;
+      border-radius: 35px;
+      border: 2.5px solid #EDD9C6;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      padding: 12px 0;
-      background: #F5EDE4;
-      border: 2px solid #F0DDCB;
-      border-radius: 28px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .avatar-option i {
-      font-size: 36px;
+      justify-content: center;
+      gap: 4px;
+      font-size: 28px;
       color: #B88B5C;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 8px rgba(180, 120, 70, 0.08);
     }
 
-    .avatar-option span {
-      font-size: 13px;
+    .preset-avatar span {
+      font-size: 11px;
+      font-weight: 500;
       color: #8B6A4C;
     }
 
-    .avatar-option.active {
+    .preset-avatar.active {
       background: #EAD1BB;
       border-color: #D9A066;
+      color: #5E422C;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 14px rgba(217, 160, 102, 0.2);
+    }
+
+    .preset-avatar.active span {
+      color: #5E422C;
+      font-weight: 600;
+    }
+
+    /* 自定义上传卡片 */
+    .custom-upload-card {
+      background: linear-gradient(135deg, #FDF8F2 0%, #F9EFE4 100%);
+      border-radius: 48px;
+      padding: 12px 16px 12px 20px;
+      border: 1.5px solid #EEDBCB;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .avatar-preview {
+      width: 64px;
+      height: 64px;
+      background: #FFFFFF;
+      border-radius: 40px;
+      border: 2px dashed #D9A066;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #C9A87C;
+      font-size: 26px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .upload-info {
+      flex: 1;
+    }
+
+    .upload-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #6C4F32;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: #B89A78;
+    }
+
+    .upload-avatar-btn {
+      padding: 10px 18px;
+      background: #FFFFFF;
+      border: 1.5px solid #DDBB9A;
+      border-radius: 36px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #7C5F48;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      box-shadow: 0 3px 0 #E6D2C0;
+      white-space: nowrap;
+    }
+
+    .upload-avatar-btn:hover {
+      background: #F5E8DA;
+      border-color: #D9A066;
+    }
+
+    .upload-avatar-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #E6D2C0;
+    }
+
+    .upload-avatar-btn i {
+      font-size: 14px;
+      color: #D9A066;
     }
 
     .gender-selector {
       display: flex;
       gap: 16px;
+      margin-top: 16px;
     }
 
     .gender-btn {
@@ -499,7 +614,7 @@
       font-size: 14px;
     }
 
-    /* 注册步骤按钮 - 居中加宽 */
+    /* 注册步骤按钮 */
     .step-btn {
       width: 100%;
       padding: 15px 0;
@@ -520,10 +635,6 @@
       color: #6C4E32;
       box-shadow: 0 5px 0 #C6AA8A;
       border: 1.5px solid #DDBB9A;
-    }
-
-    .step-btn.primary:hover {
-      background: linear-gradient(145deg, #EEDBC8, #E5CEB4);
     }
 
     .step-btn.primary:active {
@@ -548,20 +659,11 @@
       box-shadow: 0 3px 0 #D4C4B0;
     }
 
-    .step-btn.secondary:hover {
-      background: #EDDFD0;
-    }
-
     .step-btn.secondary:active {
       transform: translateY(2px);
       box-shadow: 0 1px 0 #D4C4B0;
     }
 
-    .step-btn i {
-      font-size: 16px;
-    }
-
-    /* 步骤标题 */
     .step-title {
       font-size: 18px;
       font-weight: 700;
@@ -584,43 +686,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .third-party {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .third-party p {
-      font-size: 13px;
-      color: #B89A78;
-      margin-bottom: 14px;
-    }
-
-    .third-icons {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-    }
-
-    .third-icon {
-      width: 48px;
-      height: 48px;
-      background: #F5EDE4;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #8B6A4C;
-      cursor: pointer;
-      transition: all 0.15s;
-      border: 1.5px solid #F0DDCB;
-    }
-
-    .third-icon:hover {
-      background: #EAD1BB;
-      color: #6C4E32;
     }
 
     .success-message {
@@ -646,7 +711,6 @@
       margin-bottom: 28px;
     }
 
-    /* 提示弹窗 */
     .toast-message {
       position: absolute;
       bottom: 30px;
@@ -673,10 +737,9 @@
 
 <body>
   <div class="auth-container">
-    <!-- 左侧品牌区 - 4份 -->
+    <!-- 左侧品牌区 -->
     <div class="brand-section">
       <div class="decor-circle"></div>
-
       <div class="brand-content">
         <div class="logo-wrapper">
           <div class="logo-icon">
@@ -687,7 +750,6 @@
             <p>Stellar Companion</p>
           </div>
         </div>
-
         <div class="brand-slogan">
           <p>
             今天的陪伴，<br>
@@ -698,7 +760,7 @@
       </div>
     </div>
 
-    <!-- 右侧表单区 - 6份 -->
+    <!-- 右侧表单区 -->
     <div class="form-section">
       <div class="form-header">
         <h3 id="formTitle">家长登录</h3>
@@ -718,25 +780,27 @@
               <i class="fas fa-lock"></i> 密码登录
             </button>
             <button class="method-btn" data-method="code" id="codeMethodBtn">
-              <i class="fas fa-message"></i> 验证码登录
+              <i class="fas fa-envelope"></i> 验证码登录
             </button>
           </div>
 
           <div id="passwordLogin">
             <div class="input-group">
               <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
-              <input type="tel" class="input-field" id="loginPhone" placeholder="请输入手机号" value="13800138000">
+              <input type="tel" class="input-field" id="loginPhone" placeholder="请输入11位手机号" maxlength="11">
+              <div class="error-message" id="loginPhoneError"></div>
             </div>
             <div class="input-group">
               <div class="input-label"><i class="fas fa-lock"></i>密码</div>
               <div class="password-wrapper">
-                <input type="password" class="input-field" id="loginPassword" placeholder="请输入密码" value="123456">
-                <i class="fas fa-eye toggle-password" data-target="loginPassword"></i>
+                <input type="password" class="input-field" id="loginPassword" placeholder="请输入密码">
+                <i class="fas fa-eye-slash toggle-password" data-target="loginPassword"></i>
               </div>
+              <div class="error-message" id="loginPasswordError"></div>
             </div>
             <div class="remember-row">
               <label class="remember-me">
-                <input type="checkbox" id="rememberMe" checked> 记住账号
+                <input type="checkbox" id="rememberMe"> 记住账号
               </label>
               <a href="#" class="forgot-link" id="forgotPassword">忘记密码？</a>
             </div>
@@ -746,24 +810,18 @@
           <div id="codeLogin" style="display:none;">
             <div class="input-group">
               <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
-              <input type="tel" class="input-field" id="codePhone" placeholder="请输入手机号" value="13800138000">
+              <input type="tel" class="input-field" id="codePhone" placeholder="请输入11位手机号" maxlength="11">
+              <div class="error-message" id="codePhoneError"></div>
             </div>
             <div class="input-group">
               <div class="input-label"><i class="fas fa-shield"></i>验证码</div>
               <div class="code-wrapper">
-                <input type="text" class="input-field" id="smsCode" placeholder="请输入验证码">
-                <button class="code-btn" id="getCodeBtn">获取验证码</button>
+                <input type="text" class="input-field" id="smsCode" placeholder="请输入6位验证码" maxlength="6">
+                <button class="code-btn" id="getSmsCodeBtn">获取验证码</button>
               </div>
+              <div class="error-message" id="smsCodeError"></div>
             </div>
-            <button class="login-btn" id="codeLoginBtn"><i class="fas fa-message"></i> 验证码登录</button>
-          </div>
-
-          <div class="third-party">
-            <p>其他登录方式</p>
-            <div class="third-icons">
-              <div class="third-icon"><i class="fab fa-weixin"></i></div>
-              <div class="third-icon"><i class="fab fa-apple"></i></div>
-            </div>
+            <button class="login-btn" id="smsCodeLoginBtn"><i class="fas fa-paper-plane"></i> 验证码登录</button>
           </div>
         </div>
 
@@ -772,29 +830,43 @@
           <div id="regStep1">
             <div class="step-title"><i class="fas fa-user"></i> 家长信息</div>
             <div class="input-group">
-              <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
-              <input type="tel" class="input-field" id="regPhone" placeholder="请输入手机号">
+              <div class="input-label"><i class="fas fa-user-pen"></i>家长昵称</div>
+              <input type="text" class="input-field" id="parentNickname" placeholder="请输入中文昵称（2-10个汉字）">
+              <div class="error-message" id="parentNicknameError"></div>
             </div>
             <div class="input-group">
-              <div class="input-label"><i class="fas fa-shield"></i>验证码</div>
+              <div class="input-label"><i class="fas fa-phone"></i>手机号</div>
+              <input type="tel" class="input-field" id="regPhone" placeholder="请输入11位手机号" maxlength="11">
+              <div class="error-message" id="regPhoneError"></div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-envelope"></i>QQ邮箱</div>
+              <input type="email" class="input-field" id="regEmail" placeholder="例如：123456789@qq.com">
+              <div class="error-message" id="regEmailError"></div>
+            </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-shield"></i>邮箱验证码</div>
               <div class="code-wrapper">
-                <input type="text" class="input-field" id="regSmsCode" placeholder="请输入验证码">
-                <button class="code-btn" id="regGetCodeBtn">获取验证码</button>
+                <input type="text" class="input-field" id="regEmailCode" placeholder="请输入6位验证码" maxlength="6">
+                <button class="code-btn" id="regGetEmailCodeBtn">获取验证码</button>
               </div>
+              <div class="error-message" id="regEmailCodeError"></div>
             </div>
             <div class="input-group">
               <div class="input-label"><i class="fas fa-lock"></i>设置密码</div>
               <div class="password-wrapper">
-                <input type="password" class="input-field" id="regPassword" placeholder="8-16位字母数字组合">
-                <i class="fas fa-eye toggle-password" data-target="regPassword"></i>
+                <input type="password" class="input-field" id="regPassword" placeholder="6位以上字母数字组合">
+                <i class="fas fa-eye-slash toggle-password" data-target="regPassword"></i>
               </div>
+              <div class="error-message" id="regPasswordError"></div>
             </div>
             <div class="input-group">
               <div class="input-label"><i class="fas fa-check-circle"></i>确认密码</div>
               <div class="password-wrapper">
                 <input type="password" class="input-field" id="regConfirmPassword" placeholder="再次输入密码">
-                <i class="fas fa-eye toggle-password" data-target="regConfirmPassword"></i>
+                <i class="fas fa-eye-slash toggle-password" data-target="regConfirmPassword"></i>
               </div>
+              <div class="error-message" id="regConfirmPasswordError"></div>
             </div>
             <button class="step-btn primary" id="regNextStep1"><i class="fas fa-arrow-right"></i> 下一步</button>
           </div>
@@ -803,18 +875,51 @@
             <div class="step-title"><i class="fas fa-child"></i> 宝贝信息</div>
             <div class="input-group">
               <div class="input-label"><i class="fas fa-child"></i>宝贝昵称</div>
-              <input type="text" class="input-field" id="regChildName" placeholder="宝贝的小名">
+              <input type="text" class="input-field" id="regChildName" placeholder="请输入中文昵称（2-10个汉字）">
+              <div class="error-message" id="regChildNameError"></div>
             </div>
-            <div class="row-inputs">
-              <div class="input-group">
-                <div class="input-label"><i class="fas fa-cake-candles"></i>年龄</div>
-                <div class="age-selector">
-                  <div class="age-btn" data-age="2">2岁</div>
-                  <div class="age-btn active" data-age="3">3岁</div>
-                  <div class="age-btn" data-age="4">4岁</div>
-                </div>
+            <div class="input-group">
+              <div class="input-label"><i class="fas fa-cake-candles"></i>出生年月</div>
+              <div class="birth-selector">
+                <select class="birth-select" id="birthYear"></select>
+                <select class="birth-select" id="birthMonth"></select>
               </div>
             </div>
+            <div class="input-group avatar-section">
+              <div class="input-label"><i class="fas fa-face-smile"></i>选择头像</div>
+
+              <div class="avatar-presets">
+                <div class="preset-avatar active" data-avatar="bear">
+                  <i class="fas fa-face-smile"></i>
+                  <span>小熊</span>
+                </div>
+                <div class="preset-avatar" data-avatar="cat">
+                  <i class="fas fa-cat"></i>
+                  <span>小猫</span>
+                </div>
+                <div class="preset-avatar" data-avatar="dog">
+                  <i class="fas fa-dog"></i>
+                  <span>小狗</span>
+                </div>
+              </div>
+
+              <div class="custom-upload-card">
+                <div class="avatar-preview" id="avatarPreview">
+                  <i class="fas fa-camera"></i>
+                </div>
+                <div class="upload-info">
+                  <div class="upload-title">
+                    <i class="fas fa-cloud-upload-alt" style="color:#D9A066;"></i> 自定义头像
+                  </div>
+                  <div class="upload-hint">支持 JPG、PNG 格式</div>
+                </div>
+                <label class="upload-avatar-btn" for="avatarUploadInput">
+                  <i class="fas fa-arrow-up-from-bracket"></i> 上传图片
+                </label>
+                <input type="file" id="avatarUploadInput" accept="image/*" style="display:none;">
+              </div>
+            </div>
+
             <div class="input-group">
               <div class="input-label"><i class="fas fa-venus-mars"></i>性别</div>
               <div class="gender-selector">
@@ -822,20 +927,7 @@
                 <div class="gender-btn" data-gender="girl"><i class="fas fa-venus"></i> 女孩</div>
               </div>
             </div>
-            <div class="input-group">
-              <div class="input-label"><i class="fas fa-face-smile"></i>选择头像</div>
-              <div class="avatar-selector">
-                <div class="avatar-option active" data-avatar="bear">
-                  <i class="fas fa-face-smile"></i><span>小熊</span>
-                </div>
-                <div class="avatar-option" data-avatar="cat">
-                  <i class="fas fa-cat"></i><span>小猫</span>
-                </div>
-                <div class="avatar-option" data-avatar="dog">
-                  <i class="fas fa-dog"></i><span>小狗</span>
-                </div>
-              </div>
-            </div>
+
             <div class="step-buttons">
               <button class="step-btn secondary" id="regPrevStep2"><i class="fas fa-arrow-left"></i> 上一步</button>
               <button class="step-btn primary" id="regNextStep2">下一步 <i class="fas fa-arrow-right"></i></button>
@@ -875,12 +967,49 @@
 
   <script>
     (function () {
+      // ========== 验证工具函数 ==========
+      function validatePhone(phone) {
+        return /^1[3-9]\d{9}$/.test(phone);
+      }
+
+      function validatePassword(password) {
+        return password.length >= 6;
+      }
+
+      function validateSmsCode(code) {
+        return /^\d{6}$/.test(code);
+      }
+
+      function validateNickname(nickname) {
+        const chineseRegex = /^[\u4e00-\u9fa5]{2,10}$/;
+        return chineseRegex.test(nickname);
+      }
+
+      function validateQQEmail(email) {
+        return /^[1-9]\d{4,10}@qq\.com$/.test(email);
+      }
+
+      function showFieldError(inputId, errorId, message) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+        input.classList.add('error');
+        error.textContent = message;
+        error.classList.add('show');
+      }
+
+      function clearFieldError(inputId, errorId) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+        input.classList.remove('error');
+        error.classList.remove('show');
+      }
+
       let currentTab = 'login';
       let loginMethod = 'password';
       let regStep = 1;
-      let selectedAge = '3';
       let selectedGender = 'boy';
       let selectedAvatar = 'bear';
+      let customAvatarUrl = '';
 
       const authTabs = document.getElementById('authTabs');
       const loginStep = document.getElementById('loginStep');
@@ -892,7 +1021,40 @@
       const passwordMethodBtn = document.getElementById('passwordMethodBtn');
       const codeMethodBtn = document.getElementById('codeMethodBtn');
 
-      // 方法按钮样式 - 默认密码登录有底色
+      // 出生年月下拉初始化
+      const yearSelect = document.getElementById('birthYear');
+      const monthSelect = document.getElementById('birthMonth');
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= currentYear - 10; y--) {
+        const option = document.createElement('option');
+        option.value = y;
+        option.textContent = y + '年';
+        if (y === currentYear - 2) option.selected = true;
+        yearSelect.appendChild(option);
+      }
+      for (let m = 1; m <= 12; m++) {
+        const option = document.createElement('option');
+        option.value = m;
+        option.textContent = m + '月';
+        if (m === 6) option.selected = true;
+        monthSelect.appendChild(option);
+      }
+
+      // ========== 记住账号功能 ==========
+      const rememberCheckbox = document.getElementById('rememberMe');
+      const loginPhoneInput = document.getElementById('loginPhone');
+      const loginPasswordInput = document.getElementById('loginPassword');
+
+      // 加载保存的账号
+      const savedPhone = localStorage.getItem('savedPhone');
+      const savedPassword = localStorage.getItem('savedPassword');
+      if (savedPhone) {
+        loginPhoneInput.value = savedPhone;
+        loginPasswordInput.value = savedPassword || '';
+        rememberCheckbox.checked = true;
+      }
+
+      // 方法切换
       function setActiveMethod(method) {
         loginMethod = method;
         if (method === 'password') {
@@ -907,7 +1069,6 @@
           codeLogin.style.display = 'block';
         }
       }
-
       passwordMethodBtn.addEventListener('click', () => setActiveMethod('password'));
       codeMethodBtn.addEventListener('click', () => setActiveMethod('code'));
 
@@ -916,7 +1077,6 @@
         currentTab = tab;
         authTabs.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
         authTabs.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-
         if (tab === 'login') {
           loginStep.classList.add('active');
           registerStep.classList.remove('active');
@@ -930,29 +1090,20 @@
           showRegStep(1);
         }
       }
-
       authTabs.addEventListener('click', (e) => {
         const tab = e.target.closest('.tab-btn');
         if (!tab) return;
         switchTab(tab.dataset.tab);
       });
 
-      // 密码显示切换
+      // 密码显示切换 - 修正：默认闭眼(fa-eye-slash)，点击后睁眼(fa-eye)
       document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', function () {
           const targetId = this.dataset.target;
           const input = document.getElementById(targetId);
-          input.type = input.type === 'password' ? 'text' : 'password';
-          this.className = input.type === 'password' ? 'fas fa-eye toggle-password' : 'fas fa-eye-slash toggle-password';
-        });
-      });
-
-      // 年龄选择
-      document.querySelectorAll('.age-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          selectedAge = this.dataset.age;
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          this.className = isPassword ? 'fas fa-eye toggle-password' : 'fas fa-eye-slash toggle-password';
         });
       });
 
@@ -965,13 +1116,40 @@
         });
       });
 
-      // 头像选择
-      document.querySelectorAll('.avatar-option').forEach(opt => {
+      // 预设头像选择
+      document.querySelectorAll('.preset-avatar').forEach(opt => {
         opt.addEventListener('click', function () {
-          document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('active'));
+          document.querySelectorAll('.preset-avatar').forEach(o => o.classList.remove('active'));
           this.classList.add('active');
           selectedAvatar = this.dataset.avatar;
+          customAvatarUrl = '';
+
+          const preview = document.getElementById('avatarPreview');
+          const icon = this.querySelector('i');
+          preview.innerHTML = '';
+          if (icon) {
+            const cloneIcon = icon.cloneNode(true);
+            cloneIcon.style.fontSize = '30px';
+            preview.appendChild(cloneIcon);
+          }
         });
+      });
+
+      // 自定义头像上传
+      const avatarUpload = document.getElementById('avatarUploadInput');
+      avatarUpload.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (ev) {
+            customAvatarUrl = ev.target.result;
+            selectedAvatar = 'custom';
+            document.querySelectorAll('.preset-avatar').forEach(o => o.classList.remove('active'));
+            const preview = document.getElementById('avatarPreview');
+            preview.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+          };
+          reader.readAsDataURL(file);
+        }
       });
 
       // 兴趣标签
@@ -1000,75 +1178,145 @@
         });
       }
 
-      // 登录 - 跳转到 mainPart.html
+      // ========== 输入时清除错误 ==========
+      document.getElementById('loginPhone').addEventListener('input', () => clearFieldError('loginPhone', 'loginPhoneError'));
+      document.getElementById('loginPassword').addEventListener('input', () => clearFieldError('loginPassword', 'loginPasswordError'));
+      document.getElementById('codePhone').addEventListener('input', () => clearFieldError('codePhone', 'codePhoneError'));
+      document.getElementById('smsCode').addEventListener('input', () => clearFieldError('smsCode', 'smsCodeError'));
+      document.getElementById('parentNickname').addEventListener('input', () => clearFieldError('parentNickname', 'parentNicknameError'));
+      document.getElementById('regPhone').addEventListener('input', () => clearFieldError('regPhone', 'regPhoneError'));
+      document.getElementById('regEmail').addEventListener('input', () => clearFieldError('regEmail', 'regEmailError'));
+      document.getElementById('regEmailCode').addEventListener('input', () => clearFieldError('regEmailCode', 'regEmailCodeError'));
+      document.getElementById('regPassword').addEventListener('input', () => clearFieldError('regPassword', 'regPasswordError'));
+      document.getElementById('regConfirmPassword').addEventListener('input', () => clearFieldError('regConfirmPassword', 'regConfirmPasswordError'));
+      document.getElementById('regChildName').addEventListener('input', () => clearFieldError('regChildName', 'regChildNameError'));
+
+      // ========== 密码登录 ==========
       document.getElementById('loginBtn').addEventListener('click', () => {
-        const phone = document.getElementById('loginPhone').value;
+        const phone = document.getElementById('loginPhone').value.trim();
         const password = document.getElementById('loginPassword').value;
 
-        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
-        if (!password) { showToast('请输入密码', '#FCE8E8'); return; }
+        let isValid = true;
+        if (!validatePhone(phone)) {
+          showFieldError('loginPhone', 'loginPhoneError', '请输入正确的11位手机号');
+          isValid = false;
+        }
+        if (!validatePassword(password)) {
+          showFieldError('loginPassword', 'loginPasswordError', '密码长度至少6位');
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // 记住账号
+        if (rememberCheckbox.checked) {
+          localStorage.setItem('savedPhone', phone);
+          localStorage.setItem('savedPassword', password);
+        } else {
+          localStorage.removeItem('savedPhone');
+          localStorage.removeItem('savedPassword');
+        }
 
         showToast('✨ 登录成功！正在进入星伴世界...', '#E8F0D8');
-        setTimeout(() => {
-          window.location.href = 'mainPart.html';
-        }, 800);
+        setTimeout(() => { window.location.href = 'mainPart.html'; }, 800);
       });
 
-      // 验证码登录 - 跳转到 mainPart.html
-      document.getElementById('codeLoginBtn').addEventListener('click', () => {
-        const phone = document.getElementById('codePhone').value;
-        const code = document.getElementById('smsCode').value;
+      // ========== 短信验证码登录 ==========
+      document.getElementById('getSmsCodeBtn').addEventListener('click', function () {
+        const phone = document.getElementById('codePhone').value.trim();
+        if (!validatePhone(phone)) {
+          showFieldError('codePhone', 'codePhoneError', '请输入正确的11位手机号');
+          return;
+        }
+        clearFieldError('codePhone', 'codePhoneError');
+        startCodeCountdown(this);
+        showToast('📱 验证码已发送至手机');
+      });
 
-        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
-        if (!code) { showToast('请输入验证码', '#FCE8E8'); return; }
+      document.getElementById('smsCodeLoginBtn').addEventListener('click', () => {
+        const phone = document.getElementById('codePhone').value.trim();
+        const code = document.getElementById('smsCode').value.trim();
+
+        let isValid = true;
+        if (!validatePhone(phone)) {
+          showFieldError('codePhone', 'codePhoneError', '请输入正确的11位手机号');
+          isValid = false;
+        }
+        if (!validateSmsCode(code)) {
+          showFieldError('smsCode', 'smsCodeError', '验证码为6位数字');
+          isValid = false;
+        }
+
+        if (!isValid) return;
 
         showToast('✨ 登录成功！', '#E8F0D8');
-        setTimeout(() => {
-          window.location.href = 'mainPart.html';
-        }, 500);
+        setTimeout(() => { window.location.href = 'mainPart.html'; }, 500);
       });
 
-      // 获取验证码
       function startCodeCountdown(btn) {
         let countdown = 60;
         btn.disabled = true;
-
+        const originalText = btn.innerText;
         const timer = setInterval(() => {
           countdown--;
           btn.innerText = `${countdown}秒后重试`;
           if (countdown <= 0) {
             clearInterval(timer);
             btn.disabled = false;
-            btn.innerText = '获取验证码';
+            btn.innerText = originalText;
           }
         }, 1000);
-
-        showToast('📱 验证码已发送');
       }
 
-      document.getElementById('getCodeBtn').addEventListener('click', function () {
-        const phone = document.getElementById('codePhone').value;
-        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
+      // ========== 获取邮箱验证码 ==========
+      document.getElementById('regGetEmailCodeBtn').addEventListener('click', function () {
+        const email = document.getElementById('regEmail').value.trim();
+        if (!validateQQEmail(email)) {
+          showFieldError('regEmail', 'regEmailError', '请输入正确的QQ邮箱（如：123456789@qq.com）');
+          return;
+        }
+        clearFieldError('regEmail', 'regEmailError');
         startCodeCountdown(this);
+        showToast('📧 验证码已发送至QQ邮箱');
       });
 
-      document.getElementById('regGetCodeBtn').addEventListener('click', function () {
-        const phone = document.getElementById('regPhone').value;
-        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
-        startCodeCountdown(this);
-      });
-
-      // 注册步骤
+      // ========== 注册步骤1验证 ==========
       document.getElementById('regNextStep1').addEventListener('click', () => {
-        const phone = document.getElementById('regPhone').value;
-        const code = document.getElementById('regSmsCode').value;
+        const nickname = document.getElementById('parentNickname').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const code = document.getElementById('regEmailCode').value.trim();
         const pwd = document.getElementById('regPassword').value;
         const confirmPwd = document.getElementById('regConfirmPassword').value;
 
-        if (!phone) { showToast('请输入手机号', '#FCE8E8'); return; }
-        if (!code) { showToast('请输入验证码', '#FCE8E8'); return; }
-        if (!pwd) { showToast('请设置密码', '#FCE8E8'); return; }
-        if (pwd !== confirmPwd) { showToast('两次密码不一致', '#FCE8E8'); return; }
+        let isValid = true;
+
+        if (!validateNickname(nickname)) {
+          showFieldError('parentNickname', 'parentNicknameError', '昵称为2-10个中文汉字');
+          isValid = false;
+        }
+        if (!validatePhone(phone)) {
+          showFieldError('regPhone', 'regPhoneError', '请输入正确的11位手机号');
+          isValid = false;
+        }
+        if (!validateQQEmail(email)) {
+          showFieldError('regEmail', 'regEmailError', '请输入正确的QQ邮箱（如：123456789@qq.com）');
+          isValid = false;
+        }
+        if (!validateSmsCode(code)) {
+          showFieldError('regEmailCode', 'regEmailCodeError', '验证码为6位数字');
+          isValid = false;
+        }
+        if (!validatePassword(pwd)) {
+          showFieldError('regPassword', 'regPasswordError', '密码长度至少6位');
+          isValid = false;
+        }
+        if (pwd !== confirmPwd) {
+          showFieldError('regConfirmPassword', 'regConfirmPasswordError', '两次密码输入不一致');
+          isValid = false;
+        }
+
+        if (!isValid) return;
 
         showRegStep(2);
       });
@@ -1076,42 +1324,45 @@
       document.getElementById('regPrevStep2').addEventListener('click', () => showRegStep(1));
 
       document.getElementById('regNextStep2').addEventListener('click', () => {
-        const childName = document.getElementById('regChildName').value;
-        if (!childName) { showToast('请输入宝贝昵称', '#FCE8E8'); return; }
+        const childName = document.getElementById('regChildName').value.trim();
+
+        if (!validateNickname(childName)) {
+          showFieldError('regChildName', 'regChildNameError', '宝贝昵称为2-10个中文汉字');
+          return;
+        }
+
         showRegStep(3);
       });
 
       document.getElementById('regPrevStep3').addEventListener('click', () => showRegStep(2));
 
       document.getElementById('regNextStep3').addEventListener('click', () => {
-        const childName = document.getElementById('regChildName').value;
-        document.getElementById('welcomeMessage').innerHTML = `${childName}宝贝，开始成长陪伴之旅吧！`;
+        const childName = document.getElementById('regChildName').value.trim();
+        const parentNick = document.getElementById('parentNickname').value.trim() || '家长';
+        document.getElementById('welcomeMessage').innerHTML = `${parentNick} · ${childName}宝贝，开始成长陪伴之旅吧！`;
         showRegStep(4);
       });
 
-      // 注册完成后跳转到登录界面
       document.getElementById('goToLoginBtn').addEventListener('click', () => {
+        document.getElementById('parentNickname').value = '';
         document.getElementById('regPhone').value = '';
-        document.getElementById('regSmsCode').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regEmailCode').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regConfirmPassword').value = '';
         document.getElementById('regChildName').value = '';
-
         switchTab('login');
         showToast('🎉 注册成功！请登录您的账号', '#E8F0D8');
       });
 
       document.getElementById('forgotPassword').addEventListener('click', (e) => {
         e.preventDefault();
-        showToast('📧 重置密码链接已发送至您的手机');
+        showToast('📧 重置密码链接已发送至您的邮箱');
       });
 
-      document.querySelectorAll('.third-icon').forEach(icon => {
-        icon.addEventListener('click', () => {
-          const type = icon.querySelector('.fa-weixin') ? '微信' : 'Apple';
-          showToast(`🔐 正在跳转${type}登录...`);
-        });
-      });
+      // 默认头像预览
+      const defaultPreview = document.getElementById('avatarPreview');
+      defaultPreview.innerHTML = '<i class="fas fa-face-smile" style="font-size:30px;"></i>';
     })();
   </script>
 </body>

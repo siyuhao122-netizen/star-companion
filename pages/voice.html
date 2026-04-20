@@ -40,22 +40,22 @@
       position: relative;
     }
 
-    /* 装饰背景 */
     .game-inner {
       flex: 1;
-      padding: 16px 24px 18px;
+      padding: 18px 26px 18px;
       display: flex;
       flex-direction: column;
-      position: relative;
       background: radial-gradient(circle at 20% 30%, rgba(255, 245, 235, 0.5) 0%, transparent 50%);
+      height: 100%;
     }
 
-    /* 头部 */
+    /* 头部 - 紧凑 */
     .game-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
     .left-header {
@@ -75,7 +75,7 @@
       cursor: pointer;
       transition: all 0.15s;
       box-shadow: 0 3px 0 #DBC8B5;
-      border: 1px solid #EADACA;
+      border: 1.5px solid #EADACA;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -88,12 +88,12 @@
 
     .title-wrapper {
       background: #FCF4EA;
-      padding: 5px 18px;
+      padding: 6px 18px;
       border-radius: 40px;
       display: flex;
       align-items: center;
       gap: 8px;
-      border: 1px solid #EDDDCF;
+      border: 1.5px solid #EDDDCF;
     }
 
     .title-wrapper i {
@@ -107,41 +107,21 @@
       color: #6C4F32;
     }
 
-    .round-badge {
-      background: #F7EFE6;
-      padding: 6px 18px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 16px;
-      color: #9F7C5F;
-      border: 1px solid #EDDDCF;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .round-badge i {
-      color: #D9A066;
-    }
-
     .speaker-btn {
       background: #F5EDE4;
       border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 26px;
+      width: 34px;
+      height: 34px;
+      border-radius: 24px;
       font-size: 14px;
       color: #B88B5C;
       cursor: pointer;
       transition: 0.15s;
-      border: 1px solid #EADACA;
+      border: 1.5px solid #EADACA;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .speaker-btn:hover {
-      background: #EDDFD0;
+      margin-left: 4px;
     }
 
     .speaker-btn.speaking {
@@ -162,45 +142,63 @@
       }
     }
 
-    /* 主舞台 */
+    .round-badge {
+      background: #F7EFE6;
+      padding: 6px 18px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 15px;
+      color: #9F7C5F;
+      border: 1.5px solid #EDDDCF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .round-badge i {
+      color: #D9A066;
+    }
+
+    /* 主舞台 - 紧凑 */
     .mic-stage {
       background: linear-gradient(135deg, #FEF9F2 0%, #FCF4EA 100%);
       border-radius: 36px;
-      padding: 14px 20px 14px;
+      padding: 16px 24px 16px;
       margin-bottom: 12px;
       border: 2px solid #F4E5D6;
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 6px 12px rgba(160, 120, 80, 0.06);
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 10px rgba(160, 120, 80, 0.06);
       flex: 1;
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
 
     .character-area {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .mic-icon {
-      font-size: 44px;
+      font-size: 48px;
       background: linear-gradient(145deg, #F9EDE0, #F3E2D0);
-      width: 80px;
-      height: 80px;
-      border-radius: 50px;
+      width: 88px;
+      height: 88px;
+      border-radius: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.15s;
-      box-shadow: 0 5px 0 #D4BCA4, 0 6px 16px rgba(180, 130, 80, 0.1);
-      border: 2px solid #EDD9C6;
+      box-shadow: 0 5px 0 #D4BCA4, 0 8px 16px rgba(180, 130, 80, 0.12);
+      border: 2.5px solid #EDD9C6;
       color: #A77348;
     }
 
     .mic-icon.recording {
-      box-shadow: 0 5px 0 #D4BCA4, 0 0 0 4px #F2C94C, 0 6px 16px rgba(180, 130, 80, 0.1);
+      box-shadow: 0 5px 0 #D4BCA4, 0 0 0 4px rgba(242, 201, 76, 0.4), 0 8px 16px rgba(180, 130, 80, 0.12);
       animation: recordingPulse 1.5s infinite;
     }
 
@@ -212,25 +210,25 @@
       }
 
       50% {
-        transform: scale(1.05);
+        transform: scale(1.03);
       }
     }
 
     .mic-icon:active {
       transform: translateY(3px);
-      box-shadow: 0 2px 0 #D4BCA4, 0 6px 16px rgba(180, 130, 80, 0.1);
+      box-shadow: 0 2px 0 #D4BCA4, 0 8px 16px rgba(180, 130, 80, 0.12);
     }
 
     .target-sound {
-      font-size: 40px;
+      font-size: 42px;
       font-weight: 800;
       background: linear-gradient(145deg, #FFFAF2, #FEF5EA);
-      padding: 4px 28px;
-      border-radius: 50px;
+      padding: 6px 32px;
+      border-radius: 52px;
       display: inline-block;
       letter-spacing: 4px;
       color: #CF9F6E;
-      border: 2px solid #F3E2D0;
+      border: 2.5px solid #F3E2D0;
       cursor: pointer;
       transition: all 0.15s;
       box-shadow: 0 3px 0 #E6D3C0;
@@ -246,14 +244,14 @@
       font-weight: 600;
       color: #B58253;
       background: #FEF2E4;
-      padding: 5px 18px;
-      border-radius: 36px;
+      padding: 8px 22px;
+      border-radius: 40px;
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
       transition: all 0.15s;
-      border: 1.5px solid #F0DDCB;
+      border: 2px solid #F0DDCB;
     }
 
     .listen-hint i {
@@ -261,46 +259,19 @@
       font-size: 14px;
     }
 
-    .listen-hint:active {
-      background: #F5E3D0;
-      transform: scale(0.98);
-    }
-
-    /* 录音状态区域 */
     .voice-action {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      margin: 6px 0 4px;
-    }
-
-    .recording-status {
-      background: linear-gradient(145deg, #EADBCA, #E0CDB6);
-      border: none;
-      width: 65px;
-      height: 65px;
-      border-radius: 50px;
-      font-size: 32px;
-      color: #A77348;
-      box-shadow: 0 4px 0 #C6AA8A, 0 6px 16px rgba(180, 130, 80, 0.12);
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #EDD9C6;
-    }
-
-    .recording-status.recording {
-      background: linear-gradient(145deg, #D9C2A8, #CDB598);
-      box-shadow: 0 4px 0 #C6AA8A, 0 0 0 3px #F2C94C80, 0 6px 16px rgba(180, 130, 80, 0.12);
+      gap: 10px;
+      margin: 6px 0 8px;
     }
 
     .volume-meter {
-      width: 60%;
+      width: 65%;
       background: #F0E2D4;
       border-radius: 30px;
-      height: 6px;
+      height: 8px;
       overflow: hidden;
     }
 
@@ -312,63 +283,26 @@
       transition: width 0.05s linear;
     }
 
-    .encourage-tip {
-      font-size: 11px;
-      color: #C19463;
-      background: #FEF5EA;
-      padding: 4px 14px;
-      border-radius: 30px;
+    .success-message {
+      font-size: 14px;
+      color: #7F9A6B;
+      background: #E8F0D8;
+      padding: 6px 20px;
+      border-radius: 32px;
       text-align: center;
-      font-weight: 500;
-      border: 1px solid #F0DDCB;
+      font-weight: 600;
+      border: 1.5px solid #B8D4A3;
+      display: inline-block;
+      margin: 0 auto;
     }
 
-    /* 星星区 */
-    .stars-reward {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      margin: 4px 0 2px;
-    }
-
-    .star-item {
-      font-size: 28px;
-      color: #E9C594;
-      transition: all 0.2s;
-    }
-
-    .star-item.active {
-      color: #F7B05E;
-      text-shadow: 0 0 10px #FFD58C;
-      transform: scale(1.05);
-    }
-
-    .star-bounce {
-      animation: bounceStar 0.3s ease;
-    }
-
-    @keyframes bounceStar {
-      0% {
-        transform: scale(1);
-        opacity: 0.6;
-      }
-
-      50% {
-        transform: scale(1.3);
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    /* 进度区域 */
+    /* 进度区域 - 紧凑 */
     .game-progress {
       background: linear-gradient(135deg, #FBF5ED, #F8EFE4);
       border-radius: 32px;
-      padding: 10px 16px;
-      border: 1.5px solid #F0DDCB;
+      padding: 12px 18px;
+      border: 2px solid #F0DDCB;
+      flex-shrink: 0;
     }
 
     .stats-row {
@@ -378,17 +312,17 @@
       margin-bottom: 8px;
     }
 
-    .stars-earned {
+    .progress-info {
       display: flex;
       align-items: center;
       gap: 6px;
       font-weight: 600;
       color: #8F6A44;
-      font-size: 13px;
+      font-size: 14px;
     }
 
-    .stars-earned i {
-      color: #F7B05E;
+    .progress-info i {
+      color: #D9A066;
     }
 
     .action-buttons {
@@ -402,13 +336,13 @@
       padding: 6px 16px;
       border-radius: 36px;
       font-weight: 600;
-      font-size: 12px;
+      font-size: 13px;
       color: #8B6A4C;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
-      border: 1px solid #E6D2C0;
+      border: 1.5px solid #E6D2C0;
       transition: all 0.15s;
     }
 
@@ -425,7 +359,7 @@
 
     .progress-bar-bg {
       background: #EADDCB;
-      border-radius: 20px;
+      border-radius: 24px;
       height: 7px;
       margin: 6px 0;
     }
@@ -433,7 +367,7 @@
     .progress-fill {
       width: 0%;
       background: linear-gradient(90deg, #D9A56C, #E8B88A);
-      border-radius: 20px;
+      border-radius: 24px;
       height: 100%;
       transition: width 0.3s;
     }
@@ -442,14 +376,14 @@
       background: linear-gradient(145deg, #F0E2D4, #E8D6C2);
       border: none;
       width: 100%;
-      padding: 10px;
-      border-radius: 40px;
+      padding: 11px;
+      border-radius: 44px;
       font-weight: 700;
       font-size: 15px;
       color: #AA784C;
       margin-top: 6px;
       cursor: pointer;
-      border: 1.5px solid #E6D2C0;
+      border: 2px solid #E6D2C0;
       transition: all 0.15s;
       display: flex;
       align-items: center;
@@ -475,15 +409,15 @@
       left: 50%;
       transform: translateX(-50%);
       background: #FEF3E2;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(8px);
       padding: 8px 22px;
-      border-radius: 50px;
+      border-radius: 48px;
       font-weight: 600;
       color: #B4753E;
       font-size: 14px;
       z-index: 200;
-      box-shadow: 0 8px 20px rgba(100, 70, 30, 0.15);
-      border: 1.5px solid #FFE4CA;
+      box-shadow: 0 6px 16px rgba(100, 70, 30, 0.12);
+      border: 2px solid #FFE4CA;
       pointer-events: none;
       white-space: nowrap;
       display: flex;
@@ -491,7 +425,7 @@
       gap: 6px;
     }
 
-    /* 确认弹窗 - 在1024x600内部 */
+    /* 确认弹窗 */
     .confirm-modal {
       position: absolute;
       top: 0;
@@ -507,6 +441,7 @@
       opacity: 0;
       visibility: hidden;
       transition: 0.2s;
+      border-radius: 48px;
     }
 
     .confirm-modal.show {
@@ -521,12 +456,12 @@
       max-width: 340px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 30px 40px -16px #5f3e2a33;
-      border: 1px solid #FFE9D4;
+      box-shadow: 0 30px 40px -16px rgba(95, 62, 42, 0.2);
+      border: 2px solid #FFE9D4;
     }
 
     .confirm-icon {
-      font-size: 48px;
+      font-size: 46px;
       color: #E8B88A;
       margin-bottom: 12px;
     }
@@ -559,7 +494,7 @@
       font-size: 15px;
       color: #8B6A4C;
       cursor: pointer;
-      border: 1px solid #E6D2C0;
+      border: 1.5px solid #E6D2C0;
       transition: all 0.15s;
       flex: 1;
     }
@@ -568,10 +503,6 @@
       background: #EAD1BB;
       border-color: #DDBB9A;
       color: #6C4E32;
-    }
-
-    .confirm-btn:active {
-      transform: scale(0.97);
     }
 
     /* 成绩弹窗 */
@@ -590,6 +521,7 @@
       opacity: 0;
       visibility: hidden;
       transition: 0.2s;
+      border-radius: 48px;
     }
 
     .result-modal.show {
@@ -601,38 +533,38 @@
       background: #FFFCF5;
       border-radius: 44px;
       padding: 24px 36px;
-      max-width: 380px;
+      max-width: 360px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 30px 40px -16px #5f3e2a33;
-      border: 1px solid #FFE9D4;
+      box-shadow: 0 30px 40px -16px rgba(95, 62, 42, 0.2);
+      border: 2px solid #FFE9D4;
     }
 
     .modal-title {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       color: #7C5F48;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .total-stars {
+    .success-count {
       font-size: 52px;
       font-weight: 900;
-      color: #F7B05E;
-      margin: 12px 0;
+      color: #7F9A6B;
+      margin: 10px 0;
     }
 
     .modal-btn {
       background: #EAD1BB;
       border: none;
-      padding: 12px 26px;
+      padding: 12px 24px;
       border-radius: 44px;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15px;
       color: #6F4E34;
       cursor: pointer;
       margin-top: 12px;
-      border: 1px solid #DDBB9A;
+      border: 2px solid #DDBB9A;
       width: 100%;
     }
 
@@ -653,11 +585,11 @@
       <!-- 头部 -->
       <div class="game-header">
         <div class="left-header">
-          <button class="home-btn" id="backBtn"><i class="fas fa-home"></i></button>
+          <button class="home-btn" id="homeBtn"><i class="fas fa-home"></i></button>
           <div class="title-wrapper">
             <i class="fas fa-microphone-alt"></i>
             <h2>声音小话筒</h2>
-            <button class="speaker-btn" id="speakCurrentBtn" title="朗读提示"><i class="fas fa-volume-up"></i></button>
+            <button class="speaker-btn" id="speakBtn" title="朗读提示"><i class="fas fa-volume-up"></i></button>
           </div>
         </div>
         <div class="round-badge">
@@ -680,36 +612,25 @@
         </div>
 
         <div class="voice-action">
-          <div class="recording-status" id="recordingStatus">
-            <i class="fas fa-microphone"></i>
-          </div>
           <div class="volume-meter">
             <div class="volume-fill" id="volumeFill"></div>
           </div>
-          <div class="encourage-tip" id="encourageTip">
-            💡 播报完成后自动录音，发声得星星
-          </div>
-        </div>
-
-        <div class="stars-reward" id="starsReward">
-          <div class="star-item"><i class="fas fa-star"></i></div>
-          <div class="star-item"><i class="fas fa-star"></i></div>
-          <div class="star-item"><i class="fas fa-star"></i></div>
+          <div id="successIndicator" style="min-height: 36px;"></div>
         </div>
       </div>
 
       <!-- 进度区域 -->
       <div class="game-progress">
         <div class="stats-row">
-          <div class="stars-earned">
-            <i class="fas fa-star"></i>
-            <span>本轮 <span id="roundStars">0</span> 星</span>
+          <div class="progress-info">
+            <i class="fas fa-check-circle" style="color:#7F9A6B;"></i>
+            <span>成功 <span id="successCount">0</span>/<span id="totalSuccess">8</span></span>
           </div>
           <div class="action-buttons">
-            <button class="action-btn" id="skipRoundBtn">
+            <button class="action-btn" id="skipBtn">
               <i class="fas fa-forward"></i> 跳过
             </button>
-            <button class="action-btn end-btn" id="endGameBtn">
+            <button class="action-btn end-btn" id="endBtn">
               <i class="fas fa-flag-checkered"></i> 结束
             </button>
           </div>
@@ -717,18 +638,18 @@
         <div class="progress-bar-bg">
           <div class="progress-fill" id="progressFill"></div>
         </div>
-        <button class="next-btn" id="nextRoundBtn">
+        <button class="next-btn" id="nextBtn">
           🎤 下一个声音 <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- 确认弹窗 - 在1024x600内部 -->
+    <!-- 确认弹窗 -->
     <div class="confirm-modal" id="confirmModal">
       <div class="confirm-card">
         <div class="confirm-icon"><i class="fas fa-question-circle"></i></div>
-        <div class="confirm-title">确定要结束吗？</div>
-        <div class="confirm-message" id="confirmMessage">结束练习后可以查看成绩</div>
+        <div class="confirm-title" id="confirmTitle">确定吗？</div>
+        <div class="confirm-message" id="confirmMessage"></div>
         <div class="confirm-buttons">
           <button class="confirm-btn" id="confirmCancel">取消</button>
           <button class="confirm-btn primary" id="confirmOk">确定</button>
@@ -740,8 +661,8 @@
     <div class="result-modal" id="resultModal">
       <div class="modal-card">
         <div class="modal-title"><i class="fas fa-trophy"></i> 练习完成</div>
-        <div style="font-size: 16px; color: #8F6A44;">总共获得星星</div>
-        <div class="total-stars" id="finalStars">0</div>
+        <div style="font-size: 15px; color: #8F6A44;">成功发声次数</div>
+        <div class="success-count" id="finalSuccess">0</div>
         <div style="font-size: 14px; color: #9B846C;">完成 <span id="completedRounds">0</span>/8 轮</div>
         <button class="modal-btn" id="restartBtn">重新开始</button>
         <button class="modal-btn secondary" id="homeBtn2">返回主页</button>
@@ -750,260 +671,339 @@
   </div>
 
   <script>
-    // ========== TTS 语音播报 ==========
-    const VoiceSpeaker = {
-      synth: window.speechSynthesis,
-      speaking: false,
-      getChineseVoice() {
-        const voices = this.synth.getVoices();
-        return voices.find(v => v.lang.includes('zh')) || voices[0];
-      },
-      speak(text, onEnd = null) {
-        this.stop();
-        const u = new SpeechSynthesisUtterance(text);
-        u.voice = this.getChineseVoice();
-        u.lang = 'zh-CN';
-        u.rate = 0.9;
-        u.pitch = 1.2;
-        this.speaking = true;
-        this.updateBtn(true);
-        u.onend = u.onerror = () => { this.speaking = false; this.updateBtn(false); if (onEnd) onEnd(); };
-        this.synth.speak(u);
-      },
-      stop() { if (this.synth.speaking) this.synth.cancel(); this.speaking = false; this.updateBtn(false); },
-      updateBtn(s) { document.getElementById('speakCurrentBtn')?.classList.toggle('speaking', s); }
-    };
+    (function () {
+      // ========== TTS 语音播报 ==========
+      const VoiceSpeaker = {
+        synth: window.speechSynthesis,
+        speaking: false,
+        getChineseVoice() {
+          const voices = this.synth.getVoices();
+          return voices.find(v => v.lang.includes('zh')) || voices[0];
+        },
+        speak(text, onEnd = null) {
+          this.stop();
+          const u = new SpeechSynthesisUtterance(text);
+          u.voice = this.getChineseVoice();
+          u.lang = 'zh-CN';
+          u.rate = 0.9;
+          u.pitch = 1.2;
+          this.speaking = true;
+          document.getElementById('speakBtn')?.classList.add('speaking');
+          u.onend = u.onerror = () => {
+            this.speaking = false;
+            document.getElementById('speakBtn')?.classList.remove('speaking');
+            if (onEnd) onEnd();
+          };
+          this.synth.speak(u);
+        },
+        stop() {
+          if (this.synth.speaking) this.synth.cancel();
+          this.speaking = false;
+          document.getElementById('speakBtn')?.classList.remove('speaking');
+        }
+      };
 
-    // 音效
-    const SoundFX = {
-      ctx: null,
-      init() { if (!this.ctx) try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } },
-      async resume() { this.init(); if (this.ctx?.state === 'suspended') await this.ctx.resume(); },
-      play(freq, dur, type = 'sine') {
-        if (!this.ctx) this.init();
-        if (!this.ctx) return;
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-        const t = this.ctx.currentTime;
-        const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.08, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-        g.connect(this.ctx.destination);
-        const o = this.ctx.createOscillator();
-        o.type = type;
-        o.frequency.value = freq;
-        o.connect(g);
-        o.start(); o.stop(t + dur);
-      },
-      star() { this.play(880, 0.15); },
-      triple() { [659, 784, 880].forEach((f, i) => setTimeout(() => this.play(f, 0.12, 'triangle'), i * 100)); },
-      next() { this.play(523, 0.12); },
-      complete() { [523, 659, 784].forEach((f, i) => setTimeout(() => this.play(f, 0.25, 'triangle'), i * 120)); },
-      click() { this.play(800, 0.04); }
-    };
+      // 8轮数据
+      const library = [
+        { text: "a", display: "a — 啊", hint: "张开小嘴巴～", full: "小猫咪想听你学 a ～ 张开小嘴巴" },
+        { text: "o", display: "o — 喔", hint: "圆圆的嘴巴～", full: "小猫咪想听你学 o ～ 圆圆的嘴巴" },
+        { text: "e", display: "e — 鹅", hint: "嘴巴扁扁～", full: "小猫咪想听你学 e ～ 嘴巴扁扁" },
+        { text: "ma", display: "ma — 妈", hint: "轻轻说妈～", full: "小猫咪想听你学 ma ～ 轻轻说妈" },
+        { text: "ba", display: "ba — 爸", hint: "试试 ba～", full: "小猫咪想听你学 ba ～ 试试 ba" },
+        { text: "wu", display: "wu — 呜", hint: "小火车呜～", full: "小猫咪想听你学 wu ～ 小火车呜呜" },
+        { text: "yi", display: "yi — 衣", hint: "衣服的衣～", full: "小猫咪想听你学 yi ～ 衣服的衣" },
+        { text: "yu", display: "yu — 鱼", hint: "小鱼游游～", full: "小猫咪想听你学 yu ～ 小鱼游游" }
+      ];
 
-    // 8轮数据
-    const library = [
-      { text: "a", display: "a — 啊", hint: "张开小嘴巴～", full: "小猫咪想听你学 a ～ 张开小嘴巴" },
-      { text: "o", display: "o — 喔", hint: "圆圆的嘴巴～", full: "小猫咪想听你学 o ～ 圆圆的嘴巴" },
-      { text: "e", display: "e — 鹅", hint: "嘴巴扁扁～", full: "小猫咪想听你学 e ～ 嘴巴扁扁" },
-      { text: "ma", display: "ma — 妈", hint: "轻轻说妈～", full: "小猫咪想听你学 ma ～ 轻轻说妈" },
-      { text: "ba", display: "ba — 爸", hint: "试试 ba～", full: "小猫咪想听你学 ba ～ 试试 ba" },
-      { text: "wu", display: "wu — 呜", hint: "小火车呜～", full: "小猫咪想听你学 wu ～ 小火车呜呜" },
-      { text: "yi", display: "yi — 衣", hint: "衣服的衣～", full: "小猫咪想听你学 yi ～ 衣服的衣" },
-      { text: "yu", display: "yu — 鱼", hint: "小鱼游游～", full: "小猫咪想听你学 yu ～ 小鱼游游" }
-    ];
+      const TOTAL = 8;
+      let idx = 0;
+      let successCount = 0;
+      let hasSucceeded = false;
+      let stream = null;
+      let audioCtx = null;
+      let analyser = null;
+      let source = null;
+      let listening = false;
+      let loop = null;
+      let active = true;
+      let confirmCallback = null;
+      let autoNextTimer = null;
 
-    const TOTAL = 8;
-    let idx = 0, roundStars = 0, totalStars = 0, canStar = true;
-    let stream = null, ctx = null, analyser = null, source = null;
-    let listening = false, loop = null, lastReward = 0, autoPending = false, active = true;
-    let confirmCallback = null;
+      // DOM
+      const target = document.getElementById('targetSound');
+      const hint = document.getElementById('hintText');
+      const volume = document.getElementById('volumeFill');
+      const successSpan = document.getElementById('successCount');
+      const curRound = document.getElementById('currentRound');
+      const progress = document.getElementById('progressFill');
+      const nextBtn = document.getElementById('nextBtn');
+      const micIcon = document.getElementById('micIcon');
+      const successIndicator = document.getElementById('successIndicator');
+      const confirmModal = document.getElementById('confirmModal');
+      const confirmTitle = document.getElementById('confirmTitle');
+      const confirmMsg = document.getElementById('confirmMessage');
+      const resultModal = document.getElementById('resultModal');
+      const finalSuccess = document.getElementById('finalSuccess');
+      const completed = document.getElementById('completedRounds');
+      const totalSuccessSpan = document.getElementById('totalSuccess');
 
-    // DOM
-    const target = document.getElementById('targetSound');
-    const hint = document.getElementById('hintText');
-    const volume = document.getElementById('volumeFill');
-    const starsDiv = document.getElementById('starsReward');
-    const roundStarsSpan = document.getElementById('roundStars');
-    const curRound = document.getElementById('currentRound');
-    const progress = document.getElementById('progressFill');
-    const nextBtn = document.getElementById('nextRoundBtn');
-    const tip = document.getElementById('encourageTip');
-    const micIcon = document.getElementById('micIcon');
-    const recStatus = document.getElementById('recordingStatus');
-    const confirmModal = document.getElementById('confirmModal');
-    const confirmMsg = document.getElementById('confirmMessage');
-    const resultModal = document.getElementById('resultModal');
-    const finalStars = document.getElementById('finalStars');
-    const completed = document.getElementById('completedRounds');
+      document.getElementById('totalRounds').innerText = TOTAL;
+      totalSuccessSpan.innerText = TOTAL;
 
-    document.getElementById('totalRounds').innerText = TOTAL;
-
-    function stopRecord() {
-      if (listening) {
-        listening = false;
-        micIcon.classList.remove('recording');
-        recStatus.classList.remove('recording');
-        if (loop) { cancelAnimationFrame(loop); loop = null; }
+      function showToast(msg, bg = '#FEF3E2') {
+        let t = document.querySelector('.feedback-toast');
+        if (t) t.remove();
+        t = document.createElement('div');
+        t.className = 'feedback-toast';
+        t.innerHTML = `<i class="fas fa-microphone"></i> ${msg}`;
+        t.style.background = bg;
+        document.querySelector('.mic-game').appendChild(t);
+        setTimeout(() => t.remove(), 1500);
       }
-    }
 
-    async function startRecord() {
-      if (listening || !canStar || !active) return;
-      if (!ctx) {
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = ctx.createAnalyser();
-          analyser.fftSize = 256;
-          const data = new Uint8Array(analyser.frequencyBinCount);
-          source = ctx.createMediaStreamSource(stream);
-          source.connect(analyser);
-          if (ctx.state === 'suspended') await ctx.resume();
-          startMeter(analyser, data);
-        } catch { return showToast('需要麦克风权限'); }
+      function stopRecord() {
+        if (listening) {
+          listening = false;
+          micIcon.classList.remove('recording');
+          if (loop) { cancelAnimationFrame(loop); loop = null; }
+        }
+        if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
       }
-      listening = true;
-      micIcon.classList.add('recording');
-      recStatus.classList.add('recording');
-      showToast('🎤 正在听你发声！');
-    }
 
-    function startMeter(a, d) {
-      if (loop) cancelAnimationFrame(loop);
-      function update() {
-        if (!a || !listening) { loop = requestAnimationFrame(update); return; }
-        a.getByteTimeDomainData(d);
-        let max = 0;
-        for (let i = 0; i < d.length; i++) max = Math.max(max, Math.abs((d[i] - 128) / 128));
-        volume.style.width = Math.min(100, max * 250) + '%';
-        if (max > 0.09 && listening && canStar && roundStars < 3 && Date.now() - lastReward > 700) {
-          lastReward = Date.now();
-          addStar();
+      async function startRecord() {
+        if (listening || !active || hasSucceeded) return;
+
+        if (!audioCtx) {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256;
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            source = audioCtx.createMediaStreamSource(stream);
+            source.connect(analyser);
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            startMeter(analyser, data);
+          } catch {
+            showToast('需要麦克风权限', '#FCE8E8');
+            return;
+          }
+        }
+
+        listening = true;
+        micIcon.classList.add('recording');
+        showToast('🎤 正在听你发声！');
+      }
+
+      function startMeter(a, d) {
+        if (loop) cancelAnimationFrame(loop);
+        function update() {
+          if (!a || !listening || !active) { loop = requestAnimationFrame(update); return; }
+          a.getByteTimeDomainData(d);
+          let max = 0;
+          for (let i = 0; i < d.length; i++) max = Math.max(max, Math.abs((d[i] - 128) / 128));
+          volume.style.width = Math.min(100, max * 250) + '%';
+
+          if (max > 0.12 && listening && !hasSucceeded && active) {
+            handleSuccess();
+          }
+          loop = requestAnimationFrame(update);
         }
         loop = requestAnimationFrame(update);
       }
-      loop = requestAnimationFrame(update);
-    }
 
-    function addStar() {
-      if (!canStar || roundStars >= 3 || !listening || !active) return;
-      roundStars++; totalStars++;
-      starsDiv.children[roundStars - 1]?.classList.add('active');
-      roundStarsSpan.innerText = roundStars;
-      SoundFX.star();
-      showToast(`✨ 获得第${roundStars}颗星星！`);
-      if (roundStars >= 3) {
-        canStar = false; stopRecord();
-        SoundFX.triple();
-        showToast('🎉 集满三颗星！进入下一轮');
-        VoiceSpeaker.speak('太厉害了！');
-        if (!autoPending && active) { autoPending = true; setTimeout(() => { if (active) nextRound(); }, 1500); }
+      function handleSuccess() {
+        if (hasSucceeded || !active) return;
+
+        hasSucceeded = true;
+        successCount++;
+        successSpan.innerText = successCount;
+        stopRecord();
+
+        successIndicator.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> 太棒了！发声成功！</div>';
+        showToast('🎉 发声成功！', '#E8F0D8');
+        VoiceSpeaker.speak('太棒了！');
+
+        autoNextTimer = setTimeout(() => {
+          if (active) nextRound();
+        }, 1200);
       }
-    }
 
-    function showToast(m, bg = '#FEF3E2') {
-      let t = document.querySelector('.feedback-toast');
-      if (t) t.remove();
-      t = document.createElement('div');
-      t.className = 'feedback-toast';
-      t.innerHTML = `<i class="fas fa-microphone"></i> ${m}`;
-      t.style.background = bg;
-      document.querySelector('.mic-game').appendChild(t);
-      setTimeout(() => t.remove(), 1700);
-    }
+      function speakHint() {
+        if (!active) return;
+        VoiceSpeaker.speak(library[idx].full, () => {
+          if (active && !hasSucceeded) startRecord();
+        });
+      }
 
-    function speakHint() {
-      if (!active) return;
-      VoiceSpeaker.speak(library[idx].full, () => startRecord());
-    }
+      function updateDisplay() {
+        if (!active) return;
 
-    function updateDisplay() {
-      if (!active) return;
-      const item = library[idx];
-      target.innerText = item.display;
-      hint.innerHTML = `🐱 小猫咪想听你学 "${item.text}" ～ ${item.hint}`;
-      tip.innerHTML = `💡 播报后自动录音，发出"${item.text}"得星星`;
-      roundStars = 0; canStar = true; autoPending = false;
-      Array.from(starsDiv.children).forEach(s => s.classList.remove('active'));
-      roundStarsSpan.innerText = '0';
-      volume.style.width = '0%';
-      progress.style.width = `${(idx / TOTAL) * 100}%`;
-      curRound.innerText = idx + 1;
-      nextBtn.disabled = false;
-      stopRecord();
-      speakHint();
-    }
+        const item = library[idx];
+        target.innerText = item.display;
+        hint.innerHTML = `🐱 小猫咪想听你学 "${item.text}" ～ ${item.hint}`;
+        hasSucceeded = false;
+        successIndicator.innerHTML = '';
+        volume.style.width = '0%';
+        progress.style.width = `${(idx / TOTAL) * 100}%`;
+        curRound.innerText = idx + 1;
+        nextBtn.disabled = false;
+        stopRecord();
+        speakHint();
+      }
 
-    function nextRound() {
-      if (autoPending && idx + 1 >= TOTAL) { finish(); return; }
-      if (!active) return;
-      stopRecord();
-      SoundFX.next();
-      if (idx + 1 < TOTAL) {
-        idx++;
+      function nextRound() {
+        if (!active) return;
+
+        stopRecord();
+
+        if (idx + 1 < TOTAL) {
+          idx++;
+          updateDisplay();
+          showToast(`🌟 新挑战：${library[idx].display}`);
+        } else {
+          finish();
+        }
+      }
+
+      function skipRound() {
+        if (!active) return;
+
+        stopRecord();
+        VoiceSpeaker.stop();
+
+        if (idx + 1 < TOTAL) {
+          idx++;
+          updateDisplay();
+          showToast(`⏩ 已跳过本轮`);
+        } else {
+          finish();
+        }
+      }
+
+      function finish() {
+        if (!active) return;
+        active = false;
+        stopRecord();
+        VoiceSpeaker.stop();
+
+        progress.style.width = '100%';
+        finalSuccess.innerText = successCount;
+        completed.innerText = idx + 1;
+        resultModal.classList.add('show');
+        nextBtn.disabled = true;
+      }
+
+      function reset() {
+        active = true;
+        idx = 0;
+        successCount = 0;
+        hasSucceeded = false;
+        successSpan.innerText = '0';
         updateDisplay();
-        showToast(`🌟 新挑战：${library[idx].display}`);
-      } else finish();
-    }
+        progress.style.width = '0%';
+        resultModal.classList.remove('show');
+        hideConfirm();
+      }
 
-    function skip() {
-      if (!active || autoPending) return;
-      SoundFX.click();
-      stopRecord();
-      if (idx + 1 < TOTAL) { idx++; updateDisplay(); }
-      else finish();
-    }
+      function goHome() {
+        window.location.href = 'mainPart.html';
+      }
 
-    function finish() {
-      if (!active) return;
-      active = false; stopRecord(); VoiceSpeaker.stop();
-      SoundFX.complete();
-      finalStars.innerText = totalStars;
-      completed.innerText = idx + 1;
-      resultModal.classList.add('show');
-      nextBtn.disabled = true;
-    }
+      function showConfirm(title, msg, onOk) {
+        confirmTitle.innerText = title;
+        confirmMsg.innerText = msg;
+        confirmCallback = onOk;
+        confirmModal.classList.add('show');
+      }
 
-    function reset() {
-      active = true; idx = 0; roundStars = 0; totalStars = 0; canStar = true; autoPending = false;
+      function hideConfirm() {
+        confirmModal.classList.remove('show');
+        confirmCallback = null;
+      }
+
+      // 事件绑定
+      document.getElementById('homeBtn').onclick = () => {
+        VoiceSpeaker.stop();
+        stopRecord();
+        showConfirm('返回主页', '返回主页将结束当前游戏，确定吗？', () => { hideConfirm(); goHome(); });
+      };
+
+      document.getElementById('nextBtn').onclick = () => {
+        if (!active) return;
+        stopRecord();
+        VoiceSpeaker.stop();
+        nextRound();
+      };
+
+      document.getElementById('skipBtn').onclick = () => {
+        VoiceSpeaker.stop();
+        skipRound();
+      };
+
+      document.getElementById('endBtn').onclick = () => {
+        VoiceSpeaker.stop();
+        stopRecord();
+        showConfirm('结束练习', '确定要结束练习并查看成绩吗？', () => { hideConfirm(); finish(); });
+      };
+
+      document.getElementById('speakBtn').onclick = () => {
+        stopRecord();
+        VoiceSpeaker.stop();
+        speakHint();
+      };
+
+      document.getElementById('listenHint').onclick = () => {
+        stopRecord();
+        VoiceSpeaker.stop();
+        speakHint();
+      };
+
+      target.onclick = () => {
+        stopRecord();
+        VoiceSpeaker.speak(library[idx].text, () => {
+          if (active && !hasSucceeded) startRecord();
+        });
+      };
+
+      micIcon.onclick = () => {
+        if (listening) {
+          stopRecord();
+          showToast('录音已停止');
+        } else {
+          stopRecord();
+          speakHint();
+        }
+      };
+
+      document.getElementById('confirmCancel').onclick = hideConfirm;
+
+      document.getElementById('confirmOk').onclick = () => {
+        if (confirmCallback) confirmCallback();
+        hideConfirm();
+      };
+
+      document.getElementById('restartBtn').onclick = () => {
+        resultModal.classList.remove('show');
+        reset();
+      };
+
+      document.getElementById('homeBtn2').onclick = () => {
+        resultModal.classList.remove('show');
+        goHome();
+      };
+
+      // 初始化
       updateDisplay();
-      progress.style.width = '0%';
-      resultModal.classList.remove('show');
-    }
+      window.speechSynthesis.getVoices();
 
-    function showConfirm(msg, onOk) {
-      confirmMsg.innerText = msg;
-      confirmCallback = onOk;
-      confirmModal.classList.add('show');
-    }
-
-    function hideConfirm() {
-      confirmModal.classList.remove('show');
-      confirmCallback = null;
-    }
-
-    // 事件
-    nextBtn.onclick = () => { SoundFX.click(); if (!autoPending && active) nextRound(); };
-    document.getElementById('skipRoundBtn').onclick = skip;
-    document.getElementById('endGameBtn').onclick = () => showConfirm('确定要结束练习吗？', finish);
-    document.getElementById('speakCurrentBtn').onclick = () => { SoundFX.click(); stopRecord(); speakHint(); };
-    document.getElementById('listenHint').onclick = () => { stopRecord(); speakHint(); };
-    target.onclick = () => { stopRecord(); VoiceSpeaker.speak(library[idx].text, () => startRecord()); };
-    micIcon.onclick = () => listening ? (stopRecord(), showToast('录音已停止')) : (stopRecord(), speakHint());
-    document.getElementById('backBtn').onclick = () => showConfirm('返回主页将重新开始游戏', () => { hideConfirm(); reset(); });
-    document.getElementById('confirmCancel').onclick = hideConfirm;
-    document.getElementById('confirmOk').onclick = () => { if (confirmCallback) confirmCallback(); hideConfirm(); };
-    document.getElementById('restartBtn').onclick = () => { resultModal.classList.remove('show'); reset(); };
-    document.getElementById('homeBtn2').onclick = () => showConfirm('返回主页？', () => { hideConfirm(); reset(); });
-
-    updateDisplay();
-    window.speechSynthesis.getVoices();
-    window.addEventListener('beforeunload', () => {
-      VoiceSpeaker.stop(); stopRecord();
-      if (stream) stream.getTracks().forEach(t => t.stop());
-      if (ctx) ctx.close();
-    });
+      window.addEventListener('beforeunload', () => {
+        VoiceSpeaker.stop();
+        stopRecord();
+        if (stream) stream.getTracks().forEach(t => t.stop());
+        if (audioCtx) audioCtx.close();
+      });
+    })();
   </script>
 </body>
 

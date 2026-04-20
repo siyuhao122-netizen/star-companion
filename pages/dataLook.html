@@ -83,30 +83,46 @@
       gap: 12px;
     }
 
-    .child-card {
-      background: #F9F1E8;
-      padding: 6px 16px 6px 12px;
-      border-radius: 48px;
+    .child-info-card {
       display: flex;
       align-items: center;
       gap: 12px;
+      background: linear-gradient(135deg, #FCF8F2, #F7EFE6);
+      border-radius: 48px;
+      padding: 6px 16px 6px 12px;
+      border: 2px solid #F0E2D4;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .child-info-card:hover {
+      background: #FDF5EC;
+      border-color: #E5CEB8;
     }
 
     .child-avatar {
-      background: #EADBCA;
       width: 40px;
       height: 40px;
-      border-radius: 40px;
+      background: linear-gradient(145deg, #FFF3E8, #FDE8D6);
+      border-radius: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 22px;
-      color: #B47C44;
+      color: #C28958;
+      border: 2px solid #EDD9C6;
     }
 
     .child-details {
       display: flex;
       flex-direction: column;
+    }
+
+    .child-name-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
     }
 
     .child-name {
@@ -116,13 +132,119 @@
       line-height: 1.2;
     }
 
-    .child-id {
-      font-size: 10px;
-      color: #B89A78;
-      letter-spacing: 0.3px;
+    .child-age {
+      font-size: 12px;
+      font-weight: 600;
+      color: #B47C44;
+      background: #FDF5EC;
+      padding: 1px 8px;
+      border-radius: 20px;
+      border: 1px solid #EAD1BB;
     }
 
-    .date-filter {
+    .switch-hint {
+      font-size: 10px;
+      color: #A68A6F;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .switch-hint i {
+      font-size: 9px;
+    }
+
+    /* 孩子切换下拉菜单 */
+    .child-switch-dropdown {
+      position: absolute;
+      top: 52px;
+      right: 0;
+      background: #FFFFFF;
+      border-radius: 28px;
+      box-shadow: 0 12px 28px rgba(90, 60, 40, 0.15);
+      border: 2px solid #F0E2D4;
+      min-width: 200px;
+      z-index: 1001;
+      display: none;
+      padding: 6px 4px;
+    }
+
+    .child-switch-dropdown.show {
+      display: block;
+    }
+
+    .dropdown-header {
+      padding: 10px 14px 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #9B846C;
+      border-bottom: 1.5px solid #F0E2D4;
+    }
+
+    .child-list {
+      list-style: none;
+      padding: 4px 0;
+    }
+
+    .child-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .child-list-item:hover {
+      background: #FDF5EC;
+    }
+
+    .child-list-item.active {
+      background: #F5E8DA;
+    }
+
+    .list-avatar {
+      width: 36px;
+      height: 36px;
+      background: #FDF5EC;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #C28958;
+      border: 1.5px solid #EDD9C6;
+    }
+
+    .list-info {
+      flex: 1;
+    }
+
+    .list-name {
+      font-weight: 700;
+      color: #5E422C;
+      font-size: 14px;
+    }
+
+    .list-age {
+      font-size: 11px;
+      color: #B47C44;
+    }
+
+    .active-indicator {
+      color: #D9A066;
+      font-size: 13px;
+    }
+
+    /* 下拉选择框 */
+    .filter-dropdown {
+      position: relative;
+      min-width: 130px;
+      z-index: 1000;
+    }
+
+    .filter-btn {
       background: #F2ECE4;
       padding: 8px 16px;
       border-radius: 40px;
@@ -132,6 +254,68 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      border: 1.5px solid #E6D2C0;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover {
+      background: #EDDFD0;
+    }
+
+    .filter-btn i {
+      color: #B88B5C;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(90, 60, 40, 0.2);
+      border: 1.5px solid #F0E2D4;
+      min-width: 130px;
+      z-index: 1002;
+      display: none;
+      overflow: hidden;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6C4E32;
+      cursor: pointer;
+      transition: all 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dropdown-item:hover {
+      background: #FDF5EC;
+    }
+
+    .dropdown-item.active {
+      background: #F5E8DA;
+      color: #B47C44;
+      font-weight: 600;
+    }
+
+    .dropdown-item.active i {
+      color: #D9A066;
+      opacity: 1;
+    }
+
+    .dropdown-item i {
+      opacity: 0;
+      font-size: 11px;
     }
 
     /* 三项指标 */
@@ -189,7 +373,7 @@
     }
 
     .trend.up {
-      color: #5E8742;
+      color: #B07D54;
     }
 
     .trend.down {
@@ -447,7 +631,7 @@
     .game-rate {
       font-size: 24px;
       font-weight: 800;
-      color: #55883E;
+      color: #543E2A;
       line-height: 1.2;
     }
 
@@ -461,7 +645,7 @@
     }
 
     .game-compare i {
-      color: #5E8742;
+      color: #B07D54;
     }
 
     .game-body {
@@ -474,12 +658,32 @@
       display: block;
     }
 
+    .history-list {
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #D4B99B #F3EBE2;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
     .history-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid #F4EADE;
+    }
+
+    .history-row:last-child {
+      border-bottom: none;
     }
 
     .history-date {
@@ -498,14 +702,16 @@
       padding: 4px 12px;
       border-radius: 30px;
       font-size: 13px;
+      color: #5E422C;
     }
 
     .history-detail {
       color: #9F7C58;
       font-size: 12px;
+      min-width: 80px;
     }
 
-    .video-btn {
+    .detail-btn {
       background: #F2E8DE;
       border: none;
       padding: 6px 14px;
@@ -520,11 +726,11 @@
       gap: 4px;
     }
 
-    .video-btn:hover {
+    .detail-btn:hover {
       background: #E8D5C3;
     }
 
-    .video-btn i {
+    .detail-btn i {
       font-size: 13px;
     }
 
@@ -549,30 +755,19 @@
       margin-top: 8px;
     }
 
-    .btn-outline,
     .btn-primary-sm {
-      background: transparent;
-      border: 1px solid #E0CFBD;
+      background: #EBDBCA;
+      border: none;
       padding: 8px 18px;
       border-radius: 40px;
       font-weight: 600;
-      color: #8F6E4A;
+      color: #6C4E32;
       cursor: pointer;
       font-size: 12px;
       transition: all 0.15s;
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .btn-outline:hover {
-      background: #F5EDE4;
-    }
-
-    .btn-primary-sm {
-      background: #EBDBCA;
-      border: none;
-      color: #6C4E32;
     }
 
     .btn-primary-sm:hover {
@@ -586,7 +781,7 @@
       text-align: center;
     }
 
-    /* ========= 底部导航栏 - 图片风格 ========= */
+    /* 底部导航栏 */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -629,7 +824,6 @@
       transition: all 0.2s;
     }
 
-    /* 激活状态 - 纯色切换，无背景框 */
     .nav-item.active i {
       color: #D9A066;
     }
@@ -652,11 +846,26 @@
       border-radius: 48px;
       font-weight: 600;
       color: #B87A48;
-      z-index: 1000;
+      z-index: 2000;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
       border: 1px solid #F7E3CF;
       font-size: 13px;
       pointer-events: none;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      display: none;
+      background: transparent;
+    }
+
+    .overlay.show {
+      display: block;
     }
 
     button {
@@ -665,18 +874,176 @@
       border: none;
     }
 
-    .fa-chevron-down,
-    .fa-chevron-up {
-      font-size: 16px;
-      color: #B89A78;
-      margin-left: 10px;
-      transition: transform 0.2s;
+    /* 详情弹窗 */
+    .detail-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .detail-modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFCF5;
+      border-radius: 36px;
+      padding: 24px 28px;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 30px 50px -16px rgba(95, 62, 42, 0.25);
+      border: 2px solid #FFE9D4;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #5E422C;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title i {
+      color: #D9A066;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      background: #F5EDE4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B88B5C;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .modal-close:hover {
+      background: #EDDFD0;
+    }
+
+    .modal-subtitle {
+      font-size: 14px;
+      color: #9B846C;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid #F0E2D4;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      background: #FEF8F2;
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-icon-sm {
+      width: 40px;
+      height: 40px;
+      background: #F5EDE4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #D9A066;
+      font-size: 18px;
+    }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .stat-label-sm {
+      font-size: 11px;
+      color: #9B846C;
+      margin-bottom: 2px;
+    }
+
+    .stat-value-sm {
+      font-size: 22px;
+      font-weight: 800;
+      color: #5E422C;
+      line-height: 1.2;
+    }
+
+    .rate-item {
+      background: linear-gradient(135deg, #FDF8F0, #F9F1E6);
+      border-radius: 20px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .rate-label {
+      font-weight: 600;
+      color: #6C4F32;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rate-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #B57A48;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      background: #EAD1BB;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      color: #6C4E32;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1.5px solid #DDBB9A;
     }
   </style>
 </head>
 
 <body>
   <div class="dashboard-container">
+    <div class="overlay" id="overlay" onclick="closeAllDropdowns()"></div>
+
     <div class="scroll-content">
       <!-- 头部区域 -->
       <div class="header">
@@ -685,19 +1052,50 @@
           <p>看得懂 · 有温度 · 见证成长每一步</p>
         </div>
         <div class="child-section">
-          <div class="child-card">
-            <div class="child-avatar">
-              <i class="fas fa-child"></i>
+          <!-- 孩子信息卡片 - 与首页同步 -->
+          <div class="child-info-card" id="childInfoCard">
+            <div class="child-avatar" id="currentChildAvatar">
+              <i class="fas fa-face-smile"></i>
             </div>
             <div class="child-details">
-              <span class="child-name">小宝 · 3岁半</span>
-              <span class="child-id">ID: XB0326</span>
+              <div class="child-name-row">
+                <span class="child-name" id="currentChildName">乐乐</span>
+                <span class="child-age" id="currentChildAge">3岁</span>
+              </div>
+              <div class="switch-hint">
+                <i class="fas fa-chevron-down"></i>
+                <span>切换宝贝</span>
+              </div>
             </div>
           </div>
-          <div class="date-filter" id="filterDateBtn">
-            <i class="fas fa-calendar-week"></i>
-            <span>最近7天</span>
-            <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+
+          <!-- 孩子切换下拉菜单 -->
+          <div class="child-switch-dropdown" id="childDropdown">
+            <div class="dropdown-header">
+              <i class="fas fa-users"></i> 我的宝贝们
+            </div>
+            <ul class="child-list" id="childList"></ul>
+          </div>
+
+          <!-- 次数筛选下拉框 -->
+          <div class="filter-dropdown" id="filterDropdown">
+            <div class="filter-btn" id="filterBtn">
+              <i class="fas fa-list-ol"></i>
+              <span id="selectedFilterText">最近7次</span>
+              <i class="fas fa-chevron-down" id="dropdownArrow" style="font-size: 12px;"></i>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-item" data-count="10"><span>最近10次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="9"><span>最近9次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="8"><span>最近8次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item active" data-count="7"><span>最近7次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="6"><span>最近6次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="5"><span>最近5次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="4"><span>最近4次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="3"><span>最近3次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="2"><span>最近2次</span><i class="fas fa-check"></i></div>
+              <div class="dropdown-item" data-count="1"><span>最近1次</span><i class="fas fa-check"></i></div>
+            </div>
           </div>
         </div>
       </div>
@@ -706,21 +1104,21 @@
       <div class="overview-grid">
         <div class="metric-card" data-game="name">
           <div class="metric-icon"><i class="fas fa-ear-listen"></i></div>
-          <div class="metric-value">62.5%</div>
-          <div class="metric-label">叫名反应成功率</div>
-          <span class="trend up"><i class="fas fa-arrow-up"></i> +12%</span>
+          <div class="metric-value" id="metricName">62.5%</div>
+          <div class="metric-label">叫名反应正确率</div>
+          <span class="trend up" id="trendName"><i class="fas fa-arrow-up"></i> +12%</span>
         </div>
         <div class="metric-card" data-game="point">
           <div class="metric-icon"><i class="fas fa-hand-peace"></i></div>
-          <div class="metric-value">75.0%</div>
-          <div class="metric-label">指物练习成功率</div>
-          <span class="trend up"><i class="fas fa-arrow-up"></i> +8%</span>
+          <div class="metric-value" id="metricPoint">75.0%</div>
+          <div class="metric-label">指物练习正确率</div>
+          <span class="trend up" id="trendPoint"><i class="fas fa-arrow-up"></i> +8%</span>
         </div>
         <div class="metric-card" data-game="mic">
           <div class="metric-icon"><i class="fas fa-microphone-alt"></i></div>
-          <div class="metric-value">58.3%</div>
-          <div class="metric-label">声音小话筒成功率</div>
-          <span class="trend up"><i class="fas fa-arrow-up"></i> +10%</span>
+          <div class="metric-value" id="metricMic">58.3%</div>
+          <div class="metric-label">声音小话筒正确率</div>
+          <span class="trend up" id="trendMic"><i class="fas fa-arrow-up"></i> +10%</span>
         </div>
       </div>
 
@@ -731,24 +1129,16 @@
           <span>📋 智能分析 · 深度解读</span>
         </div>
         <div class="tab-group">
-          <div class="tab-btn active" data-analysis="name">
-            <i class="fas fa-ear-deaf"></i> 叫名反应
-          </div>
-          <div class="tab-btn" data-analysis="point">
-            <i class="fas fa-hand-peace"></i> 指物练习
-          </div>
-          <div class="tab-btn" data-analysis="mic">
-            <i class="fas fa-microphone-alt"></i> 声音小话筒
-          </div>
+          <div class="tab-btn active" data-analysis="name"><i class="fas fa-ear-deaf"></i> 叫名反应</div>
+          <div class="tab-btn" data-analysis="point"><i class="fas fa-hand-peace"></i> 指物练习</div>
+          <div class="tab-btn" data-analysis="mic"><i class="fas fa-microphone-alt"></i> 声音小话筒</div>
         </div>
         <div class="analysis-preview">
           <div class="preview-content">
             <h4><span id="analysisTitle">叫名反应</span> · 智能分析</h4>
             <p id="analysisDesc">反应速度提升27%，社交回应频率显著增加，建议每日保持训练。</p>
           </div>
-          <button class="jump-btn" id="analysisJumpBtn">
-            查看完整分析 <i class="fas fa-arrow-right"></i>
-          </button>
+          <button class="jump-btn" id="analysisJumpBtn">查看完整分析 <i class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
@@ -757,83 +1147,40 @@
         <div class="chart-header">
           <div class="chart-title">
             <i class="fas fa-chart-simple" style="color: #CFA276;"></i>
-            <h3>近7天趋势</h3>
+            <h3 id="chartRangeTitle">近7次趋势</h3>
           </div>
           <div class="chart-switch">
             <button class="chart-switch-btn active" data-chart="name">叫名反应</button>
             <button class="chart-switch-btn" data-chart="point">指物练习</button>
             <button class="chart-switch-btn" data-chart="mic">声音小话筒</button>
           </div>
-          <div class="chart-insight" id="chartInsight">
-            <i class="fas fa-brain"></i> 平均反应时间缩短0.3s
-          </div>
+          <div class="chart-insight" id="chartInsight"><i class="fas fa-brain"></i> 平均反应时间缩短0.3s</div>
         </div>
         <canvas id="trendChart" width="400" height="110" style="max-height:110px;"></canvas>
-        <div class="chart-encourage" id="chartEncourage">
-          <i class="fas fa-leaf"></i> 宝贝最近叫名反应越来越快！比上周进步12% ✨
-        </div>
+        <div class="chart-encourage" id="chartEncourage"><i class="fas fa-leaf"></i> 宝贝最近叫名反应越来越快！比上周进步12% ✨</div>
       </div>
 
       <!-- 游戏卡片列表 -->
       <div class="games-list">
-        <!-- 叫名反应卡片 -->
         <div class="game-card">
           <div class="game-header" onclick="toggleGameCard('nameCard')">
             <div class="game-icon"><i class="fas fa-ear-deaf"></i></div>
             <div class="game-info">
-              <div class="game-title">叫名反应 · 进阶训练</div>
+              <div class="game-title">叫名反应 · 听觉回应</div>
               <div class="game-sub">听觉·社交回应</div>
             </div>
-            <div class="game-stats">
+            <div class="game-stats" id="nameStats">
               <div class="game-rate">5/8 (62.5%)</div>
-              <div class="game-compare">
-                上次 4/8 (50%)
-                <i class="fas fa-arrow-up"></i> 进步
-              </div>
+              <div class="game-compare">上次 4/8 (50%) <i class="fas fa-arrow-up"></i> 进步</div>
             </div>
             <i class="fas fa-chevron-down" id="nameCardIcon"></i>
           </div>
           <div id="nameCard" class="game-body">
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-15</span>
-              <span class="history-rate">5/8 (62.5%)</span>
-              <span class="history-detail">反应时间 0.8s</span>
-              <button class="video-btn" data-game="name" data-date="04/15">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-14</span>
-              <span class="history-rate">4/8 (50.0%)</span>
-              <span class="history-detail">反应时间 1.1s</span>
-              <button class="video-btn" data-game="name" data-date="04/14">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-13</span>
-              <span class="history-rate">4/8 (50.0%)</span>
-              <span class="history-detail">反应时间 1.3s</span>
-              <button class="video-btn" data-game="name" data-date="04/13">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-12</span>
-              <span class="history-rate">3/8 (37.5%)</span>
-              <span class="history-detail">反应时间 1.5s</span>
-              <button class="video-btn" data-game="name" data-date="04/12">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="game-encourage">
-              <i class="fas fa-chart-line"></i>
-              最近5次训练成功率上升趋势明显，反应速度提升27%！继续保持每日训练。
-            </div>
+            <div class="history-list" id="nameHistoryList"></div>
+            <div class="game-encourage"><i class="fas fa-chart-line"></i>最近训练正确率上升趋势明显，反应速度提升27%！继续保持每日训练。</div>
           </div>
         </div>
 
-        <!-- 指物练习卡片 -->
         <div class="game-card">
           <div class="game-header" onclick="toggleGameCard('pointCard')">
             <div class="game-icon"><i class="fas fa-hand-peace"></i></div>
@@ -841,56 +1188,18 @@
               <div class="game-title">指物练习 · 趣味指认</div>
               <div class="game-sub">共同注意·表达</div>
             </div>
-            <div class="game-stats">
+            <div class="game-stats" id="pointStats">
               <div class="game-rate">6/8 (75.0%)</div>
-              <div class="game-compare">
-                上次 5/8 (62.5%)
-                <i class="fas fa-arrow-up"></i> 进步
-              </div>
+              <div class="game-compare">上次 5/8 (62.5%) <i class="fas fa-arrow-up"></i> 进步</div>
             </div>
             <i class="fas fa-chevron-down" id="pointCardIcon"></i>
           </div>
           <div id="pointCard" class="game-body">
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-15</span>
-              <span class="history-rate">6/8 (75.0%)</span>
-              <span class="history-detail">平均 1.2s</span>
-              <button class="video-btn" data-game="point" data-date="04/15">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-14</span>
-              <span class="history-rate">5/8 (62.5%)</span>
-              <span class="history-detail">平均 1.4s</span>
-              <button class="video-btn" data-game="point" data-date="04/14">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-13</span>
-              <span class="history-rate">5/8 (62.5%)</span>
-              <span class="history-detail">平均 1.6s</span>
-              <button class="video-btn" data-game="point" data-date="04/13">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-12</span>
-              <span class="history-rate">4/8 (50.0%)</span>
-              <span class="history-detail">平均 1.8s</span>
-              <button class="video-btn" data-game="point" data-date="04/12">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="game-encourage">
-              <i class="fas fa-hand-peace"></i>
-              指物练习成功率稳步提高，主动表达欲望增强，记得多鼓励宝宝！
-            </div>
+            <div class="history-list" id="pointHistoryList"></div>
+            <div class="game-encourage"><i class="fas fa-hand-peace"></i>指物练习正确率稳步提高，主动表达欲望增强，记得多鼓励宝宝！</div>
           </div>
         </div>
 
-        <!-- 声音小话筒卡片 -->
         <div class="game-card">
           <div class="game-header" onclick="toggleGameCard('micCard')">
             <div class="game-icon"><i class="fas fa-microphone-alt"></i></div>
@@ -898,141 +1207,137 @@
               <div class="game-title">声音小话筒 · 发声启蒙</div>
               <div class="game-sub">发声启蒙·语言意愿</div>
             </div>
-            <div class="game-stats">
+            <div class="game-stats" id="micStats">
               <div class="game-rate">7/12 (58.3%)</div>
-              <div class="game-compare">
-                上次 6/12 (50%)
-                <i class="fas fa-arrow-up"></i> 进步
-              </div>
+              <div class="game-compare">上次 6/12 (50%) <i class="fas fa-arrow-up"></i> 进步</div>
             </div>
             <i class="fas fa-chevron-down" id="micCardIcon"></i>
           </div>
           <div id="micCard" class="game-body">
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-15</span>
-              <span class="history-rate">7/12 (58.3%)</span>
-              <span class="history-detail">发声 5次</span>
-              <button class="video-btn" data-game="mic" data-date="04/15">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-14</span>
-              <span class="history-rate">6/12 (50.0%)</span>
-              <span class="history-detail">发声 4次</span>
-              <button class="video-btn" data-game="mic" data-date="04/14">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-13</span>
-              <span class="history-rate">5/12 (41.7%)</span>
-              <span class="history-detail">发声 3次</span>
-              <button class="video-btn" data-game="mic" data-date="04/13">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="history-row">
-              <span class="history-date"><i class="far fa-calendar-alt"></i> 2026-04-12</span>
-              <span class="history-rate">4/12 (33.3%)</span>
-              <span class="history-detail">发声 2次</span>
-              <button class="video-btn" data-game="mic" data-date="04/12">
-                <i class="fas fa-play-circle"></i>回放录像
-              </button>
-            </div>
-            <div class="game-encourage">
-              <i class="fas fa-volume-up"></i>
-              发声频率持续上升，多玩声音模仿游戏促进语言发展！
-            </div>
+            <div class="history-list" id="micHistoryList"></div>
+            <div class="game-encourage"><i class="fas fa-volume-up"></i>发声频率持续上升，多玩声音模仿游戏促进语言发展！</div>
           </div>
         </div>
       </div>
 
       <!-- 操作栏 -->
       <div class="export-bar">
-        <button class="btn-outline" id="clearHistoryBtn">
-          <i class="fas fa-trash-alt"></i> 清理历史数据
-        </button>
-        <button class="btn-primary-sm" id="exportReportBtn">
-          <i class="fas fa-download"></i> 导出成长报告 (PDF)
-        </button>
+        <button class="btn-primary-sm" id="exportReportBtn"><i class="fas fa-download"></i> 导出成长报告 (PDF)</button>
       </div>
-      <div class="footer-note">
-        <i class="fas fa-shield-alt"></i> 所有数据仅存储于本地设备，隐私安全由你掌控 · 录像保留最近10条
-      </div>
+      <div class="footer-note"><i class="fas fa-shield-alt"></i> 所有数据仅存储于本地设备，隐私安全由你掌控</div>
     </div>
 
-    <!-- 底部导航栏 - 图片风格 -->
+    <!-- 底部导航栏 -->
     <div class="bottom-nav">
       <div class="nav-items">
-        <div class="nav-item" data-nav="home">
-          <i class="fas fa-home"></i>
-          <span>首页</span>
-        </div>
-        <div class="nav-item active" data-nav="dashboard">
-          <i class="fas fa-chart-bar"></i>
-          <span>数据看板</span>
-        </div>
-        <div class="nav-item" data-nav="treehole">
-          <i class="fas fa-tree"></i>
-          <span>家长树洞</span>
-        </div>
-        <div class="nav-item" data-nav="survey">
-          <i class="fas fa-clipboard-list"></i>
-          <span>问卷筛查</span>
-        </div>
+        <div class="nav-item" data-nav="home"><i class="fas fa-home"></i><span>首页</span></div>
+        <div class="nav-item active" data-nav="dashboard"><i class="fas fa-chart-bar"></i><span>数据看板</span></div>
+        <div class="nav-item" data-nav="treehole"><i class="fas fa-tree"></i><span>家长树洞</span></div>
+        <div class="nav-item" data-nav="survey"><i class="fas fa-clipboard-list"></i><span>问卷筛查</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 详情弹窗 -->
+  <div class="detail-modal" id="detailModal" onclick="closeDetailModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fas fa-hand-peace"></i> 指物练习 · 详细数据</div>
+        <div class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="modal-subtitle" id="modalSubtitle">第7次训练 · 3岁6个月 · 男孩</div>
+      <div class="stats-grid" id="modalStatsGrid"></div>
+      <div id="modalRates"></div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeDetailModal()"><i class="fas fa-check"></i> 知道了</button>
       </div>
     </div>
   </div>
 
   <script>
     (function () {
-      // 游戏数据
-      const gameData = {
-        name: {
-          title: '叫名反应',
-          rates: [50, 50, 37.5, 50, 50, 62.5, 62.5],
-          insight: '平均反应时间缩短0.3s',
-          encourage: '宝贝最近叫名反应越来越快！比上周进步12% ✨',
-          analysisDesc: '反应速度提升27%，社交回应频率显著增加，建议每日保持训练。'
+      // 孩子数据 - 与首页同步
+      const childrenData = [
+        { id: 1, name: '乐乐', age: '3岁', birth: '2023-03-15', avatar: 'bear', icon: 'fa-face-smile' },
+        { id: 2, name: '朵朵', age: '2岁', birth: '2024-01-20', avatar: 'cat', icon: 'fa-cat' },
+        { id: 3, name: '阳阳', age: '5岁', birth: '2021-06-10', avatar: 'dog', icon: 'fa-dog' }
+      ];
+
+      let currentChildId = 1;
+
+      // 完整游戏数据（10次）- 按孩子ID存储
+      const allGameData = {
+        1: { // 乐乐
+          name: { fullRates: [37.5, 50, 50, 50, 62.5, 62.5, 62.5, 75, 75, 75], corrects: [3, 4, 4, 4, 5, 5, 5, 6, 6, 6], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.5, 1.3, 1.3, 1.1, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5] },
+          point: { fullRates: [50, 62.5, 62.5, 62.5, 75, 75, 75, 87.5, 87.5, 100], corrects: [4, 5, 5, 5, 6, 6, 6, 7, 7, 8], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.2, 1.0, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3], totalClicks: [18, 14, 12, 10, 9, 9, 9, 9, 9, 10], correctClicks: [4, 5, 5, 5, 6, 6, 6, 7, 7, 8], wrongClicks: [14, 9, 7, 5, 3, 3, 3, 2, 2, 2], correctCount: [4, 5, 5, 5, 6, 6, 6, 7, 7, 8], wrongCount: [4, 3, 3, 3, 2, 2, 2, 1, 1, 0], timeout: [5, 3, 2, 1, 0, 0, 0, 0, 0, 0], skip: [2, 1, 0, 0, 0, 0, 0, 0, 0, 0] },
+          mic: { fullRates: [33.3, 41.7, 41.7, 50, 50, 58.3, 58.3, 66.7, 66.7, 75], corrects: [4, 5, 5, 6, 6, 7, 7, 8, 8, 9], totals: [12, 12, 12, 12, 12, 12, 12, 12, 12, 12], times: [1.8, 1.6, 1.6, 1.4, 1.4, 1.2, 1.1, 1.0, 0.9, 0.8] }
         },
-        point: {
-          title: '指物练习',
-          rates: [50, 62.5, 62.5, 62.5, 75, 75, 75],
-          insight: '主动指认准确率提升15%',
-          encourage: '指物练习成功率稳步提高，共同注意能力明显增强！',
-          analysisDesc: '主动指认成功率提升至75%，共同注意能力增强，可加入更多物品指认。'
+        2: { // 朵朵
+          name: { fullRates: [25, 37.5, 37.5, 50, 50, 62.5, 62.5, 75, 75, 87.5], corrects: [2, 3, 3, 4, 4, 5, 5, 6, 6, 7], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.8, 1.6, 1.5, 1.3, 1.2, 1.0, 0.9, 0.8, 0.7, 0.6] },
+          point: { fullRates: [37.5, 50, 50, 62.5, 62.5, 75, 75, 87.5, 87.5, 100], corrects: [3, 4, 4, 5, 5, 6, 6, 7, 7, 8], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.4, 1.2, 1.1, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4], totalClicks: [20, 16, 14, 12, 11, 10, 10, 9, 9, 10], correctClicks: [3, 4, 4, 5, 5, 6, 6, 7, 7, 8], wrongClicks: [17, 12, 10, 7, 6, 4, 4, 2, 2, 2], correctCount: [3, 4, 4, 5, 5, 6, 6, 7, 7, 8], wrongCount: [5, 4, 4, 3, 3, 2, 2, 1, 1, 0], timeout: [6, 4, 3, 2, 1, 0, 0, 0, 0, 0], skip: [3, 2, 1, 0, 0, 0, 0, 0, 0, 0] },
+          mic: { fullRates: [25, 33.3, 33.3, 41.7, 50, 50, 58.3, 66.7, 75, 75], corrects: [3, 4, 4, 5, 6, 6, 7, 8, 9, 9], totals: [12, 12, 12, 12, 12, 12, 12, 12, 12, 12], times: [2.0, 1.8, 1.7, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0, 0.9] }
         },
-        mic: {
-          title: '声音小话筒',
-          rates: [33.3, 41.7, 41.7, 50, 50, 58.3, 58.3],
-          insight: '发声频率提升42%',
-          encourage: '声音模仿越来越积极，语言意愿明显增强！',
-          analysisDesc: '发声频率与模仿意愿上升，58.3%成功率，多玩声音模仿游戏促进语言。'
+        3: { // 阳阳
+          name: { fullRates: [50, 62.5, 62.5, 75, 75, 87.5, 87.5, 100, 100, 100], corrects: [4, 5, 5, 6, 6, 7, 7, 8, 8, 8], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.2, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.4, 0.3] },
+          point: { fullRates: [62.5, 75, 75, 87.5, 87.5, 100, 100, 100, 100, 100], corrects: [5, 6, 6, 7, 7, 8, 8, 8, 8, 8], totals: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8], times: [1.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3, 0.3, 0.2], totalClicks: [14, 12, 11, 10, 9, 9, 8, 8, 8, 8], correctClicks: [5, 6, 6, 7, 7, 8, 8, 8, 8, 8], wrongClicks: [9, 6, 5, 3, 2, 1, 0, 0, 0, 0], correctCount: [5, 6, 6, 7, 7, 8, 8, 8, 8, 8], wrongCount: [3, 2, 2, 1, 1, 0, 0, 0, 0, 0], timeout: [3, 2, 1, 0, 0, 0, 0, 0, 0, 0], skip: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+          mic: { fullRates: [41.7, 50, 58.3, 66.7, 75, 83.3, 91.7, 100, 100, 100], corrects: [5, 6, 7, 8, 9, 10, 11, 12, 12, 12], totals: [12, 12, 12, 12, 12, 12, 12, 12, 12, 12], times: [1.5, 1.3, 1.1, 1.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3] }
         }
       };
 
-      const labels = ['04/09', '04/10', '04/11', '04/12', '04/13', '04/14', '今日'];
+      const gameMeta = {
+        name: { title: '叫名反应', insight: '平均反应时间缩短0.3s', encourage: '宝贝最近叫名反应越来越快！比上周进步12% ✨', analysisDesc: '反应速度提升27%，社交回应频率显著增加，建议每日保持训练。' },
+        point: { title: '指物练习', insight: '主动指认准确率提升15%', encourage: '指物练习正确率稳步提高，共同注意能力明显增强！', analysisDesc: '主动指认正确率提升至75%，共同注意能力增强，可加入更多物品指认。' },
+        mic: { title: '声音小话筒', insight: '发声频率提升42%', encourage: '声音模仿越来越积极，语言意愿明显增强！', analysisDesc: '发声频率与模仿意愿上升，58.3%正确率，多玩声音模仿游戏促进语言。' }
+      };
+
+      let currentCount = 7;
+      let currentGame = 'name';
       let trendChart;
       const ctx = document.getElementById('trendChart').getContext('2d');
 
-      // 渲染图表
-      function renderChart(gameKey) {
-        const data = gameData[gameKey];
+      // DOM 元素
+      const childInfoCard = document.getElementById('childInfoCard');
+      const childDropdown = document.getElementById('childDropdown');
+      const currentChildName = document.getElementById('currentChildName');
+      const currentChildAge = document.getElementById('currentChildAge');
+      const currentChildAvatar = document.getElementById('currentChildAvatar');
+      const childList = document.getElementById('childList');
+
+      function getFullGameData() {
+        return allGameData[currentChildId];
+      }
+
+      function getFilteredData(gameKey, count) {
+        const game = getFullGameData()[gameKey];
+        const startIndex = Math.max(0, game.fullRates.length - count);
+        return {
+          rates: game.fullRates.slice(startIndex),
+          corrects: game.corrects.slice(startIndex),
+          totals: game.totals.slice(startIndex),
+          times: game.times.slice(startIndex)
+        };
+      }
+
+      function getLabels(count) {
+        const labels = [];
+        for (let i = 1; i <= count; i++) labels.push(`第${i}次`);
+        return labels;
+      }
+
+      function renderChart(gameKey, count) {
+        const data = getFilteredData(gameKey, count);
+        const game = getFullGameData()[gameKey];
+        const meta = gameMeta[gameKey];
         if (trendChart) trendChart.destroy();
 
-        const colors = {
-          name: '#CFA276',
-          point: '#9BBF7A',
-          mic: '#C68B54'
-        };
+        const colors = { name: '#CFA276', point: '#9BBF7A', mic: '#C68B54' };
 
         trendChart = new Chart(ctx, {
           type: 'line',
           data: {
-            labels: labels,
+            labels: getLabels(count),
             datasets: [{
-              label: `${data.title}成功率 (%)`,
+              label: `${meta.title}正确率 (%)`,
               data: data.rates,
               borderColor: colors[gameKey],
               backgroundColor: colors[gameKey] + '20',
@@ -1046,164 +1351,349 @@
             }]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => `${ctx.raw}%`
-                }
-              }
-            },
-            scales: {
-              y: {
-                min: 20,
-                max: 90,
-                grid: { color: '#F0E6DC' },
-                title: { display: true, text: '成功率 (%)', font: { size: 11 } }
-              },
-              x: { grid: { display: false } }
-            }
+            responsive: true, maintainAspectRatio: true,
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw}%` } } },
+            scales: { y: { min: 20, max: 100, grid: { color: '#F0E6DC' }, title: { display: true, text: '正确率 (%)', font: { size: 11 } } }, x: { grid: { display: false } } }
           }
         });
 
-        document.getElementById('chartInsight').innerHTML = `<i class="fas fa-brain"></i> ${data.insight}`;
-        document.getElementById('chartEncourage').innerHTML = `<i class="fas fa-leaf"></i> ${data.encourage}`;
+        document.getElementById('chartInsight').innerHTML = `<i class="fas fa-brain"></i> ${meta.insight}`;
+        document.getElementById('chartEncourage').innerHTML = `<i class="fas fa-leaf"></i> ${meta.encourage}`;
+        document.getElementById('chartRangeTitle').innerHTML = `近${count}次趋势`;
       }
 
-      // 智能分析切换
+      function updateMetrics(count) {
+        const nameData = getFilteredData('name', count);
+        const pointData = getFilteredData('point', count);
+        const micData = getFilteredData('mic', count);
+        const lastName = nameData.rates[nameData.rates.length - 1];
+        const lastPoint = pointData.rates[pointData.rates.length - 1];
+        const lastMic = micData.rates[micData.rates.length - 1];
+        const firstName = nameData.rates[0], firstPoint = pointData.rates[0], firstMic = micData.rates[0];
+
+        document.getElementById('metricName').textContent = lastName + '%';
+        document.getElementById('metricPoint').textContent = lastPoint + '%';
+        document.getElementById('metricMic').textContent = lastMic + '%';
+
+        const nameDiff = (lastName - firstName).toFixed(1);
+        const pointDiff = (lastPoint - firstPoint).toFixed(1);
+        const micDiff = (lastMic - firstMic).toFixed(1);
+
+        document.getElementById('trendName').innerHTML = `<i class="fas fa-arrow-${nameDiff >= 0 ? 'up' : 'down'}"></i> ${nameDiff >= 0 ? '+' : ''}${nameDiff}%`;
+        document.getElementById('trendPoint').innerHTML = `<i class="fas fa-arrow-${pointDiff >= 0 ? 'up' : 'down'}"></i> ${pointDiff >= 0 ? '+' : ''}${pointDiff}%`;
+        document.getElementById('trendMic').innerHTML = `<i class="fas fa-arrow-${micDiff >= 0 ? 'up' : 'down'}"></i> ${micDiff >= 0 ? '+' : ''}${micDiff}%`;
+      }
+
+      function updateGameCards(count) {
+        const nameData = getFilteredData('name', count);
+        const lastName = nameData.rates[nameData.rates.length - 1];
+        const lastCorrect = nameData.corrects[nameData.corrects.length - 1];
+        const lastTotal = nameData.totals[nameData.totals.length - 1];
+        const prevCorrect = nameData.corrects.length > 1 ? nameData.corrects[nameData.corrects.length - 2] : lastCorrect;
+
+        document.querySelector('#nameStats .game-rate').textContent = `${lastCorrect}/${lastTotal} (${lastName}%)`;
+        document.querySelector('#nameStats .game-compare').innerHTML = `上次 ${prevCorrect}/${lastTotal} (${nameData.rates.length > 1 ? nameData.rates[nameData.rates.length - 2] : lastName}%) <i class="fas fa-arrow-${lastCorrect >= prevCorrect ? 'up' : 'down'}"></i> ${lastCorrect >= prevCorrect ? '进步' : '退步'}`;
+
+        let historyHtml = '';
+        for (let i = 0; i < nameData.rates.length; i++) {
+          historyHtml += `<div class="history-row"><span class="history-date"><i class="far fa-calendar-alt"></i> 第${i + 1}次</span><span class="history-rate">正确率：${nameData.corrects[i]}/${nameData.totals[i]} (${nameData.rates[i]}%)</span><span class="history-detail">反应时间 ${nameData.times[i]}s</span><button class="detail-btn" data-game="name" data-index="${i}" data-display="第${i + 1}次"><i class="fas fa-play-circle"></i>回放录像</button></div>`;
+        }
+        document.getElementById('nameHistoryList').innerHTML = historyHtml;
+
+        const pointData = getFilteredData('point', count);
+        const pointGame = getFullGameData().point;
+        const startIndex = Math.max(0, pointGame.fullRates.length - count);
+        const lastPoint = pointData.rates[pointData.rates.length - 1];
+        const lastPointCorrect = pointData.corrects[pointData.corrects.length - 1];
+        const lastPointTotal = pointData.totals[pointData.totals.length - 1];
+        const prevPointCorrect = pointData.corrects.length > 1 ? pointData.corrects[pointData.corrects.length - 2] : lastPointCorrect;
+
+        document.querySelector('#pointStats .game-rate').textContent = `${lastPointCorrect}/${lastPointTotal} (${lastPoint}%)`;
+        document.querySelector('#pointStats .game-compare').innerHTML = `上次 ${prevPointCorrect}/${lastPointTotal} (${pointData.rates.length > 1 ? pointData.rates[pointData.rates.length - 2] : lastPoint}%) <i class="fas fa-arrow-${lastPointCorrect >= prevPointCorrect ? 'up' : 'down'}"></i> ${lastPointCorrect >= prevPointCorrect ? '进步' : '退步'}`;
+
+        historyHtml = '';
+        for (let i = 0; i < pointData.rates.length; i++) {
+          const actualIndex = startIndex + i;
+          historyHtml += `<div class="history-row"><span class="history-date"><i class="far fa-calendar-alt"></i> 第${i + 1}次</span><span class="history-rate">正确率：${pointData.corrects[i]}/${pointData.totals[i]} (${pointData.rates[i]}%)</span><span class="history-detail">指认物品 ${pointData.corrects[i]}个</span><button class="detail-btn" data-game="point" data-index="${actualIndex}" data-display="第${i + 1}次"><i class="fas fa-chart-simple"></i>查看详情</button></div>`;
+        }
+        document.getElementById('pointHistoryList').innerHTML = historyHtml;
+
+        const micData = getFilteredData('mic', count);
+        const lastMic = micData.rates[micData.rates.length - 1];
+        const lastMicCorrect = micData.corrects[micData.corrects.length - 1];
+        const lastMicTotal = micData.totals[micData.totals.length - 1];
+        const prevMicCorrect = micData.corrects.length > 1 ? micData.corrects[micData.corrects.length - 2] : lastMicCorrect;
+
+        document.querySelector('#micStats .game-rate').textContent = `${lastMicCorrect}/${lastMicTotal} (${lastMic}%)`;
+        document.querySelector('#micStats .game-compare').innerHTML = `上次 ${prevMicCorrect}/${lastMicTotal} (${micData.rates.length > 1 ? micData.rates[micData.rates.length - 2] : lastMic}%) <i class="fas fa-arrow-${lastMicCorrect >= prevMicCorrect ? 'up' : 'down'}"></i> ${lastMicCorrect >= prevMicCorrect ? '进步' : '退步'}`;
+
+        historyHtml = '';
+        for (let i = 0; i < micData.rates.length; i++) {
+          historyHtml += `<div class="history-row"><span class="history-date"><i class="far fa-calendar-alt"></i> 第${i + 1}次</span><span class="history-rate">正确率：${micData.corrects[i]}/${micData.totals[i]} (${micData.rates[i]}%)</span><span class="history-detail">有效发声 ${micData.corrects[i]}次</span><button class="detail-btn" data-game="mic" data-index="${i}" data-display="第${i + 1}次"><i class="fas fa-chart-simple"></i>查看详情</button></div>`;
+        }
+        document.getElementById('micHistoryList').innerHTML = historyHtml;
+
+        bindDetailButtons();
+      }
+
+      function showDetailModal(game, index, displayText) {
+        const modal = document.getElementById('detailModal');
+        const pointData = getFullGameData().point;
+        const child = childrenData.find(c => c.id === currentChildId);
+
+        const totalClicks = pointData.totalClicks[index];
+        const correctClicks = pointData.correctClicks[index];
+        const wrongClicks = pointData.wrongClicks[index];
+        const correctCount = pointData.correctCount[index];
+        const wrongCount = pointData.wrongCount[index];
+        const clickRate = ((correctClicks / totalClicks) * 100).toFixed(1);
+        const correctRate = pointData.fullRates[index];
+        const avgTime = pointData.times[index];
+        const timeout = pointData.timeout[index];
+        const skip = pointData.skip[index];
+
+        document.getElementById('modalSubtitle').innerHTML = `${displayText} · ${child.name} · ${child.age} · ${child.id === 1 ? '男孩' : (child.id === 2 ? '女孩' : '男孩')}`;
+
+        const statsHtml = `
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-mouse-pointer"></i></div><div class="stat-content"><div class="stat-label-sm">总点击次数</div><div class="stat-value-sm">${totalClicks}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-check-circle"></i></div><div class="stat-content"><div class="stat-label-sm">正确点击次数</div><div class="stat-value-sm">${correctClicks}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-times-circle"></i></div><div class="stat-content"><div class="stat-label-sm">错误点击次数</div><div class="stat-value-sm">${wrongClicks}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-star"></i></div><div class="stat-content"><div class="stat-label-sm">正确数</div><div class="stat-value-sm">${correctCount}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-content"><div class="stat-label-sm">错误数</div><div class="stat-value-sm">${wrongCount}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-clock"></i></div><div class="stat-content"><div class="stat-label-sm">平均使用时间</div><div class="stat-value-sm">${avgTime}s</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-hourglass-end"></i></div><div class="stat-content"><div class="stat-label-sm">超时数</div><div class="stat-value-sm">${timeout}</div></div></div>
+          <div class="stat-item"><div class="stat-icon-sm"><i class="fas fa-forward"></i></div><div class="stat-content"><div class="stat-label-sm">跳过次数</div><div class="stat-value-sm">${skip}</div></div></div>
+        `;
+        document.getElementById('modalStatsGrid').innerHTML = statsHtml;
+
+        const ratesHtml = `
+          <div class="rate-item"><span class="rate-label"><i class="fas fa-mouse"></i> 正确点击率</span><span class="rate-value">${clickRate}%</span></div>
+          <div class="rate-item"><span class="rate-label"><i class="fas fa-bullseye"></i> 正确率</span><span class="rate-value">${correctRate}%</span></div>
+        `;
+        document.getElementById('modalRates').innerHTML = ratesHtml;
+
+        modal.classList.add('show');
+      }
+
+      function closeDetailModal() {
+        document.getElementById('detailModal').classList.remove('show');
+      }
+
+      function bindDetailButtons() {
+        document.querySelectorAll('.detail-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const game = btn.dataset.game;
+            const index = parseInt(btn.dataset.index);
+            const displayText = btn.dataset.display;
+            const child = childrenData.find(c => c.id === currentChildId);
+
+            if (game === 'point') {
+              showDetailModal(game, index, displayText);
+            } else if (game === 'name') {
+              toast(`📹 播放 ${child.name} · 叫名反应 训练录像 (${displayText}) — 本地录制，安全回看`);
+            } else {
+              toast(`📊 查看 ${child.name} · 声音小话筒 详细记录 (${displayText}) — 包含具体发声数据`);
+            }
+          });
+        });
+      }
+
+      // 更新当前显示的孩子信息
+      function updateCurrentChildDisplay() {
+        const child = childrenData.find(c => c.id === currentChildId);
+        if (!child) return;
+
+        currentChildName.textContent = child.name;
+        currentChildAge.textContent = child.age;
+
+        const avatarIcon = currentChildAvatar.querySelector('i');
+        if (avatarIcon) {
+          avatarIcon.className = `fas ${child.icon}`;
+        }
+
+        // 刷新所有数据
+        updateMetrics(currentCount);
+        updateGameCards(currentCount);
+        renderChart(currentGame, currentCount);
+      }
+
+      // 渲染孩子列表
+      function renderChildList() {
+        childList.innerHTML = '';
+
+        childrenData.forEach(child => {
+          const li = document.createElement('li');
+          li.className = `child-list-item ${child.id === currentChildId ? 'active' : ''}`;
+          li.setAttribute('data-child-id', child.id);
+
+          li.innerHTML = `
+            <div class="list-avatar"><i class="fas ${child.icon}"></i></div>
+            <div class="list-info"><div class="list-name">${child.name}</div><div class="list-age">${child.age}</div></div>
+            ${child.id === currentChildId ? '<i class="fas fa-check-circle active-indicator"></i>' : ''}
+          `;
+
+          li.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newChildId = child.id;
+            if (newChildId !== currentChildId) {
+              currentChildId = newChildId;
+              updateCurrentChildDisplay();
+              renderChildList();
+            }
+            closeChildDropdown();
+            toast(`✨ 已切换到${child.name}宝贝`);
+          });
+
+          childList.appendChild(li);
+        });
+      }
+
+      function toggleChildDropdown(e) {
+        e.stopPropagation();
+        childDropdown.classList.toggle('show');
+        document.getElementById('overlay').classList.toggle('show');
+      }
+
+      function closeChildDropdown() {
+        childDropdown.classList.remove('show');
+        document.getElementById('overlay').classList.remove('show');
+      }
+
+      function closeAllDropdowns() {
+        closeChildDropdown();
+        closeFilterDropdown();
+      }
+
       const analysisTabs = document.querySelectorAll('.tab-btn');
       const analysisTitle = document.getElementById('analysisTitle');
       const analysisDesc = document.getElementById('analysisDesc');
 
       function setAnalysisTab(gameKey) {
-        analysisTabs.forEach(tab => {
-          tab.classList.toggle('active', tab.dataset.analysis === gameKey);
-        });
-        const data = gameData[gameKey];
-        analysisTitle.innerText = data.title;
-        analysisDesc.innerText = data.analysisDesc;
+        currentGame = gameKey;
+        analysisTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.analysis === gameKey));
+        const meta = gameMeta[gameKey];
+        analysisTitle.innerText = meta.title;
+        analysisDesc.innerText = meta.analysisDesc;
       }
 
-      analysisTabs.forEach(tab => {
-        tab.addEventListener('click', () => setAnalysisTab(tab.dataset.analysis));
-      });
+      analysisTabs.forEach(tab => tab.addEventListener('click', () => { setAnalysisTab(tab.dataset.analysis); renderChart(currentGame, currentCount); }));
 
-      // 趋势图切换
       const chartSwitches = document.querySelectorAll('.chart-switch-btn');
-      chartSwitches.forEach(btn => {
-        btn.addEventListener('click', () => {
-          chartSwitches.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderChart(btn.dataset.chart);
+      chartSwitches.forEach(btn => btn.addEventListener('click', () => {
+        chartSwitches.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentGame = btn.dataset.chart;
+        setAnalysisTab(currentGame);
+        renderChart(currentGame, currentCount);
+      }));
+
+      const filterBtn = document.getElementById('filterBtn');
+      const dropdownMenu = document.getElementById('dropdownMenu');
+      const dropdownArrow = document.getElementById('dropdownArrow');
+
+      function toggleFilterDropdown(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+        document.getElementById('overlay').classList.toggle('show');
+        dropdownArrow.className = dropdownMenu.classList.contains('show') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+      }
+
+      function closeFilterDropdown() {
+        dropdownMenu.classList.remove('show');
+        dropdownArrow.className = 'fas fa-chevron-down';
+      }
+
+      filterBtn.addEventListener('click', toggleFilterDropdown);
+
+      function selectFilter(count, label) {
+        currentCount = count;
+        document.getElementById('selectedFilterText').textContent = label;
+        document.getElementById('chartRangeTitle').textContent = `近${count}次趋势`;
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+          const itemCount = parseInt(item.dataset.count);
+          const checkIcon = item.querySelector('.fa-check');
+          if (itemCount === count) { item.classList.add('active'); if (checkIcon) checkIcon.style.opacity = '1'; }
+          else { item.classList.remove('active'); if (checkIcon) checkIcon.style.opacity = '0'; }
+        });
+        updateMetrics(count);
+        updateGameCards(count);
+        renderChart(currentGame, count);
+        closeFilterDropdown();
+        document.getElementById('overlay').classList.remove('show');
+        toast(`📊 已切换至${label}数据`);
+      }
+
+      document.querySelectorAll('.dropdown-item').forEach(item => {
+        const checkIcon = item.querySelector('.fa-check');
+        if (item.classList.contains('active')) { if (checkIcon) checkIcon.style.opacity = '1'; }
+        else { if (checkIcon) checkIcon.style.opacity = '0'; }
+        item.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const count = parseInt(this.dataset.count);
+          const label = this.querySelector('span').textContent;
+          selectFilter(count, label);
         });
       });
 
-      // 初始化
-      renderChart('name');
-      setAnalysisTab('name');
+      childInfoCard.addEventListener('click', toggleChildDropdown);
 
-      // 游戏卡片下拉展开
       window.toggleGameCard = function (cardId) {
         const body = document.getElementById(cardId);
         const icon = document.getElementById(cardId + 'Icon');
-        if (body.classList.contains('open')) {
-          body.classList.remove('open');
-          if (icon) {
-            icon.className = 'fas fa-chevron-down';
-          }
-        } else {
-          body.classList.add('open');
-          if (icon) {
-            icon.className = 'fas fa-chevron-up';
-          }
-        }
+        if (body.classList.contains('open')) { body.classList.remove('open'); if (icon) icon.className = 'fas fa-chevron-down'; }
+        else { body.classList.add('open'); if (icon) icon.className = 'fas fa-chevron-up'; }
       };
 
-      // 底部导航 - 无提示，只切换激活状态
-      // 底部导航 - 跳转到真实页面
       const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-          e.stopPropagation();
-          const nav = this.dataset.nav;
-          if (nav === 'home') {
-            location.href = 'mainPart.html';
-          } else if (nav === 'dashboard') {
-            // 已经在数据看板页面，不做跳转（或者你想刷新当前页就取消注释下面这行）
-            // location.href = 'dataLook.html';
-          } else if (nav === 'treehole') {
-            location.href = 'seniorHole.html';
-          } else if (nav === 'survey') {
-            location.href = 'askQuestions.html';
-          }
-        });
-      });
+      navItems.forEach(item => item.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const nav = this.dataset.nav;
+        if (nav === 'home') location.href = 'mainPart.html';
+        else if (nav === 'dashboard') { }
+        else if (nav === 'treehole') location.href = 'seniorHole.html';
+        else if (nav === 'survey') location.href = 'askQuestions.html';
+      }));
 
-      // 其他按钮保留原有提示
       function toast(msg) {
-        let t = document.querySelector('.toast-msg');
-        if (t) t.remove();
-        t = document.createElement('div');
-        t.className = 'toast-msg';
-        t.innerHTML = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 1800);
+        let t = document.querySelector('.toast-msg'); if (t) t.remove();
+        t = document.createElement('div'); t.className = 'toast-msg'; t.innerHTML = msg;
+        document.body.appendChild(t); setTimeout(() => t.remove(), 1800);
       }
 
-      // 录像回放
-      document.querySelectorAll('.video-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const game = btn.dataset.game === 'name' ? '叫名反应' : (btn.dataset.game === 'point' ? '指物练习' : '声音小话筒');
-          toast(`📹 播放 ${game} 训练录像 (${btn.dataset.date}) — 本地录制，安全回看`);
-        });
-      });
-
-      // 跳转分析
       document.getElementById('analysisJumpBtn').addEventListener('click', () => {
-        const activeTab = document.querySelector('.tab-btn.active')?.dataset.analysis || 'name';
-        toast(`🔍 跳转至「${gameData[activeTab].title}」数据分析结果界面`);
+        const meta = gameMeta[currentGame];
+        if (currentGame === 'point') { toast(`🔍 跳转至「${meta.title}」深度分析界面`); setTimeout(() => { location.href = 'dataAnalys.html'; }, 500); }
+        else { toast(`🔍 跳转至「${meta.title}」数据分析结果界面`); setTimeout(() => { location.href = 'analysis_detail.html?game=' + currentGame; }, 500); }
       });
 
-      // 其他按钮
-      document.getElementById('filterDateBtn')?.addEventListener('click', () => toast('📅 支持最近7天/30天/全部，目前展示最近一周数据'));
-      document.getElementById('clearHistoryBtn')?.addEventListener('click', () => {
-        if (confirm('⚠️ 清理后将删除所有历史录像及旧记录，只保留最近7天数据。确定要清理吗？')) {
-          toast('✅ 已清理旧数据，保留最近30条记录与核心趋势');
-        }
-      });
-      document.getElementById('exportReportBtn')?.addEventListener('click', () => {
-        toast('📄 正在生成成长报告（PDF）... 包含叫名/指物/发声趋势、本周进步对比');
-        setTimeout(() => toast('报告已生成，保存至本地'), 1500);
-      });
+      document.getElementById('exportReportBtn')?.addEventListener('click', () => { toast('📄 正在生成成长报告（PDF）...'); setTimeout(() => toast('报告已生成，保存至本地'), 1500); });
 
-      // 指标卡片点击
       document.querySelectorAll('.metric-card').forEach((card) => {
         card.addEventListener('click', function () {
           const game = this.dataset.game;
-          if (game && gameData[game]) {
-            setAnalysisTab(game);
-            renderChart(game);
-            chartSwitches.forEach(btn => {
-              btn.classList.toggle('active', btn.dataset.chart === game);
-            });
-            toast(`📊 查看${gameData[game].title}详细数据`);
+          if (game && getFullGameData()[game]) {
+            setAnalysisTab(game); renderChart(game, currentCount);
+            chartSwitches.forEach(btn => btn.classList.toggle('active', btn.dataset.chart === game));
+            currentGame = game;
+            toast(`📊 查看${gameMeta[game].title}详细数据`);
           }
         });
       });
 
-      // 默认展开叫名卡片
+      window.closeDetailModal = closeDetailModal;
+
+      // 初始化
+      renderChildList();
+      updateCurrentChildDisplay();
+      renderChart('name', 7);
+      setAnalysisTab('name');
+      bindDetailButtons();
+
       setTimeout(() => {
         const nameCard = document.getElementById('nameCard');
         const nameIcon = document.getElementById('nameCardIcon');
-        if (nameCard) {
-          nameCard.classList.add('open');
-          if (nameIcon) {
-            nameIcon.className = 'fas fa-chevron-up';
-          }
-        }
+        if (nameCard) { nameCard.classList.add('open'); if (nameIcon) nameIcon.className = 'fas fa-chevron-up'; }
       }, 100);
     })();
   </script>

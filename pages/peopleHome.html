@@ -239,6 +239,13 @@
       font-size: 28px;
       color: #C28958;
       border: 2px solid #EDD9C6;
+      overflow: hidden;
+    }
+
+    .child-avatar-medium img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .child-detail {
@@ -288,15 +295,25 @@
 
     .child-stats {
       text-align: right;
+      min-width: 100px;
     }
 
-    .progress-label {
+    .stats-label {
       font-size: 12px;
       color: #9B846C;
       margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
     }
 
-    .progress-value {
+    .stats-label i {
+      color: #D9A066;
+      font-size: 12px;
+    }
+
+    .stats-value {
       font-size: 22px;
       font-weight: 800;
       color: #B57A48;
@@ -325,40 +342,6 @@
 
     .child-action-btn:hover {
       background: #EDDFD0;
-    }
-
-    /* 成长数据汇总 */
-    .stats-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: #FEFCF8;
-      border-radius: 24px;
-      padding: 16px 14px;
-      border: 1.5px solid #F0E5DA;
-      text-align: center;
-    }
-
-    .stat-card i {
-      font-size: 28px;
-      color: #D9A066;
-      margin-bottom: 8px;
-    }
-
-    .stat-number {
-      font-size: 28px;
-      font-weight: 800;
-      color: #5E422C;
-    }
-
-    .stat-label {
-      font-size: 13px;
-      color: #9B846C;
-      margin-top: 4px;
     }
 
     /* 功能菜单 */
@@ -421,8 +404,15 @@
       font-size: 14px;
     }
 
+    /* 底部按钮组 */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
     .logout-btn {
-      width: 100%;
+      flex: 1;
       padding: 14px;
       background: transparent;
       border: 1.5px solid #E8D5C3;
@@ -436,7 +426,6 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.15s;
-      margin-bottom: 8px;
     }
 
     .logout-btn:hover {
@@ -444,26 +433,395 @@
       border-color: #D4A0A0;
     }
 
-    /* 弹窗 */
+    .delete-account-btn {
+      flex: 1;
+      padding: 14px;
+      background: transparent;
+      border: 1.5px solid #E8D5C3;
+      border-radius: 48px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #A0A0A0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+
+    .delete-account-btn:hover {
+      background: #F0F0F0;
+      border-color: #B0B0B0;
+      color: #808080;
+    }
+
+    /* 弹窗遮罩 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(60, 40, 28, 0.4);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    /* 通用弹窗样式 */
+    .form-modal {
+      background: #FFFDF9;
+      border-radius: 36px;
+      padding: 28px 32px;
+      max-width: 480px;
+      width: 90%;
+      max-height: 560px;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #5E422C;
+    }
+
+    .close-modal-btn {
+      width: 36px;
+      height: 36px;
+      background: #F5EDE4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B88B5C;
+      font-size: 16px;
+      cursor: pointer;
+      border: 1px solid #EADACA;
+    }
+
+    /* 表单样式 */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5E422C;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-label i {
+      color: #D9A066;
+      margin-right: 6px;
+      font-size: 12px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #FCF8F2;
+      border: 1.5px solid #EDDDCF;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #5E422C;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #D9A066;
+      background: #FFFDF9;
+    }
+
+    .form-input::placeholder {
+      color: #B89A78;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: #FCF8F2;
+      border: 1.5px solid #EDDDCF;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #5E422C;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    /* 头像选择 */
+    .avatar-selector {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .avatar-option {
+      width: 56px;
+      height: 56px;
+      background: #F5EDE4;
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #B88B5C;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      overflow: hidden;
+    }
+
+    .avatar-option:hover {
+      background: #EDDFD0;
+    }
+
+    .avatar-option.selected {
+      border-color: #D9A066;
+      background: #FDF5EC;
+    }
+
+    .avatar-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 自定义上传头像 */
+    .avatar-upload {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(145deg, #F8EFE4, #F0E2D4);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #B88B5C;
+      cursor: pointer;
+      border: 2px dashed #D9A066;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .avatar-upload:hover {
+      background: #EDDFD0;
+    }
+
+    .avatar-upload input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .custom-avatar-preview {
+      width: 56px;
+      height: 56px;
+      border-radius: 32px;
+      overflow: hidden;
+      border: 2px solid #D9A066;
+    }
+
+    .custom-avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 标签选择 */
+    .tags-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag-option {
+      padding: 8px 16px;
+      background: #F5EDE4;
+      border-radius: 30px;
+      font-size: 13px;
+      color: #8B6A4C;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .tag-option:hover {
+      background: #EDDFD0;
+    }
+
+    .tag-option.selected {
+      border-color: #D9A066;
+      background: #FDF5EC;
+      color: #B47C44;
+    }
+
+    /* 弹窗底部按钮 */
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 40px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+    }
+
+    .modal-btn.cancel {
+      background: #F5EDE4;
+      color: #8B6A4C;
+      border: 1px solid #E6D2C0;
+    }
+
+    .modal-btn.cancel:hover {
+      background: #EDDFD0;
+    }
+
+    .modal-btn.confirm {
+      background: #EADBCA;
+      color: #6C4E32;
+      border: 1px solid #DDBB9A;
+    }
+
+    .modal-btn.confirm:hover {
+      background: #DFCAB4;
+    }
+
+    /* 确认弹窗（注销用） */
+    .confirm-modal {
+      background: #FFFDF9;
+      border-radius: 36px;
+      padding: 28px 32px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .modal-icon {
+      font-size: 52px;
+      color: #D4A0A0;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #5E422C;
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      color: #9B846C;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .modal-btn.delete-confirm {
+      background: #E8C4C4;
+      color: #8B4A4A;
+      border: 1px solid #D4A0A0;
+    }
+
+    .modal-btn.delete-confirm:hover {
+      background: #DCB0B0;
+    }
+
+    /* 提示消息 */
     .toast-msg {
       position: fixed;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       background: #FEF3E2;
-      padding: 10px 24px;
+      padding: 12px 28px;
       border-radius: 48px;
       font-weight: 600;
       color: #B87A48;
-      z-index: 1000;
+      z-index: 2000;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
       border: 1px solid #F7E3CF;
-      font-size: 13px;
+      font-size: 14px;
       pointer-events: none;
+      white-space: nowrap;
     }
 
     button {
       font-family: inherit;
+    }
+
+    /* 自定义头像区域 */
+    .custom-avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .custom-avatar-preview-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .remove-custom-avatar {
+      width: 32px;
+      height: 32px;
+      background: #FCE8E8;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #C06060;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid #D4A0A0;
+      transition: all 0.15s;
+    }
+
+    .remove-custom-avatar:hover {
+      background: #F5D0D0;
     }
   </style>
 </head>
@@ -471,7 +829,7 @@
 <body>
   <div class="profile-container">
     <div class="scroll-content">
-      <!-- 头部 - 修改返回按钮 -->
+      <!-- 头部 -->
       <div class="header">
         <div class="back-btn" onclick="goBack()">
           <i class="fas fa-arrow-left"></i>
@@ -481,17 +839,17 @@
 
       <!-- 家长信息卡片 -->
       <div class="parent-card">
-        <div class="parent-avatar-large">
+        <div class="parent-avatar-large" id="parentAvatarLarge">
           <i class="fas fa-user-circle"></i>
         </div>
         <div class="parent-info">
-          <div class="parent-name">李妈妈</div>
-          <div class="parent-phone">
+          <div class="parent-name" id="parentDisplayName">李妈妈</div>
+          <div class="parent-phone" id="parentDisplayPhone">
             <i class="fas fa-phone"></i>
             <span>138****8000</span>
           </div>
         </div>
-        <button class="edit-profile-btn" onclick="showToast('编辑个人资料')">
+        <button class="edit-profile-btn" onclick="showEditProfileModal()">
           <i class="fas fa-pen"></i> 编辑
         </button>
       </div>
@@ -499,118 +857,13 @@
       <!-- 宝贝管理 -->
       <div class="section-header">
         <h2><i class="fas fa-child"></i> 我的宝贝</h2>
-        <button class="add-child-btn" onclick="showToast('添加新宝贝')">
+        <button class="add-child-btn" onclick="showAddChildModal()">
           <i class="fas fa-plus"></i> 添加宝贝
         </button>
       </div>
 
-      <div class="children-list">
-        <!-- 宝贝1 - 当前激活 -->
-        <div class="child-item active">
-          <div class="child-avatar-medium">
-            <i class="fas fa-child"></i>
-          </div>
-          <div class="child-detail">
-            <div class="child-name-row">
-              <span class="child-name">小宝</span>
-              <span class="child-badge">当前选中</span>
-            </div>
-            <div class="child-info-row">
-              <span><i class="fas fa-cake-candles"></i> 3岁半</span>
-              <span><i class="fas fa-venus"></i> 男</span>
-              <span><i class="fas fa-calendar"></i> 训练62天</span>
-            </div>
-          </div>
-          <div class="child-stats">
-            <div class="progress-label">综合进步</div>
-            <div class="progress-value">78%</div>
-          </div>
-          <div class="child-actions">
-            <div class="child-action-btn" onclick="showToast('编辑小宝信息')">
-              <i class="fas fa-pen"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 宝贝2 -->
-        <div class="child-item">
-          <div class="child-avatar-medium">
-            <i class="fas fa-face-smile"></i>
-          </div>
-          <div class="child-detail">
-            <div class="child-name-row">
-              <span class="child-name">小苹果</span>
-            </div>
-            <div class="child-info-row">
-              <span><i class="fas fa-cake-candles"></i> 2岁</span>
-              <span><i class="fas fa-mars"></i> 女</span>
-              <span><i class="fas fa-calendar"></i> 训练28天</span>
-            </div>
-          </div>
-          <div class="child-stats">
-            <div class="progress-label">综合进步</div>
-            <div class="progress-value">65%</div>
-          </div>
-          <div class="child-actions">
-            <div class="child-action-btn" onclick="showToast('切换到小苹果')">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="child-action-btn" onclick="showToast('编辑小苹果信息')">
-              <i class="fas fa-pen"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 宝贝3 -->
-        <div class="child-item">
-          <div class="child-avatar-medium">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="child-detail">
-            <div class="child-name-row">
-              <span class="child-name">乐乐</span>
-            </div>
-            <div class="child-info-row">
-              <span><i class="fas fa-cake-candles"></i> 4岁</span>
-              <span><i class="fas fa-venus"></i> 男</span>
-              <span><i class="fas fa-calendar"></i> 训练15天</span>
-            </div>
-          </div>
-          <div class="child-stats">
-            <div class="progress-label">综合进步</div>
-            <div class="progress-value">52%</div>
-          </div>
-          <div class="child-actions">
-            <div class="child-action-btn" onclick="showToast('切换到乐乐')">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="child-action-btn" onclick="showToast('编辑乐乐信息')">
-              <i class="fas fa-pen"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 成长数据汇总 -->
-      <div class="section-header">
-        <h2><i class="fas fa-chart-simple"></i> 成长数据</h2>
-      </div>
-      <div class="stats-summary">
-        <div class="stat-card">
-          <i class="fas fa-calendar-check"></i>
-          <div class="stat-number">105</div>
-          <div class="stat-label">累计训练天数</div>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-star"></i>
-          <div class="stat-number">386</div>
-          <div class="stat-label">获得星星总数</div>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-trophy"></i>
-          <div class="stat-number">12</div>
-          <div class="stat-label">完成里程碑</div>
-        </div>
+      <div class="children-list" id="childrenList">
+        <!-- 宝贝列表会通过JS动态渲染 -->
       </div>
 
       <!-- 功能菜单 -->
@@ -660,14 +913,294 @@
         </div>
       </div>
 
-      <!-- 退出登录按钮 - 无弹框直接跳转 -->
-      <button class="logout-btn" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i> 退出登录
-      </button>
+      <!-- 底部按钮组 -->
+      <div class="action-buttons">
+        <button class="logout-btn" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i> 退出登录
+        </button>
+        <button class="delete-account-btn" onclick="showDeleteModal()">
+          <i class="fas fa-user-slash"></i> 注销账户
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑个人资料弹窗 -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="form-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-edit" style="color: #D9A066; margin-right: 8px;"></i>编辑个人资料</h3>
+        <div class="close-modal-btn" onclick="closeEditProfileModal()">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault(); saveProfile()">
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-user"></i>家长称呼</label>
+          <input type="text" class="form-input" id="editParentName" placeholder="如：李妈妈" value="李妈妈">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-phone"></i>手机号码</label>
+          <input type="tel" class="form-input" id="editParentPhone" placeholder="请输入手机号" value="13888888000">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-venus-mars"></i>与宝贝关系</label>
+          <select class="form-select" id="editParentRelation">
+            <option value="妈妈" selected>妈妈</option>
+            <option value="爸爸">爸爸</option>
+            <option value="奶奶">奶奶/外婆</option>
+            <option value="爷爷">爷爷/外公</option>
+            <option value="其他">其他亲属</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-envelope"></i>电子邮箱（选填）</label>
+          <input type="email" class="form-input" id="editParentEmail" placeholder="用于接收成长报告" value="limama@example.com">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn cancel" onclick="closeEditProfileModal()">取消</button>
+          <button type="submit" class="modal-btn confirm">保存修改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加宝贝弹窗 -->
+  <div class="modal-overlay" id="addChildModal">
+    <div class="form-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-baby" style="color: #D9A066; margin-right: 8px;"></i>添加新宝贝</h3>
+        <div class="close-modal-btn" onclick="closeAddChildModal()">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault(); addChild()">
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-tag"></i>宝贝昵称</label>
+          <input type="text" class="form-input" id="newChildName" placeholder="如：乐乐、小宝" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-cake-candles"></i>出生日期</label>
+            <input type="date" class="form-input" id="newChildBirth" value="2023-01-01" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-venus-mars"></i>性别</label>
+            <select class="form-select" id="newChildGender">
+              <option value="男">👦 男孩</option>
+              <option value="女">👧 女孩</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-face-smile"></i>选择头像</label>
+          <div class="avatar-selector" id="newChildAvatarSelector">
+            <div class="avatar-option selected" data-avatar="fa-face-smile">
+              <i class="fas fa-face-smile"></i>
+            </div>
+            <div class="avatar-option" data-avatar="fa-cat">
+              <i class="fas fa-cat"></i>
+            </div>
+            <div class="avatar-option" data-avatar="fa-dog">
+              <i class="fas fa-dog"></i>
+            </div>
+            <div class="avatar-option" data-avatar="fa-star">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="avatar-option" data-avatar="fa-crown">
+              <i class="fas fa-crown"></i>
+            </div>
+          </div>
+          <!-- 自定义上传区域 -->
+          <div class="custom-avatar-section">
+            <div class="avatar-upload" id="newChildAvatarUpload">
+              <i class="fas fa-plus"></i>
+              <input type="file" id="newChildCustomAvatarInput" accept="image/*">
+            </div>
+            <div id="newChildCustomAvatarPreview" style="display: none;" class="custom-avatar-preview-container">
+              <div class="custom-avatar-preview">
+                <img id="newChildCustomAvatarImg" src="" alt="自定义头像">
+              </div>
+              <div class="remove-custom-avatar" onclick="removeNewChildCustomAvatar()">
+                <i class="fas fa-times"></i>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="newChildCustomAvatarData" value="">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-heart"></i>关注重点（可多选）</label>
+          <div class="tags-selector" id="newChildFocusTags">
+            <span class="tag-option selected" data-tag="社交">社交互动</span>
+            <span class="tag-option" data-tag="语言">语言表达</span>
+            <span class="tag-option" data-tag="认知">认知能力</span>
+            <span class="tag-option" data-tag="运动">运动协调</span>
+            <span class="tag-option" data-tag="情绪">情绪管理</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-note-sticky"></i>备注（选填）</label>
+          <input type="text" class="form-input" id="newChildNote" placeholder="如：特别喜欢小动物">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn cancel" onclick="closeAddChildModal()">取消</button>
+          <button type="submit" class="modal-btn confirm">添加宝贝</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 编辑宝贝弹窗 -->
+  <div class="modal-overlay" id="editChildModal">
+    <div class="form-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-pen-to-square" style="color: #D9A066; margin-right: 8px;"></i>编辑宝贝信息</h3>
+        <div class="close-modal-btn" onclick="closeEditChildModal()">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault(); saveChildEdit()">
+        <input type="hidden" id="editChildId">
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-tag"></i>宝贝昵称</label>
+          <input type="text" class="form-input" id="editChildName" placeholder="宝贝昵称" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-cake-candles"></i>出生日期</label>
+            <input type="date" class="form-input" id="editChildBirth" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-venus-mars"></i>性别</label>
+            <select class="form-select" id="editChildGender">
+              <option value="男">👦 男孩</option>
+              <option value="女">👧 女孩</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-face-smile"></i>选择头像</label>
+          <div class="avatar-selector" id="editChildAvatarSelector">
+            <div class="avatar-option" data-avatar="fa-face-smile"><i class="fas fa-face-smile"></i></div>
+            <div class="avatar-option" data-avatar="fa-cat"><i class="fas fa-cat"></i></div>
+            <div class="avatar-option" data-avatar="fa-dog"><i class="fas fa-dog"></i></div>
+            <div class="avatar-option" data-avatar="fa-star"><i class="fas fa-star"></i></div>
+            <div class="avatar-option" data-avatar="fa-crown"><i class="fas fa-crown"></i></div>
+          </div>
+          <!-- 自定义上传区域 -->
+          <div class="custom-avatar-section">
+            <div class="avatar-upload" id="editChildAvatarUpload">
+              <i class="fas fa-plus"></i>
+              <input type="file" id="editChildCustomAvatarInput" accept="image/*">
+            </div>
+            <div id="editChildCustomAvatarPreview" style="display: none;" class="custom-avatar-preview-container">
+              <div class="custom-avatar-preview">
+                <img id="editChildCustomAvatarImg" src="" alt="自定义头像">
+              </div>
+              <div class="remove-custom-avatar" onclick="removeEditChildCustomAvatar()">
+                <i class="fas fa-times"></i>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="editChildCustomAvatarData" value="">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-heart"></i>关注重点</label>
+          <div class="tags-selector" id="editChildFocusTags">
+            <span class="tag-option" data-tag="社交">社交互动</span>
+            <span class="tag-option" data-tag="语言">语言表达</span>
+            <span class="tag-option" data-tag="认知">认知能力</span>
+            <span class="tag-option" data-tag="运动">运动协调</span>
+            <span class="tag-option" data-tag="情绪">情绪管理</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn cancel" onclick="closeEditChildModal()">取消</button>
+          <button type="submit" class="modal-btn confirm">保存修改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 注销确认弹窗 -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="confirm-modal">
+      <div class="modal-icon">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="modal-title">确认注销账户？</div>
+      <div class="modal-desc">
+        注销后，您的所有数据将被永久删除，<br>
+        包括宝贝档案、训练记录等，无法恢复。
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeDeleteModal()">再想想</button>
+        <button class="modal-btn delete-confirm" onclick="confirmDeleteAccount()">确认注销</button>
+      </div>
     </div>
   </div>
 
   <script>
+    // ========== 数据存储 ==========
+    // 默认孩子数据 - 与首页保持一致
+    let childrenData = [
+      { id: 1, name: '乐乐', birth: '2023-03-15', gender: '男', avatar: 'fa-face-smile', avatarType: 'icon', customAvatar: null, focusTags: ['社交', '语言'], trainingCount: 62, weekCount: 8, active: true },
+      { id: 2, name: '朵朵', birth: '2024-01-20', gender: '女', avatar: 'fa-cat', avatarType: 'icon', customAvatar: null, focusTags: ['认知', '情绪'], trainingCount: 28, weekCount: 5, active: false },
+      { id: 3, name: '阳阳', birth: '2021-06-10', gender: '男', avatar: 'fa-dog', avatarType: 'icon', customAvatar: null, focusTags: ['运动', '语言'], trainingCount: 15, weekCount: 3, active: false }
+    ];
+
+    let parentData = {
+      name: '李妈妈',
+      phone: '13888888000',
+      relation: '妈妈',
+      email: 'limama@example.com'
+    };
+
+    // 当前编辑的宝贝ID
+    let editingChildId = null;
+
+    // 从localStorage加载数据
+    function loadFromStorage() {
+      const savedChildren = localStorage.getItem('starCompanionChildren');
+      const savedParent = localStorage.getItem('starCompanionParent');
+      const savedActiveChild = localStorage.getItem('starCompanionActiveChild');
+
+      if (savedChildren) {
+        try {
+          childrenData = JSON.parse(savedChildren);
+        } catch (e) { }
+      }
+
+      if (savedParent) {
+        try {
+          parentData = JSON.parse(savedParent);
+        } catch (e) { }
+      }
+
+      if (savedActiveChild) {
+        const activeId = parseInt(savedActiveChild);
+        childrenData.forEach(c => c.active = (c.id === activeId));
+      }
+    }
+
+    // 保存数据到localStorage
+    function saveToStorage() {
+      localStorage.setItem('starCompanionChildren', JSON.stringify(childrenData));
+      localStorage.setItem('starCompanionParent', JSON.stringify(parentData));
+      const activeChild = childrenData.find(c => c.active);
+      if (activeChild) {
+        localStorage.setItem('starCompanionActiveChild', activeChild.id);
+      }
+    }
+
+    // 更新家长信息显示
+    function updateParentDisplay() {
+      document.getElementById('parentDisplayName').textContent = parentData.name;
+      const phoneDisplay = parentData.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+      document.getElementById('parentDisplayPhone').innerHTML = `<i class="fas fa-phone"></i><span>${phoneDisplay}</span>`;
+    }
+
+    // ========== 工具函数 ==========
     function showToast(msg) {
       let t = document.querySelector('.toast-msg');
       if (t) t.remove();
@@ -675,29 +1208,399 @@
       t.className = 'toast-msg';
       t.innerHTML = msg;
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 1800);
+      setTimeout(() => t.remove(), 2000);
     }
 
-    // 返回按钮 - 跳转到 mainPart.html
+    function calculateAge(birthDate) {
+      const today = new Date();
+      const birth = new Date(birthDate);
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      if (age < 1) {
+        const months = (today.getFullYear() - birth.getFullYear()) * 12 + today.getMonth() - birth.getMonth();
+        return months + '个月';
+      }
+      return age + '岁' + (monthDiff > 0 ? monthDiff + '个月' : '');
+    }
+
+    // ========== 渲染宝贝列表 ==========
+    function renderChildrenList() {
+      const container = document.getElementById('childrenList');
+      container.innerHTML = '';
+
+      childrenData.forEach(child => {
+        const age = calculateAge(child.birth);
+        const childItem = document.createElement('div');
+        childItem.className = `child-item ${child.active ? 'active' : ''}`;
+        childItem.setAttribute('data-child-id', child.id);
+        childItem.setAttribute('data-child-name', child.name);
+
+        // 处理头像显示
+        let avatarHtml = '';
+        if (child.avatarType === 'custom' && child.customAvatar) {
+          avatarHtml = `<img src="${child.customAvatar}" alt="${child.name}">`;
+        } else {
+          avatarHtml = `<i class="fas ${child.avatar}"></i>`;
+        }
+
+        childItem.innerHTML = `
+          <div class="child-avatar-medium">
+            ${avatarHtml}
+          </div>
+          <div class="child-detail">
+            <div class="child-name-row">
+              <span class="child-name">${child.name}</span>
+              ${child.active ? '<span class="child-badge">当前选中</span>' : ''}
+            </div>
+            <div class="child-info-row">
+              <span><i class="fas fa-cake-candles"></i> ${age}</span>
+              <span><i class="fas fa-${child.gender === '男' ? 'mars' : 'venus'}"></i> ${child.gender}</span>
+              <span><i class="fas fa-dumbbell"></i> 训练${child.trainingCount}次</span>
+            </div>
+          </div>
+          <div class="child-stats">
+            <div class="stats-label">
+              <i class="fas fa-calendar-week"></i> 本周训练
+            </div>
+            <div class="stats-value">${child.weekCount}次</div>
+          </div>
+          <div class="child-actions">
+            <div class="child-action-btn" onclick="event.stopPropagation(); switchChild(${child.id})">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="child-action-btn" onclick="event.stopPropagation(); showEditChildModal(${child.id})">
+              <i class="fas fa-pen"></i>
+            </div>
+          </div>
+        `;
+
+        childItem.addEventListener('click', function (e) {
+          if (e.target.closest('.child-action-btn')) return;
+          switchChild(child.id);
+        });
+
+        container.appendChild(childItem);
+      });
+
+      saveToStorage();
+    }
+
+    // ========== 切换宝贝 ==========
+    function switchChild(childId) {
+      childrenData.forEach(c => c.active = (c.id === childId));
+      renderChildrenList();
+      const child = childrenData.find(c => c.id === childId);
+      showToast(`👶 已切换到「${child.name}」`);
+    }
+
+    // ========== 返回 ==========
     function goBack() {
       location.href = 'mainPart.html';
     }
 
-    // 退出登录函数 - 无弹框直接跳转
-    function logout() {
-      location.href = 'sign-inANDsign-up.html';
+    // ========== 退出登录 ==========
+    function handleLogout() {
+      showToast('👋 正在退出登录...');
+      setTimeout(() => {
+        location.href = 'sign-inANDsign-up.html';
+      }, 800);
     }
 
-    // 宝贝卡片点击切换
-    document.querySelectorAll('.child-item').forEach(item => {
-      item.addEventListener('click', function (e) {
-        if (e.target.closest('.child-action-btn')) return;
-        document.querySelectorAll('.child-item').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        const name = this.querySelector('.child-name')?.innerText || '宝贝';
-        showToast(`👶 已切换到「${name}」`);
+    // ========== 注销账户弹窗 ==========
+    function showDeleteModal() {
+      document.getElementById('deleteModal').classList.add('show');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('show');
+    }
+
+    function confirmDeleteAccount() {
+      closeDeleteModal();
+      showToast('⏳ 账户注销处理中...');
+      setTimeout(() => {
+        showToast('✅ 账户已注销');
+        localStorage.clear();
+        setTimeout(() => {
+          location.href = 'sign-inANDsign-up.html';
+        }, 1000);
+      }, 1000);
+    }
+
+    // ========== 编辑个人资料弹窗 ==========
+    function showEditProfileModal() {
+      document.getElementById('editParentName').value = parentData.name;
+      document.getElementById('editParentPhone').value = parentData.phone;
+      document.getElementById('editParentRelation').value = parentData.relation;
+      document.getElementById('editParentEmail').value = parentData.email;
+      document.getElementById('editProfileModal').classList.add('show');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.remove('show');
+    }
+
+    function saveProfile() {
+      parentData.name = document.getElementById('editParentName').value;
+      parentData.phone = document.getElementById('editParentPhone').value;
+      parentData.relation = document.getElementById('editParentRelation').value;
+      parentData.email = document.getElementById('editParentEmail').value;
+
+      updateParentDisplay();
+      saveToStorage();
+      closeEditProfileModal();
+      showToast('✅ 个人资料已保存');
+    }
+
+    // ========== 添加宝贝弹窗 ==========
+    function showAddChildModal() {
+      document.getElementById('newChildName').value = '';
+      document.getElementById('newChildBirth').value = '2023-01-01';
+      document.getElementById('newChildGender').value = '男';
+      document.getElementById('newChildNote').value = '';
+      document.getElementById('newChildCustomAvatarData').value = '';
+
+      document.querySelectorAll('#newChildAvatarSelector .avatar-option').forEach((opt, i) => {
+        opt.classList.toggle('selected', i === 0);
+      });
+
+      document.querySelectorAll('#newChildFocusTags .tag-option').forEach((tag, i) => {
+        tag.classList.toggle('selected', i === 0);
+      });
+
+      document.getElementById('newChildCustomAvatarPreview').style.display = 'none';
+      document.getElementById('newChildAvatarUpload').style.display = 'flex';
+
+      document.getElementById('addChildModal').classList.add('show');
+    }
+
+    function closeAddChildModal() {
+      document.getElementById('addChildModal').classList.remove('show');
+    }
+
+    document.getElementById('newChildCustomAvatarInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          document.getElementById('newChildCustomAvatarImg').src = event.target.result;
+          document.getElementById('newChildCustomAvatarData').value = event.target.result;
+          document.getElementById('newChildCustomAvatarPreview').style.display = 'flex';
+          document.getElementById('newChildAvatarUpload').style.display = 'none';
+
+          document.querySelectorAll('#newChildAvatarSelector .avatar-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function removeNewChildCustomAvatar() {
+      document.getElementById('newChildCustomAvatarPreview').style.display = 'none';
+      document.getElementById('newChildAvatarUpload').style.display = 'flex';
+      document.getElementById('newChildCustomAvatarData').value = '';
+      document.getElementById('newChildCustomAvatarInput').value = '';
+
+      document.querySelectorAll('#newChildAvatarSelector .avatar-option').forEach((opt, i) => {
+        opt.classList.toggle('selected', i === 0);
+      });
+    }
+
+    function addChild() {
+      const name = document.getElementById('newChildName').value.trim();
+      if (!name) {
+        showToast('⚠️ 请输入宝贝昵称');
+        return;
+      }
+
+      const customAvatarData = document.getElementById('newChildCustomAvatarData').value;
+      let avatarType = 'icon';
+      let avatar = 'fa-face-smile';
+
+      if (customAvatarData) {
+        avatarType = 'custom';
+        avatar = customAvatarData;
+      } else {
+        const selectedAvatar = document.querySelector('#newChildAvatarSelector .avatar-option.selected');
+        avatar = selectedAvatar ? selectedAvatar.dataset.avatar : 'fa-face-smile';
+      }
+
+      const selectedTags = [];
+      document.querySelectorAll('#newChildFocusTags .tag-option.selected').forEach(tag => {
+        selectedTags.push(tag.dataset.tag);
+      });
+
+      const newId = Math.max(...childrenData.map(c => c.id), 0) + 1;
+      const newChild = {
+        id: newId,
+        name: name,
+        birth: document.getElementById('newChildBirth').value,
+        gender: document.getElementById('newChildGender').value,
+        avatar: avatar,
+        avatarType: avatarType,
+        customAvatar: avatarType === 'custom' ? avatar : null,
+        focusTags: selectedTags,
+        trainingCount: 0,
+        weekCount: 0,
+        active: false
+      };
+
+      childrenData.push(newChild);
+      renderChildrenList();
+      closeAddChildModal();
+      showToast(`✅ 宝贝「${name}」已添加`);
+    }
+
+    // ========== 编辑宝贝弹窗 ==========
+    function showEditChildModal(childId) {
+      editingChildId = childId;
+      const child = childrenData.find(c => c.id === childId);
+      if (!child) return;
+
+      document.getElementById('editChildId').value = childId;
+      document.getElementById('editChildName').value = child.name;
+      document.getElementById('editChildBirth').value = child.birth;
+      document.getElementById('editChildGender').value = child.gender;
+      document.getElementById('editChildCustomAvatarData').value = child.avatarType === 'custom' ? child.avatar : '';
+
+      if (child.avatarType === 'custom' && child.customAvatar) {
+        document.getElementById('editChildCustomAvatarImg').src = child.customAvatar;
+        document.getElementById('editChildCustomAvatarPreview').style.display = 'flex';
+        document.getElementById('editChildAvatarUpload').style.display = 'none';
+        document.querySelectorAll('#editChildAvatarSelector .avatar-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+      } else {
+        document.getElementById('editChildCustomAvatarPreview').style.display = 'none';
+        document.getElementById('editChildAvatarUpload').style.display = 'flex';
+        document.querySelectorAll('#editChildAvatarSelector .avatar-option').forEach(opt => {
+          opt.classList.toggle('selected', opt.dataset.avatar === child.avatar);
+        });
+      }
+
+      document.querySelectorAll('#editChildFocusTags .tag-option').forEach(tag => {
+        tag.classList.toggle('selected', child.focusTags.includes(tag.dataset.tag));
+      });
+
+      document.getElementById('editChildModal').classList.add('show');
+    }
+
+    function closeEditChildModal() {
+      document.getElementById('editChildModal').classList.remove('show');
+      editingChildId = null;
+    }
+
+    document.getElementById('editChildCustomAvatarInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          document.getElementById('editChildCustomAvatarImg').src = event.target.result;
+          document.getElementById('editChildCustomAvatarData').value = event.target.result;
+          document.getElementById('editChildCustomAvatarPreview').style.display = 'flex';
+          document.getElementById('editChildAvatarUpload').style.display = 'none';
+
+          document.querySelectorAll('#editChildAvatarSelector .avatar-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function removeEditChildCustomAvatar() {
+      document.getElementById('editChildCustomAvatarPreview').style.display = 'none';
+      document.getElementById('editChildAvatarUpload').style.display = 'flex';
+      document.getElementById('editChildCustomAvatarData').value = '';
+      document.getElementById('editChildCustomAvatarInput').value = '';
+
+      const child = childrenData.find(c => c.id === editingChildId);
+      if (child) {
+        document.querySelectorAll('#editChildAvatarSelector .avatar-option').forEach(opt => {
+          opt.classList.toggle('selected', opt.dataset.avatar === child.avatar);
+        });
+      }
+    }
+
+    function saveChildEdit() {
+      const childId = parseInt(document.getElementById('editChildId').value);
+      const child = childrenData.find(c => c.id === childId);
+      if (!child) return;
+
+      child.name = document.getElementById('editChildName').value.trim();
+      child.birth = document.getElementById('editChildBirth').value;
+      child.gender = document.getElementById('editChildGender').value;
+
+      const customAvatarData = document.getElementById('editChildCustomAvatarData').value;
+      if (customAvatarData) {
+        child.avatarType = 'custom';
+        child.avatar = customAvatarData;
+        child.customAvatar = customAvatarData;
+      } else {
+        const selectedAvatar = document.querySelector('#editChildAvatarSelector .avatar-option.selected');
+        child.avatarType = 'icon';
+        child.avatar = selectedAvatar ? selectedAvatar.dataset.avatar : 'fa-face-smile';
+        child.customAvatar = null;
+      }
+
+      child.focusTags = [];
+      document.querySelectorAll('#editChildFocusTags .tag-option.selected').forEach(tag => {
+        child.focusTags.push(tag.dataset.tag);
+      });
+
+      renderChildrenList();
+      closeEditChildModal();
+      showToast(`✅ 宝贝「${child.name}」信息已更新`);
+    }
+
+    // ========== 头像/标签选择交互 ==========
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.avatar-option')) {
+        const option = e.target.closest('.avatar-option');
+        const container = option.closest('.avatar-selector');
+        container.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+
+        if (container.id === 'newChildAvatarSelector') {
+          document.getElementById('newChildCustomAvatarPreview').style.display = 'none';
+          document.getElementById('newChildAvatarUpload').style.display = 'flex';
+          document.getElementById('newChildCustomAvatarData').value = '';
+        }
+        if (container.id === 'editChildAvatarSelector') {
+          document.getElementById('editChildCustomAvatarPreview').style.display = 'none';
+          document.getElementById('editChildAvatarUpload').style.display = 'flex';
+          document.getElementById('editChildCustomAvatarData').value = '';
+        }
+      }
+
+      if (e.target.closest('.tag-option')) {
+        const tag = e.target.closest('.tag-option');
+        tag.classList.toggle('selected');
+      }
+    });
+
+    // ========== 弹窗背景点击关闭 ==========
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', function (e) {
+        if (e.target === this) {
+          this.classList.remove('show');
+        }
       });
     });
+
+    // 将函数挂载到全局
+    window.removeNewChildCustomAvatar = removeNewChildCustomAvatar;
+    window.removeEditChildCustomAvatar = removeEditChildCustomAvatar;
+    window.showEditChildModal = showEditChildModal;
+
+    // ========== 初始化 ==========
+    loadFromStorage();
+    updateParentDisplay();
+    renderChildrenList();
   </script>
 </body>
 
