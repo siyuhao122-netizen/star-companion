@@ -1,5 +1,5 @@
 ﻿from flask import Blueprint, request, jsonify
-from models import db, TreeholeMessage
+from models import db, TreeholeMessage, Notification
 from config import Config
 import requests
 from datetime import datetime
@@ -141,6 +141,16 @@ def like_message(msg_id):
     msg = TreeholeMessage.query.get(msg_id)
     if msg:
         msg.likes += 1
+        # 通知消息作者
+        if msg.user_id:
+            notif = Notification(
+                user_id=msg.user_id,
+                type='treehole_like',
+                title='有人给你的树洞留言点了赞',
+                content=f'你的留言获得了 {msg.likes} 个赞',
+                related_id=msg_id
+            )
+            db.session.add(notif)
         db.session.commit()
         return jsonify({'likes': msg.likes})
     return jsonify({'error': '消息不存在'}), 404

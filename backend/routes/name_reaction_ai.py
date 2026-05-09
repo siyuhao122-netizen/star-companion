@@ -39,7 +39,7 @@ def save_token_usage(record_type, record_id, child_id, model_name, usage_data):
         print(f"⚠️ Token记录保存失败: {e}")
 
 
-def call_ai(prompt, extra_knowledge='', analysis_type='name'):
+def call_ai(prompt, extra_knowledge='', analysis_type='name', max_tokens=500):
     """调用AI模型（集成RAG）"""
     try:
         url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
@@ -57,7 +57,7 @@ def call_ai(prompt, extra_knowledge='', analysis_type='name'):
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.7,
-            "max_tokens": 500
+            "max_tokens": max_tokens
         }
         print(f"🤖 叫名反应AI调用: {Config.BAILIAN_MODEL}")
         response = requests.post(url, json=payload, headers=headers, timeout=15)
@@ -127,7 +127,7 @@ def build_trend_analysis_prompt(child_name, age_months, records):
     rate_diff = latest_rate - prev_avg_rate
     time_diff = prev_avg_time - latest_time
 
-    prompt = f"""你是一位儿童发育行为顾问，请根据以下叫名反应数据给出趋势分析（250字以内），包含：整体变化、具体数据对比、2条家庭练习建议。
+    prompt = f"""你是一位儿童发育行为顾问，请根据以下叫名反应训练数据给出一份详细的分析报告。
 
 【孩子】{child_name}，{age_months}个月
 
@@ -143,7 +143,26 @@ def build_trend_analysis_prompt(child_name, age_months, records):
 成功率{'提高' if rate_diff > 0 else '下降' if rate_diff < 0 else '持平'}了{abs(rate_diff):.1f}个百分点
 反应速度{'变快' if time_diff > 0 else '变慢' if time_diff < 0 else '稳定'}
 
-请直接分析，语言像朋友聊天，建议要具体可操作。"""
+请按以下结构输出分析报告（语言温暖亲切，像朋友聊天）：
+
+一、整体趋势评估
+- 用通俗易懂的语言解读孩子的整体表现变化
+- 说明这种变化在ASD早期干预中的意义
+- 对进步或不稳定给予温暖的解读，强调"坚持就有收获"
+
+二、数据详细解读
+- 具体分析成功率和反应时间的变化意味着什么
+- 从叫名反应的核心能力（社会定向、听觉处理、自我意识）角度解读
+- 如果存在前后段差异或疲劳效应，给出针对性建议
+
+三、家庭练习建议
+- 给出3-4条具体可操作的家庭游戏建议
+- 每条建议说明"为什么这样做"和"怎么做"
+- 建议要融入日常生活场景（吃饭、洗澡、玩耍等）
+
+四、下一阶段目标
+- 设定1-2个具体可达成的阶段性小目标
+- 鼓励家长，肯定他们已经付出的努力"""
     return prompt
 
 
@@ -244,7 +263,7 @@ def trend_analysis(child_id):
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_trend_analysis_prompt(child.name, age_months, records)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'name')
+    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'name', max_tokens=1000)
     save_token_usage('name_trend', None, child_id, Config.BAILIAN_MODEL, usage)
 
     return jsonify({

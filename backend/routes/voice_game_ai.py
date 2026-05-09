@@ -41,7 +41,7 @@ def save_token_usage(record_type, record_id, child_id, model_name, usage_data):
         print(f"⚠️ Token记录保存失败: {e}")
 
 
-def call_ai(prompt, extra_knowledge='', analysis_type='voice'):
+def call_ai(prompt, extra_knowledge='', analysis_type='voice', max_tokens=500):
     """调用AI模型（集成RAG）"""
     try:
         url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
@@ -59,7 +59,7 @@ def call_ai(prompt, extra_knowledge='', analysis_type='voice'):
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.7,
-            "max_tokens": 500
+            "max_tokens": max_tokens
         }
         print(f"🤖 声音小话筒AI调用: {Config.BAILIAN_MODEL}")
         response = requests.post(url, json=payload, headers=headers)
@@ -133,23 +133,29 @@ def build_trend_analysis_prompt(child_name, age_months, records):
     completion_diff = latest_completion - prev_avg_completion
     success_diff = latest_success - prev_avg_success
 
-    prompt = f"""你是一位儿童发育行为顾问，请根据以下声音小话筒数据给出趋势分析（250字以内），包含：整体变化、具体数据对比、2条家庭练习建议。
+    prompt = f"""你是一位儿童发育行为顾问，请根据以下声音小话筒数据给出一份详细的分析报告。
 
-【孩子】{child_name}，{age_months}个月
+请按以下结构输出（语言温暖亲切，像朋友聊天）：
 
-【最新一次训练（{latest.session_date}）】
-完成率：{latest_completion:.1f}%（{latest.completed_rounds}/{latest.round_total}轮）
-成功率（发音准确率）：{latest_success:.1f}%（{latest.success_count}/{latest.completed_rounds}轮）
+一、整体趋势评估
+- 用通俗语言解读孩子的整体表现变化方向
+- 说明声音模仿能力的变化在语言发展中的意义
+- 温暖地肯定孩子和家长的努力
 
-【前{prev_count}次训练平均】
-完成率：{prev_avg_completion:.1f}%
-成功率：{prev_avg_success:.1f}%
+二、数据详细解读
+- 分析完成率和发音准确率的变化各自说明什么
+- 如果完成率低但准确率高，说明孩子有模仿能力但动机需增强
+- 如果两者均低，说明需要从更简单的声音和更高的趣味性入手
+- 从沟通动机和口部运动规划角度深入解读
 
-【对比变化】
-完成率{'提高' if completion_diff > 0 else '下降' if completion_diff < 0 else '持平'}了{abs(completion_diff):.1f}个百分点
-发音准确率{'提高' if success_diff > 0 else '下降' if success_diff < 0 else '持平'}了{abs(success_diff):.1f}个百分点
+三、家庭练习建议
+- 给出3-4条具体可操作的练习建议
+- 每条说明"为什么这样做"和"具体怎么做"
+- 建议融入日常互动场景（洗澡、唱歌、讲故事等）
 
-请直接分析，语言像朋友聊天，建议要具体可操作（例如：先从元音开始、及时奖励、模仿动画角色等）。"""
+四、下一阶段目标
+- 设定1-2个具体可达成的阶段性小目标
+- 鼓励家长，强调每一次声音尝试都是宝贵的"""
     return prompt
 
 
@@ -196,7 +202,7 @@ def single_analysis():
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_single_analysis_prompt(child.name, age_months, record)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice')
+    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
 
     if ai_analysis:
         record.ai_analysis = ai_analysis
@@ -254,7 +260,7 @@ def trend_analysis(child_id):
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_trend_analysis_prompt(child.name, age_months, records)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice')
+    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
     save_token_usage('voice_trend', None, child_id, Config.BAILIAN_MODEL, usage)
 
     return jsonify({

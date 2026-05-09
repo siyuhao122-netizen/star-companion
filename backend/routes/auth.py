@@ -1,6 +1,6 @@
 ﻿from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
-from models import db, User, EmailVerification, Child, NameReactionRecord, PointGameRecord, VoiceGameRecord, SurveyResult, DailyRecommendation, TreeholeMessage
+from models import db, User, EmailVerification, Child, NameReactionRecord, PointGameRecord, VoiceGameRecord, SurveyResult, DailyRecommendation, TreeholeMessage, Notification
 from datetime import datetime, timedelta
 import smtplib
 import random
@@ -450,3 +450,102 @@ def delete_account():
         import traceback
         traceback.print_exc()
         return jsonify({'success': False, 'message': f'注销失败: {str(e)}'}), 500
+
+
+# ========== 通知相关 ==========
+
+@auth_bp.route('/notifications/<int:user_id>', methods=['GET'])
+def get_notifications(user_id):
+    """获取通知列表"""
+    limit = request.args.get('limit', 20, type=int)
+    unread_only = request.args.get('unread', '0') == '1'
+
+    query = Notification.query.filter_by(user_id=user_id)
+    if unread_only:
+        query = query.filter_by(is_read=False)
+
+    notifs = query.order_by(Notification.created_at.desc()).limit(limit).all()
+
+    unread_count = Notification.query.filter_by(user_id=user_id, is_read=False).count()
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'unread_count': unread_count,
+            'list': [{
+                'id': n.id,
+                'type': n.type,
+                'title': n.title,
+                'content': n.content,
+                'related_id': n.related_id,
+                'is_read': n.is_read,
+                'created_at': n.created_at.isoformat()
+            } for n in notifs]
+        }
+    }), 200
+
+
+@auth_bp.route('/notifications/mark-read', methods=['POST'])
+def mark_notification_read():
+    """标记通知为已读"""
+    data = request.json
+    notif_id = data.get('id')
+    mark_all = data.get('mark_all', False)
+
+    if mark_all:
+        user_id = data.get('user_id')
+        Notification.query.filter_by(user_id=user_id, is_read=False)\
+            .update({'is_read': True})
+    elif notif_id:
+        notif = Notification.query.get(notif_id)
+        if notif:
+            notif.is_read = True
+    else:
+        return jsonify({'success': False, 'message': '参数错误'}), 400
+
+    db.session.commit()
+    return jsonify({'success': True}), 200
+
+
+@auth_bp.route('/feedback', methods=['POST'])
+def submit_feedback():
+    """提交用户反馈（发送到管理员邮箱）"""
+    data = request.json
+    user_id = data.get('user_id')
+    content = data.get('content', '').strip()
+
+    if not content:
+        return jsonify({'success': False, 'message': '内容不能为空'}), 400
+
+    user = User.query.get(user_id) if user_id else None
+    user_info = f'{user.nickname or "用户"} ({user.email})' if user else '匿名用户'
+
+    try:
+        send_email(
+            Config.MAIL_USERNAME,
+            f'[星伴反馈] 来自 {user_info}',
+            f'<p>用户：{user_info}</p><p>内容：</p><p>{content}</p>'
+        )
+    except Exception as e:
+        print(f'反馈邮件发送失败: {e}')
+
+    return jsonify({'success': True, 'message': '感谢你的反馈'}), 200
+
+
+def create_notification(user_id, notif_type, title, content='', related_id=None):
+    """内部函数：创建通知"""
+    try:
+        n = Notification(
+            user_id=user_id,
+            type=notif_type,
+            title=title,
+            content=content,
+            related_id=related_id
+        )
+        db.session.add(n)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(f'创建通知失败: {e}')
+        db.session.rollback()
+        return False

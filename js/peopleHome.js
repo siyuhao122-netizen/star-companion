@@ -790,12 +790,8 @@
                 const title = this.querySelector('.menu-title')?.textContent || '';
                 if (title === '账号与安全') {
                     showAccountSecurityModal();
-                } else if (title === '通知设置') {
-                    showToast('通知设置功能开发中');
                 } else if (title === '隐私政策') {
                     showPrivacyPolicy();
-                } else if (title === '帮助与反馈') {
-                    showToast('帮助与反馈功能开发中');
                 } else if (title === '关于星伴') {
                     showAboutModal();
                 }
@@ -988,7 +984,140 @@
             const tag = e.target.classList.contains('tag-option') ? e.target : e.target.closest('.tag-option');
             tag.classList.toggle('selected');
         }
+        // 点击通知弹窗外部关闭
+        const popup = document.getElementById('notifPopup');
+        const bell = document.getElementById('notifBell');
+        if (popup && popup.classList.contains('show') && !popup.contains(e.target) && !bell.contains(e.target)) {
+            popup.classList.remove('show');
+        }
     });
+
+    // ========== 通知功能 ==========
+    async function fetchNotifications() {
+        try {
+            const resp = await fetch(`${API_BASE}/auth/notifications/${userId}`);
+            const d = await resp.json();
+            if (d.success && d.data) {
+                const badge = document.getElementById('notifBadge');
+                if (d.data.unread_count > 0) {
+                    badge.textContent = d.data.unread_count > 99 ? '99+' : d.data.unread_count;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+                renderNotifList(d.data.list);
+            }
+        } catch (e) { console.warn('获取通知失败', e); }
+    }
+
+    function renderNotifList(list) {
+        const container = document.getElementById('notifList');
+        if (!list || list.length === 0) {
+            container.innerHTML = '<div class="notif-empty">暂无通知</div>';
+            return;
+        }
+        container.innerHTML = list.map(n => {
+            const time = new Date(n.created_at).toLocaleDateString('zh-CN');
+            return `<div class="notif-item ${n.is_read ? 'read' : 'unread'}" onclick="markOneRead(${n.id})">
+                <div class="notif-title"><span class="notif-dot"></span>${n.title}</div>
+                <div class="notif-content">${n.content || ''}</div>
+                <div class="notif-time">${time}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function showNotifPopup() {
+        const popup = document.getElementById('notifPopup');
+        popup.classList.toggle('show');
+        if (popup.classList.contains('show')) {
+            fetchNotifications();
+        }
+    }
+
+    async function markOneRead(id) {
+        await fetch(`${API_BASE}/auth/notifications/mark-read`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id })
+        });
+        fetchNotifications();
+    }
+
+    async function markAllRead() {
+        await fetch(`${API_BASE}/auth/notifications/mark-read`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, mark_all: true })
+        });
+        fetchNotifications();
+    }
+
+    // ========== 通知设置 ==========
+    function showNotifSettingsModal() {
+        const settings = JSON.parse(localStorage.getItem('notifSettings') || '{}');
+        document.getElementById('toggleTraining').checked = settings.training !== false;
+        document.getElementById('toggleWeekly').checked = settings.weekly !== false;
+        document.getElementById('toggleTreehole').checked = settings.treehole !== false;
+        document.getElementById('toggleSystem').checked = settings.system !== false;
+        document.getElementById('notifSettingsModal').classList.add('show');
+    }
+
+    function closeNotifSettingsModal() {
+        document.getElementById('notifSettingsModal').classList.remove('show');
+    }
+
+    function saveNotifSettings() {
+        const settings = {
+            training: document.getElementById('toggleTraining').checked,
+            weekly: document.getElementById('toggleWeekly').checked,
+            treehole: document.getElementById('toggleTreehole').checked,
+            system: document.getElementById('toggleSystem').checked
+        };
+        localStorage.setItem('notifSettings', JSON.stringify(settings));
+    }
+
+    // ========== 帮助与反馈 ==========
+    function showHelpModal() {
+        document.getElementById('helpModal').classList.add('show');
+    }
+
+    function closeHelpModal() {
+        document.getElementById('helpModal').classList.remove('show');
+    }
+
+    function toggleFAQ(el) {
+        el.classList.toggle('open');
+    }
+
+    function submitFeedback() {
+        const content = document.getElementById('feedbackContent').value.trim();
+        if (!content) { showToast('请输入反馈内容', false); return; }
+        // 发送到后端反馈接口
+        fetch(`${API_BASE}/auth/feedback`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, content: content })
+        }).then(r => r.json()).then(d => {
+            if (d.success) {
+                showToast('感谢你的反馈！');
+                document.getElementById('feedbackContent').value = '';
+            } else {
+                showToast('提交失败，请重试', false);
+            }
+        }).catch(() => showToast('网络错误', false));
+    }
+
+    // 暴露全局函数
+    window.showNotifPopup = showNotifPopup;
+    window.markOneRead = markOneRead;
+    window.markAllRead = markAllRead;
+    window.showNotifSettingsModal = showNotifSettingsModal;
+    window.closeNotifSettingsModal = closeNotifSettingsModal;
+    window.saveNotifSettings = saveNotifSettings;
+    window.showHelpModal = showHelpModal;
+    window.closeHelpModal = closeHelpModal;
+    window.toggleFAQ = toggleFAQ;
+    window.submitFeedback = submitFeedback;
 
     // ========== 初始化 ==========
     async function init() {
@@ -1004,6 +1133,7 @@
         loadSavedAvatar();
         bindMenuEvents();
         initPasswordToggle();
+        fetchNotifications();
     }
     
     init();

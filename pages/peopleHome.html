@@ -61,6 +61,10 @@
           <i class="fas fa-arrow-left"></i>
         </div>
         <h1>个人中心</h1>
+        <div class="notif-bell" id="notifBell" onclick="showNotifPopup()">
+          <i class="fas fa-bell"></i>
+          <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+        </div>
       </div>
 
       <!-- 家长信息卡片 -->
@@ -108,7 +112,7 @@
           </div>
           <i class="fas fa-chevron-right menu-arrow"></i>
         </div>
-        <div class="menu-item" onclick="showToast('通知设置')">
+        <div class="menu-item" onclick="showNotifSettingsModal()">
           <div class="menu-icon"><i class="fas fa-bell"></i></div>
           <div class="menu-content">
             <div class="menu-title">通知设置</div>
@@ -124,7 +128,7 @@
           </div>
           <i class="fas fa-chevron-right menu-arrow"></i>
         </div>
-        <div class="menu-item" onclick="showToast('帮助与反馈')">
+        <div class="menu-item" onclick="showHelpModal()">
           <div class="menu-icon"><i class="fas fa-circle-question"></i></div>
           <div class="menu-content">
             <div class="menu-title">帮助与反馈</div>
@@ -502,6 +506,105 @@
       <img id="fullAvatarImg" src="" alt="头像大图">
       <div class="full-avatar-close" onclick="closeFullAvatarModal()">
         <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知弹窗 -->
+  <div class="notif-popup" id="notifPopup">
+    <div class="notif-popup-header">
+      <span><i class="fas fa-bell"></i> 消息通知</span>
+      <button class="notif-mark-all" onclick="markAllRead()">全部已读</button>
+    </div>
+    <div class="notif-list" id="notifList">
+      <div class="notif-empty">暂无通知</div>
+    </div>
+  </div>
+
+  <!-- 通知设置弹窗 -->
+  <div class="modal-overlay" id="notifSettingsModal">
+    <div class="form-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-bell" style="color:#D9A066;"></i> 通知设置</h3>
+        <div class="close-modal-btn" onclick="closeNotifSettingsModal()"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="notif-settings-list">
+        <div class="notif-setting-item">
+          <div class="notif-setting-info">
+            <div class="notif-setting-title">训练提醒</div>
+            <div class="notif-setting-desc">每天固定时间提醒带宝贝做训练</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleTraining" checked onchange="saveNotifSettings()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="notif-setting-item">
+          <div class="notif-setting-info">
+            <div class="notif-setting-title">周报提醒</div>
+            <div class="notif-setting-desc">每周一提醒查看宝贝的数据周报</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWeekly" checked onchange="saveNotifSettings()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="notif-setting-item">
+          <div class="notif-setting-info">
+            <div class="notif-setting-title">树洞互动</div>
+            <div class="notif-setting-desc">有人给我的树洞留言点赞时通知</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleTreehole" checked onchange="saveNotifSettings()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="notif-setting-item">
+          <div class="notif-setting-info">
+            <div class="notif-setting-title">系统通知</div>
+            <div class="notif-setting-desc">AI分析报告生成完成等系统消息</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleSystem" checked onchange="saveNotifSettings()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 帮助与反馈弹窗 -->
+  <div class="modal-overlay" id="helpModal">
+    <div class="form-modal" style="max-height:80vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3><i class="fas fa-circle-question" style="color:#D9A066;"></i> 帮助与反馈</h3>
+        <div class="close-modal-btn" onclick="closeHelpModal()"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="faq-section">
+        <h4 style="color:#5E422C;font-size:14px;margin-bottom:12px;">常见问题</h4>
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-q"><span>如何使用筛查量表？</span><i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a">在首页选择"问卷筛查"，根据宝贝的月龄系统会自动推荐M-CHAT-R（16-30个月）或CAST（4-11岁）。填写完成后AI会生成详细的评估报告。筛查结果仅供参考，不替代专业诊断。</div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-q"><span>训练游戏怎么玩？孩子不配合怎么办？</span><i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a">三个游戏分别是：叫名反应（让宝贝听到名字后回应）、指物练习（指认屏幕上出现的物品）、声音小话筒（鼓励宝贝模仿发音）。如果宝贝不配合，建议：1）选宝贝状态好的时候；2）每次只做3-5轮；3）做成"游戏"而非"任务"。</div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-q"><span>数据看板的分数是怎么算的？</span><i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a">正确率 = 成功次数 / 总轮数。分数越高说明宝贝在该能力上的表现越好。重要的是看长期趋势而非单次分数——有波动是正常的。</div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-q"><span>我的数据安全吗？</span><i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a">所有数据存储在你的本地设备和服务器上，不会分享给第三方。你可以随时在"账号与安全"中注销账户，所有数据将被永久删除。</div>
+        </div>
+      </div>
+      <div class="feedback-section" style="margin-top:20px; border-top:1px solid #F0E2D4; padding-top:16px;">
+        <h4 style="color:#5E422C;font-size:14px;margin-bottom:10px;">意见反馈</h4>
+        <textarea id="feedbackContent" class="form-input" rows="4" placeholder="请描述你的问题或建议..."></textarea>
+        <button class="modal-btn confirm" style="margin-top:10px;width:100%;" onclick="submitFeedback()">
+          <i class="fas fa-paper-plane"></i> 提交反馈
+        </button>
       </div>
     </div>
   </div>

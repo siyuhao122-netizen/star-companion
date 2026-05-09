@@ -172,26 +172,31 @@ def build_trend_analysis_prompt(child_name, age_months, records):
 【最新一次与前{prev_count}次平均的对比】
 {change_text}
 
-请用300字以内给出分析报告，必须包含以下三个部分（用##标题）：
+请按以下结构输出详细分析报告（语言温暖亲切，像朋友聊天）：
 
-## 整体变化
-说明和之前相比，孩子是进步了、保持稳定还是有所下滑。
+一、整体趋势评估
+- 用通俗语言解读孩子的整体表现变化方向
+- 说明"共同注意"能力变化在ASD发展中的意义
+- 温暖地肯定孩子和家长的努力
 
-## 具体数据变化
-用上面的对比数据分析具体哪些方面有变化，哪些稳定。
+二、数据详细解读
+- 分析正确率和点击准确率的变化各自说明什么
+- 如果正确率高但点击准确率低，提示注意力或冲动控制需关注
+- 超时/跳过次数变化的原因分析和调整建议
+- 从共同注意和社交动机角度深入解读
 
-## 家庭练习建议
-给出2-3个具体的、可操作的练习建议。要根据数据表现来给建议。
+三、家庭练习建议
+- 给出3-4条具体可操作的、融入日常生活的练习建议
+- 每条说明"为什么这样做"和"具体怎么做"
+- 建议要针对数据中反映的具体问题
 
-注意：
-- 直接说数据，不用比喻
-- 如果退步了要温和指出，但强调"有波动是正常的"
-- 建议要具体可操作，比如"可以尝试每次练习减少到3轮，保证成功率""在宝贝注意力最好的时候进行训练"
-- 语言像朋友聊天，不要用专业术语"""
+四、下一阶段目标
+- 设定1-2个具体可达成的阶段性小目标
+- 鼓励家长继续坚持，强调指物分享对社交发展的核心作用"""
 
     return prompt
 
-def call_ai(prompt, extra_knowledge='', analysis_type='point'):
+def call_ai(prompt, extra_knowledge='', analysis_type='point', max_tokens=500):
     """调用AI（集成RAG）并返回内容和token信息"""
     try:
         url = f"{Config.POINT_GAME_AI_BASE_URL}/chat/completions"
@@ -209,7 +214,7 @@ def call_ai(prompt, extra_knowledge='', analysis_type='point'):
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.7,
-            "max_tokens": 500,
+            "max_tokens": max_tokens,
             "enable_thinking": False
         }
         
@@ -278,7 +283,7 @@ def single_analysis():
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_single_analysis_prompt(child.name, age_months, record)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'point')
+    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'point', max_tokens=1000)
     
     # 保存AI结果
     if ai_analysis:
@@ -355,7 +360,7 @@ def trend_analysis(child_id):
 
     # 调用AI趋势分析
     prompt = build_trend_analysis_prompt(child.name, age_months, records)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'point')
+    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'point', max_tokens=1000)
     
     # 记录token使用
     save_token_usage('point_trend', None, child_id, Config.POINT_GAME_AI_MODEL, usage)
