@@ -1,13 +1,20 @@
 import os
+import secrets
+import warnings
 from dotenv import load_dotenv
-
-load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+load_dotenv(os.path.join(BASE_DIR, '..', '.env'))
+
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
+    _secret = os.environ.get('SECRET_KEY')
+    if not _secret:
+        _secret = secrets.token_hex(32)
+        warnings.warn('SECRET_KEY not set in environment. Using random key '
+                       '(sessions invalidated on restart).', RuntimeWarning)
+    SECRET_KEY = _secret
 
     # SQLite 数据库
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
@@ -15,7 +22,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CORS_ORIGINS = ['http://localhost:5500', 'http://127.0.0.1:5500',
-                    'http://localhost:8000', 'http://127.0.0.1:8000', '*']
+                    'http://localhost:8000', 'http://127.0.0.1:8000']
 
     # QQ邮箱 SMTP
     MAIL_SERVER = "smtp.qq.com"
