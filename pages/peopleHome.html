@@ -530,9 +530,10 @@
       </div>
       <div class="notif-settings-list">
         <div class="notif-setting-item">
+          <div class="notif-setting-icon"><i class="fas fa-calendar-check"></i></div>
           <div class="notif-setting-info">
             <div class="notif-setting-title">训练提醒</div>
-            <div class="notif-setting-desc">每天固定时间提醒带宝贝做训练</div>
+            <div class="notif-setting-desc">每天固定时间提醒带宝贝做训练，养成好习惯</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleTraining" checked onchange="saveNotifSettings()">
@@ -540,9 +541,10 @@
           </label>
         </div>
         <div class="notif-setting-item">
+          <div class="notif-setting-icon"><i class="fas fa-chart-bar"></i></div>
           <div class="notif-setting-info">
             <div class="notif-setting-title">周报提醒</div>
-            <div class="notif-setting-desc">每周一提醒查看宝贝的数据周报</div>
+            <div class="notif-setting-desc">每周一推送宝贝的数据成长周报</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleWeekly" checked onchange="saveNotifSettings()">
@@ -550,9 +552,10 @@
           </label>
         </div>
         <div class="notif-setting-item">
+          <div class="notif-setting-icon"><i class="fas fa-heart"></i></div>
           <div class="notif-setting-info">
             <div class="notif-setting-title">树洞互动</div>
-            <div class="notif-setting-desc">有人给我的树洞留言点赞时通知</div>
+            <div class="notif-setting-desc">有人点赞或回复我的树洞留言时通知</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleTreehole" checked onchange="saveNotifSettings()">
@@ -560,9 +563,10 @@
           </label>
         </div>
         <div class="notif-setting-item">
+          <div class="notif-setting-icon"><i class="fas fa-robot"></i></div>
           <div class="notif-setting-info">
-            <div class="notif-setting-title">系统通知</div>
-            <div class="notif-setting-desc">AI分析报告生成完成等系统消息</div>
+            <div class="notif-setting-title">系统消息</div>
+            <div class="notif-setting-desc">AI 分析报告生成、重要系统更新通知</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleSystem" checked onchange="saveNotifSettings()">
@@ -581,28 +585,29 @@
         <div class="close-modal-btn" onclick="closeHelpModal()"><i class="fas fa-times"></i></div>
       </div>
       <div class="faq-section">
-        <h4 style="color:#5E422C;font-size:14px;margin-bottom:12px;">常见问题</h4>
+        <h4 class="section-subtitle"><i class="fas fa-circle-question"></i> 常见问题</h4>
         <div class="faq-item" onclick="toggleFAQ(this)">
           <div class="faq-q"><span>如何使用筛查量表？</span><i class="fas fa-chevron-down"></i></div>
-          <div class="faq-a">在首页选择"问卷筛查"，根据宝贝的月龄系统会自动推荐M-CHAT-R（16-30个月）或CAST（4-11岁）。填写完成后AI会生成详细的评估报告。筛查结果仅供参考，不替代专业诊断。</div>
+          <div class="faq-a">在首页选择"问卷筛查"，根据宝贝的月龄系统会自动推荐 M-CHAT-R（16-30 个月）或 CAST（4-11 岁）。填写完成后 AI 会生成详细的评估报告。筛查结果仅供参考，不替代专业诊断。</div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(this)">
           <div class="faq-q"><span>训练游戏怎么玩？孩子不配合怎么办？</span><i class="fas fa-chevron-down"></i></div>
-          <div class="faq-a">三个游戏分别是：叫名反应（让宝贝听到名字后回应）、指物练习（指认屏幕上出现的物品）、声音小话筒（鼓励宝贝模仿发音）。如果宝贝不配合，建议：1）选宝贝状态好的时候；2）每次只做3-5轮；3）做成"游戏"而非"任务"。</div>
+          <div class="faq-a">三个游戏分别是：<b>叫名反应</b>（让宝贝听到名字后回应）、<b>指物练习</b>（指认屏幕上出现的物品）、<b>声音小话筒</b>（鼓励宝贝模仿发音）。如果宝贝不配合，建议：1）选宝贝状态最好的时候；2）每次只做 3-5 轮，保持新鲜感；3）把训练当成"亲子游戏"而非"任务"，用夸张的表情和声音吸引宝贝。</div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(this)">
           <div class="faq-q"><span>数据看板的分数是怎么算的？</span><i class="fas fa-chevron-down"></i></div>
-          <div class="faq-a">正确率 = 成功次数 / 总轮数。分数越高说明宝贝在该能力上的表现越好。重要的是看长期趋势而非单次分数——有波动是正常的。</div>
+          <div class="faq-a">正确率 = 成功次数 ÷ 总轮数 × 100%。分数越高说明宝贝在该能力上的表现越好。更重要的是看<b>长期趋势</b>而非单次分数——训练中有波动是完全正常的，坚持练习就会有收获。</div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(this)">
           <div class="faq-q"><span>我的数据安全吗？</span><i class="fas fa-chevron-down"></i></div>
-          <div class="faq-a">所有数据存储在你的本地设备和服务器上，不会分享给第三方。你可以随时在"账号与安全"中注销账户，所有数据将被永久删除。</div>
+          <div class="faq-a">所有数据加密存储，不会分享给任何第三方。你可以随时在"账号与安全"中注销账户，所有个人数据将被永久删除。星伴始终将用户隐私放在首位。</div>
         </div>
       </div>
-      <div class="feedback-section" style="margin-top:20px; border-top:1px solid #F0E2D4; padding-top:16px;">
-        <h4 style="color:#5E422C;font-size:14px;margin-bottom:10px;">意见反馈</h4>
-        <textarea id="feedbackContent" class="form-input" rows="4" placeholder="请描述你的问题或建议..."></textarea>
-        <button class="modal-btn confirm" style="margin-top:10px;width:100%;" onclick="submitFeedback()">
+      <div class="feedback-section">
+        <h4 class="section-subtitle"><i class="fas fa-comment-dots"></i> 意见反馈</h4>
+        <p class="feedback-hint">你的每一条建议都能帮助我们做得更好</p>
+        <textarea id="feedbackContent" class="feedback-textarea" rows="4" placeholder="请描述你遇到的问题或改进建议..."></textarea>
+        <button class="feedback-submit-btn" onclick="submitFeedback()">
           <i class="fas fa-paper-plane"></i> 提交反馈
         </button>
       </div>
