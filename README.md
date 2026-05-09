@@ -64,7 +64,12 @@
    ```sql
    CREATE DATABASE star_companion DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
-   输入 `exit` 退出。
+   看到 `Query OK` 即创建成功。输入 `exit` 退出。
+
+   也可以直接导入项目中的完整建表 SQL 文件（一步完成建库+建表）：
+   ```
+   mysql -u root -p < database/star_companion.sql
+   ```
 
    **macOS**：打开终端，输入 `mysql -u root -p`，同上操作。
 
@@ -162,7 +167,7 @@ python backend/app.py
  * Running on http://localhost:5000
 ```
 
-后端启动后会自动创建数据库表（首次运行），无需手动建表。
+后端首次运行会自动创建数据库表。也可以手动导入 `database/star_companion.sql` 一步到位（包含所有建表语句）。
 
 ### 第七步：启动前端
 

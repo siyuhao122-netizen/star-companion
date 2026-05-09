@@ -1,8 +1,6 @@
 -- =====================================================
 -- 星伴 · 暖愈成长空间 - 数据库设计
 -- =====================================================
-use mind_care_db;
-
 CREATE DATABASE IF NOT EXISTS `star_companion`
     DEFAULT CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
