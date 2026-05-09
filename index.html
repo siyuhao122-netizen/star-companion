@@ -1,25 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
-  <title>孤独症项目</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星伴 · 暖愈成长空间</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #D9CBBF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    }
+
+    .splash-screen {
+      text-align: center;
+    }
+
+    .logo-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #FFFCF5, #F8ECDE);
+      border-radius: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      color: #D9A066;
+      box-shadow: 0 8px 0 #C6AA8A, 0 16px 32px rgba(160, 110, 60, 0.15);
+      border: 2px solid #EDD9C6;
+      margin: 0 auto 24px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .logo-text h1 {
+      font-size: 52px;
+      font-weight: 800;
+      color: #5E422C;
+      letter-spacing: 6px;
+    }
+
+    .logo-text p {
+      font-size: 14px;
+      color: #8F6A44;
+      font-weight: 500;
+      letter-spacing: 6px;
+      margin-top: 4px;
+    }
+
+    .slogan {
+      font-size: 18px;
+      color: #8F6A44;
+      margin-top: 32px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+  <!-- 引入 Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-  <h1>功能导航</h1>
-  <ul>
-    <li><a href="pages/mainPart.html">首页</a></li>
-    <li><a href="pages/voice.html">声音小话筒</a></li>
-    <li><a href="pages/touchGame.html">指物练习</a></li>
-    <li><a href="pages/dataLook.html">数据看板</a></li>
-    <li><a href="pages/askName.html">叫名反应</a></li>
-    <li><a href="pages/askQuestions.html">问卷筛查</a></li>
-    <li><a href="pages/peopleHome.html">个人中心</a></li>
-    <li><a href="pages/seniorHole.html">家长树洞</a></li>
-    <li><a href="pages/sign-inANDsign-up.html">登录注册</a></li>
-    <li><a href="dataAnalys.html">指物练习数据分析</a></li>
-    <li><a href="forgetPassword.html">忘记密码</a></li>
-  </ul>
+  <div class="splash-screen">
+    <div class="logo-icon">
+      <i class="fas fa-star"></i>
+    </div>
+    <div class="logo-text">
+      <h1>星伴</h1>
+      <p>Stellar Companion</p>
+    </div>
+    <div class="slogan">
+      <span>正在进入暖愈成长空间...</span>
+    </div>
+  </div>
+
+  <script>
+    // 延迟后跳转到登录页面
+    setTimeout(function() {
+      window.location.href = 'pages/sign-inANDsign-up.html';
+    }, 1500);
+  </script>
 </body>
 
 </html>

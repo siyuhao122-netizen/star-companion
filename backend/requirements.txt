@@ -7,3 +7,5 @@ sqlalchemy
 requests
 SpeechRecognition==3.10.0
 pydub==0.25.1
+jieba==0.42.1
+scikit-learn>=1.3

@@ -1,408 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>星伴 · 叫名反应训练</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #D9CBBF;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Inter', 'Noto Sans SC', sans-serif;
-      padding: 12px;
-    }
-
-    /* 固定容器 1024×600 */
-    .game-container {
-      width: 1024px;
-      height: 600px;
-      background: #FFFDF9;
-      border-radius: 48px;
-      box-shadow: 0 30px 45px -12px rgba(78, 55, 36, 0.2);
-      padding: 20px 28px;
-      border: 1px solid #F0E2D4;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* 头部 */
-    .game-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-shrink: 0;
-    }
-
-    .back-btn {
-      width: 42px;
-      height: 42px;
-      background: #F5E8DA;
-      border-radius: 21px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #B47C44;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 1.5px solid #EDD9C6;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .back-btn:hover {
-      background: #EDD9C6;
-    }
-
-    .game-header h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: #5E422C;
-    }
-
-    .child-badge {
-      margin-left: auto;
-      background: #FDF5EC;
-      padding: 6px 16px;
-      border-radius: 30px;
-      border: 1.5px solid #EDD9C6;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .child-badge i {
-      color: #D9A066;
-      font-size: 18px;
-    }
-
-    .child-badge span {
-      font-weight: 600;
-      color: #5E422C;
-      font-size: 15px;
-    }
-
-    /* 两列布局 */
-    .two-column-layout {
-      display: flex;
-      gap: 20px;
-      flex: 1;
-      min-height: 0;
-      margin-bottom: 12px;
-    }
-
-    /* 左侧摄像头区域 - 占60% */
-    .camera-area {
-      flex: 6;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .camera-card {
-      background: #F5E8DA;
-      border-radius: 24px;
-      padding: 12px;
-      border: 2px solid #EDD9C6;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .video-wrapper {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #2A1F16;
-      flex: 1;
-      min-height: 0;
-    }
-
-    #videoElement {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    #canvasElement {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .camera-status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-      padding: 0 4px;
-    }
-
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #8F6A44;
-      font-weight: 500;
-      font-size: 12px;
-    }
-
-    /* 右侧信息区 - 占40% */
-    .info-area {
-      flex: 4;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* 呼唤卡片 */
-    .prompt-card {
-      background: linear-gradient(135deg, #FFF3E8, #FDE8D6);
-      border-radius: 24px;
-      padding: 18px 16px;
-      border: 2px solid #F0D5BD;
-      text-align: center;
-    }
-
-    .call-message {
-      font-size: 28px;
-      font-weight: 700;
-      color: #B47C44;
-      line-height: 1.3;
-      margin-bottom: 6px;
-    }
-
-    .call-sub {
-      font-size: 14px;
-      color: #9B846C;
-    }
-
-    /* 统计卡片 */
-    .stats-grid {
-      display: flex;
-      gap: 10px;
-    }
-
-    .stat-card {
-      flex: 1;
-      background: #FEFCF8;
-      border-radius: 20px;
-      padding: 14px 8px;
-      text-align: center;
-      border: 1.5px solid #F0E2D4;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: #9B846C;
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: #D9A066;
-      line-height: 1.2;
-    }
-
-    .stat-unit {
-      font-size: 12px;
-      color: #A68A6F;
-      margin-left: 2px;
-    }
-
-    /* 检测结果面板 */
-    .result-panel {
-      background: #FCF8F2;
-      border-radius: 20px;
-      padding: 14px 16px;
-      border: 1.5px solid #F0E2D4;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .result-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #5E422C;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .result-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .detection-status {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .status-indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #CCC;
-      animation: pulse 1.5s infinite;
-    }
-
-    .status-indicator.active {
-      background: #4CAF50;
-    }
-
-    .status-indicator.success {
-      background: #FF9800;
-    }
-
-    .status-text {
-      font-size: 15px;
-      color: #5E422C;
-      font-weight: 500;
-    }
-
-    .progress-bar-container {
-      margin-top: 8px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #8F6A44;
-      margin-bottom: 6px;
-    }
-
-    .progress-bar-bg {
-      height: 8px;
-      background: #EDD9C6;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #D9A066, #E7B87B);
-      border-radius: 10px;
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    /* 操作按钮 */
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border-radius: 36px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-      justify-content: center;
-    }
-
-    .btn-primary {
-      background: linear-gradient(145deg, #EADBCA, #E0CDB6);
-      color: #6C4E32;
-      border: 1.5px solid #DDBB9A;
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(145deg, #EEDBC8, #E5CEB4);
-    }
-
-    .btn-secondary {
-      background: #F5E8DA;
-      color: #8F6A44;
-      border: 1.5px solid #EDD9C6;
-    }
-
-    .btn-secondary:hover {
-      background: #EDD9C6;
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* 底部提示 */
-    .footer-tip {
-      padding: 8px 16px;
-      background: #FCF8F2;
-      border-radius: 20px;
-      color: #8F6A44;
-      font-size: 12px;
-      text-align: center;
-      border: 1px solid #F0E2D4;
-      flex-shrink: 0;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-    }
-
-    .fa-spin {
-      animation: fa-spin 1s infinite linear;
-    }
-  </style>
-  <!-- MediaPipe 库 -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <link rel="stylesheet" href="../css/askName.css">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
   <div class="game-container">
     <!-- 头部 -->
     <div class="game-header">
-      <a href="mainPart.html" class="back-btn">
-        <i class="fas fa-arrow-left"></i>
-      </a>
+      <a href="mainPart.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
       <h1>⭐ 叫名反应训练</h1>
       <div class="child-badge" id="childBadge">
         <i class="fas fa-face-smile"></i>
@@ -422,11 +34,19 @@
           <div class="camera-status-bar">
             <div class="status-badge" id="cameraStatus">
               <i class="fas fa-video"></i>
-              <span>等待摄像头授权...</span>
+              <span>点击"开始训练"启用摄像头</span>
             </div>
             <div class="status-badge" id="headPoseStatus">
               <i class="fas fa-user"></i>
               <span>等待检测</span>
+            </div>
+            <div class="status-badge" id="expressionStatus">
+              <i class="fas fa-smile"></i>
+              <span>面部表情</span>
+            </div>
+            <div class="status-badge" id="voiceStatus">
+              <i class="fas fa-microphone"></i>
+              <span>声音音量</span>
             </div>
           </div>
         </div>
@@ -434,7 +54,6 @@
 
       <!-- 右侧：信息面板 -->
       <div class="info-area">
-        <!-- 呼唤卡片 -->
         <div class="prompt-card">
           <div class="call-message" id="callMessage">
             <i class="fas fa-star"></i> 乐乐！看这里~
@@ -444,7 +63,6 @@
           </div>
         </div>
 
-        <!-- 统计卡片 -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-label">本轮</div>
@@ -460,17 +78,20 @@
           </div>
         </div>
 
-        <!-- 检测结果面板 -->
         <div class="result-panel">
-          <div class="result-title">
-            <i class="fas fa-chart-line"></i> 实时检测结果
-          </div>
+          <div class="result-title"><i class="fas fa-chart-line"></i> 实时检测结果</div>
           <div class="result-content">
             <div class="detection-status">
               <div class="status-indicator" id="statusIndicator"></div>
               <span class="status-text" id="detectionResultText">等待开始训练</span>
             </div>
-
+            <!-- 校准进度条 -->
+            <div class="calibration-bar" id="calibrationBar" style="display:none;">
+              <div class="calibration-label">📐 正在校准基准数据...</div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="calibrationFill" style="width: 0%"></div>
+              </div>
+            </div>
             <div class="progress-bar-container">
               <div class="progress-label">
                 <span>训练进度</span>
@@ -480,14 +101,12 @@
                 <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
               </div>
             </div>
-
             <div style="margin-top: 12px; font-size: 13px; color: #8F6A44;" id="additionalInfo">
-              <i class="fas fa-info-circle"></i> 等待宝贝转头回应
+              <i class="fas fa-info-circle"></i> 等待宝贝转头/微笑/发声回应
             </div>
           </div>
         </div>
 
-        <!-- 操作按钮 -->
         <div class="action-buttons">
           <button class="btn btn-secondary" id="skipBtn">
             <i class="fas fa-forward"></i> 跳过本轮
@@ -499,397 +118,39 @@
       </div>
     </div>
 
-    <!-- 底部提示 -->
     <div class="footer-tip">
-      <i class="fas fa-lightbulb"></i> 让宝贝面对镜头，当听到名字时转头看向屏幕
+      <i class="fas fa-lightbulb"></i> 让宝贝面对镜头，当听到名字时转头、微笑或发声回应
     </div>
   </div>
 
-  <script>
-    (function () {
-      // 获取URL参数
-      const urlParams = new URLSearchParams(window.location.search);
-      const childId = urlParams.get('childId') || '1';
-      const gameType = urlParams.get('game') || 'name';
+  <!-- 训练报告弹窗 -->
+  <div class="result-modal" id="resultModal">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-title">📊 叫名反应 · 训练报告</div>
+      <div class="stats-grid" style="grid-template-columns: repeat(4,1fr);">
+        <div class="stat-item"><div class="stat-label">总轮数</div><div class="stat-value" id="reportTotalRounds">8</div></div>
+        <div class="stat-item"><div class="stat-label">成功次数</div><div class="stat-value" id="reportSuccessCount">0</div></div>
+        <div class="stat-item"><div class="stat-label">成功率</div><div class="stat-value" id="reportSuccessRate">0%</div></div>
+        <div class="stat-item"><div class="stat-label">平均反应时间</div><div class="stat-value" id="reportAvgTime">—<span class="stat-unit">秒</span></div></div>
+        <div class="stat-item"><div class="stat-label">最快反应</div><div class="stat-value" id="reportMinTime">—<span class="stat-unit">秒</span></div></div>
+        <div class="stat-item"><div class="stat-label">最慢反应</div><div class="stat-value" id="reportMaxTime">—<span class="stat-unit">秒</span></div></div>
+        <div class="stat-item"><div class="stat-label">头部转向反应比例</div><div class="stat-value" id="reportHeadRatio">0%</div></div>
+        <div class="stat-item"><div class="stat-label">声音反应比例</div><div class="stat-value" id="reportVoiceRatio">0%</div></div>
+        <div class="stat-item"><div class="stat-label">头+声同时反应</div><div class="stat-value" id="reportBothRatio">0%</div></div>
+        <div class="stat-item"><div class="stat-label">平均头部转向距离</div><div class="stat-value" id="reportAvgHeadDist">—<span class="stat-unit">px</span></div></div>
+        <div class="stat-item"><div class="stat-label">平均声音分贝</div><div class="stat-value" id="reportAvgVoiceDb">—<span class="stat-unit">dB</span></div></div>
+        <div class="stat-item"><div class="stat-label">超时次数</div><div class="stat-value" id="reportTimeout">0</div></div>
+      </div>
+      <div class="analysis-area">
+        <div class="analysis-title"><i class="fas fa-robot"></i> 智能分析</div>
+        <div class="analysis-text" id="analysisText"></div>
+      </div>
+      <div class="single-button">
+        <button class="modal-btn" id="homeReturnBtn">🏠 返回首页</button>
+      </div>
+    </div>
+  </div>
 
-      // 孩子数据
-      const childrenData = {
-        1: { name: '乐乐', icon: 'fa-face-smile' },
-        2: { name: '朵朵', icon: 'fa-cat' },
-        3: { name: '阳阳', icon: 'fa-dog' }
-      };
-
-      // 更新显示的孩子信息
-      const child = childrenData[childId] || childrenData[1];
-      document.getElementById('childDisplayName').textContent = child.name;
-      const badgeIcon = document.querySelector('#childBadge i');
-      if (badgeIcon) {
-        badgeIcon.className = `fas ${child.icon}`;
-      }
-
-      // DOM元素
-      const videoElement = document.getElementById('videoElement');
-      const canvasElement = document.getElementById('canvasElement');
-      const canvasCtx = canvasElement.getContext('2d');
-      const cameraStatus = document.querySelector('#cameraStatus span');
-      const headPoseStatus = document.querySelector('#headPoseStatus span');
-      const callMessage = document.getElementById('callMessage');
-      const callSubMessage = document.getElementById('callSubMessage');
-      const roundDisplay = document.getElementById('roundDisplay');
-      const successCountDisplay = document.getElementById('successCount');
-      const reactionTimeDisplay = document.getElementById('reactionTime');
-      const startBtn = document.getElementById('startBtn');
-      const skipBtn = document.getElementById('skipBtn');
-      const detectionResultText = document.getElementById('detectionResultText');
-      const statusIndicator = document.getElementById('statusIndicator');
-      const progressBar = document.getElementById('progressBar');
-      const progressPercent = document.getElementById('progressPercent');
-      const additionalInfo = document.getElementById('additionalInfo');
-
-      // 更新呼唤消息中的名字
-      callMessage.innerHTML = `<i class="fas fa-star"></i> ${child.name}！看这里~`;
-
-      // 状态变量
-      let faceMesh = null;
-      let isCameraReady = false;
-      let isTraining = false;
-      let currentRound = 1;
-      const totalRounds = 8;
-      let successCount = 0;
-      let callStartTime = 0;
-      let hasResponded = false;
-      let roundTimeout = null;
-      let animationFrame = null;
-      let lastHeadTurnDetected = false;
-      let lastDetectionTime = 0;
-
-      // 头部转向检测阈值
-      const HEAD_TURN_THRESHOLD = 0.3;
-
-      // 更新进度条
-      function updateProgress() {
-        const progress = (currentRound - 1) / totalRounds * 100;
-        progressBar.style.width = progress + '%';
-        progressPercent.textContent = Math.round(progress) + '%';
-      }
-
-      // 更新检测结果显示
-      function updateDetectionDisplay(isHeadTurned, hasFace) {
-        if (!hasFace) {
-          statusIndicator.className = 'status-indicator';
-          detectionResultText.textContent = '未检测到人脸';
-          headPoseStatus.textContent = '未检测到人脸';
-        } else if (isHeadTurned) {
-          statusIndicator.className = 'status-indicator success';
-          detectionResultText.textContent = '检测到转头 ✓';
-          headPoseStatus.textContent = '已转头';
-        } else {
-          statusIndicator.className = 'status-indicator active';
-          detectionResultText.textContent = '正对镜头';
-          headPoseStatus.textContent = '正对镜头';
-        }
-      }
-
-      // 初始化 MediaPipe Face Mesh
-      async function initFaceMesh() {
-        try {
-          faceMesh = new FaceMesh({
-            locateFile: (file) => {
-              return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-            }
-          });
-
-          faceMesh.setOptions({
-            maxNumFaces: 1,
-            refineLandmarks: true,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-          });
-
-          faceMesh.onResults(onFaceMeshResults);
-
-          console.log('✅ MediaPipe Face Mesh 初始化成功');
-          return true;
-        } catch (error) {
-          console.error('❌ MediaPipe 初始化失败:', error);
-          return false;
-        }
-      }
-
-      // 处理人脸检测结果
-      function onFaceMeshResults(results) {
-        if (!canvasElement || !videoElement) return;
-
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-        const hasFace = results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0;
-        let isHeadTurned = false;
-
-        if (hasFace) {
-          const landmarks = results.multiFaceLandmarks[0];
-
-          // 绘制人脸关键点
-          drawFaceMesh(landmarks);
-
-          // 检测头部转向
-          isHeadTurned = detectHeadTurn(landmarks);
-
-          // 训练中的响应检测
-          if (isTraining && callStartTime > 0 && !hasResponded) {
-            if (isHeadTurned) {
-              if (!lastHeadTurnDetected) {
-                const reactionTime = (Date.now() - callStartTime) / 1000;
-                handleResponse(reactionTime);
-              }
-              lastHeadTurnDetected = true;
-            } else {
-              lastHeadTurnDetected = false;
-            }
-          }
-        }
-
-        // 更新检测显示
-        updateDetectionDisplay(isHeadTurned, hasFace);
-
-        canvasCtx.restore();
-      }
-
-      // 绘制人脸网格
-      function drawFaceMesh(landmarks) {
-        // 绘制人脸轮廓线
-        canvasCtx.strokeStyle = '#D9A066';
-        canvasCtx.lineWidth = 2;
-
-        // 绘制眼睛和鼻子的关键点
-        canvasCtx.fillStyle = '#4CAF50';
-        const keyPoints = [33, 133, 362, 263, 1, 61, 291];
-        landmarks.forEach((landmark, index) => {
-          if (keyPoints.includes(index)) {
-            const x = landmark.x * canvasElement.width;
-            const y = landmark.y * canvasElement.height;
-            canvasCtx.beginPath();
-            canvasCtx.arc(x, y, 3, 0, 2 * Math.PI);
-            canvasCtx.fill();
-          }
-        });
-
-        // 绘制鼻子到眼睛的连线，显示头部方向
-        const noseTip = landmarks[1];
-        const leftEye = landmarks[33];
-        const rightEye = landmarks[263];
-
-        if (noseTip && leftEye && rightEye) {
-          const eyeCenterX = (leftEye.x + rightEye.x) / 2 * canvasElement.width;
-          const eyeCenterY = (leftEye.y + rightEye.y) / 2 * canvasElement.height;
-          const noseX = noseTip.x * canvasElement.width;
-          const noseY = noseTip.y * canvasElement.height;
-
-          canvasCtx.beginPath();
-          canvasCtx.moveTo(eyeCenterX, eyeCenterY);
-          canvasCtx.lineTo(noseX, noseY);
-          canvasCtx.strokeStyle = '#FF9800';
-          canvasCtx.lineWidth = 2;
-          canvasCtx.stroke();
-        }
-      }
-
-      // 检测头部是否转向侧面
-      function detectHeadTurn(landmarks) {
-        if (!landmarks || landmarks.length < 468) return false;
-
-        const noseTip = landmarks[1];
-        const leftEye = landmarks[33];
-        const rightEye = landmarks[263];
-
-        if (!noseTip || !leftEye || !rightEye) return false;
-
-        const eyeCenterX = (leftEye.x + rightEye.x) / 2;
-        const noseOffsetX = Math.abs(noseTip.x - eyeCenterX);
-
-        return noseOffsetX > HEAD_TURN_THRESHOLD;
-      }
-
-      // 处理响应
-      function handleResponse(reactionTime) {
-        hasResponded = true;
-        successCount++;
-        successCountDisplay.textContent = successCount;
-        reactionTimeDisplay.innerHTML = reactionTime.toFixed(1) + '<span class="stat-unit">秒</span>';
-
-        callMessage.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> 太棒了！';
-        callSubMessage.innerHTML = '<i class="fas fa-heart"></i> 宝贝反应真快！';
-        additionalInfo.innerHTML = '<i class="fas fa-trophy" style="color: #FF9800;"></i> 成功！反应时间 ' + reactionTime.toFixed(1) + ' 秒';
-        detectionResultText.textContent = '✓ 成功转头！';
-        statusIndicator.className = 'status-indicator success';
-
-        clearTimeout(roundTimeout);
-        setTimeout(() => nextRound(), 1500);
-      }
-
-      // 开始新一轮
-      function startRound() {
-        if (!isTraining) return;
-        if (currentRound > totalRounds) {
-          finishTraining();
-          return;
-        }
-
-        hasResponded = false;
-        lastHeadTurnDetected = false;
-        roundDisplay.textContent = `${currentRound}/${totalRounds}`;
-        reactionTimeDisplay.innerHTML = '—<span class="stat-unit">秒</span>';
-        updateProgress();
-
-        callMessage.innerHTML = `<i class="fas fa-star"></i> ${child.name}！看这里~`;
-        callSubMessage.innerHTML = '<i class="fas fa-cat"></i> 小猫正在叫你';
-        additionalInfo.innerHTML = '<i class="fas fa-hourglass-half"></i> 第 ' + currentRound + ' 轮 · 等待宝贝转头回应...';
-        detectionResultText.textContent = '等待转头...';
-
-        callStartTime = Date.now();
-
-        roundTimeout = setTimeout(() => {
-          if (!hasResponded && isTraining) {
-            additionalInfo.innerHTML = '<i class="fas fa-clock"></i> 本轮超时，继续加油哦';
-            detectionResultText.textContent = '超时';
-            statusIndicator.className = 'status-indicator';
-            setTimeout(() => nextRound(), 1000);
-          }
-        }, 5000);
-      }
-
-      // 下一轮
-      function nextRound() {
-        clearTimeout(roundTimeout);
-        currentRound++;
-        startRound();
-      }
-
-      // 跳过本轮
-      function skipRound() {
-        if (!isTraining) return;
-        clearTimeout(roundTimeout);
-        additionalInfo.innerHTML = '<i class="fas fa-forward"></i> 已跳过本轮';
-        detectionResultText.textContent = '已跳过';
-        setTimeout(() => nextRound(), 800);
-      }
-
-      // 完成训练
-      function finishTraining() {
-        isTraining = false;
-        startBtn.innerHTML = '<i class="fas fa-play"></i> 开始训练';
-        startBtn.disabled = false;
-        skipBtn.disabled = true;
-
-        updateProgress();
-        callMessage.innerHTML = '<i class="fas fa-party-horn"></i> 训练完成！';
-        callSubMessage.innerHTML = '宝贝太棒了！';
-        additionalInfo.innerHTML = `<i class="fas fa-star" style="color: #FF9800;"></i> 完成 ${totalRounds} 轮训练，成功 ${successCount} 次！`;
-        detectionResultText.textContent = `训练完成 · 成功率 ${Math.round(successCount / totalRounds * 100)}%`;
-        statusIndicator.className = 'status-indicator success';
-
-        console.log(`训练完成: ${successCount}/${totalRounds}`);
-      }
-
-      // 开始训练
-      function startTraining() {
-        if (!isCameraReady) {
-          alert('请先允许摄像头权限');
-          return;
-        }
-
-        isTraining = true;
-        currentRound = 1;
-        successCount = 0;
-        successCountDisplay.textContent = '0';
-        startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 训练中...';
-        startBtn.disabled = true;
-        skipBtn.disabled = false;
-
-        updateProgress();
-        startRound();
-      }
-
-      // 初始化摄像头
-      async function initCamera() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              width: 640,
-              height: 480,
-              facingMode: 'user'
-            }
-          });
-
-          videoElement.srcObject = stream;
-          videoElement.onloadedmetadata = () => {
-            videoElement.play();
-
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
-
-            isCameraReady = true;
-            cameraStatus.textContent = '摄像头已就绪';
-            document.querySelector('#cameraStatus i').style.color = '#4CAF50';
-
-            startDetection();
-          };
-        } catch (error) {
-          console.error('摄像头访问失败:', error);
-          cameraStatus.textContent = '摄像头访问失败，请允许权限';
-          detectionResultText.textContent = '摄像头未授权';
-        }
-      }
-
-      // 开始检测循环
-      async function startDetection() {
-        const faceMeshReady = await initFaceMesh();
-        if (!faceMeshReady) {
-          cameraStatus.textContent = '人脸检测初始化失败';
-          detectionResultText.textContent = '检测初始化失败';
-          return;
-        }
-
-        function detectFrame() {
-          if (videoElement.readyState >= 2 && faceMesh) {
-            faceMesh.send({ image: videoElement });
-          }
-          animationFrame = requestAnimationFrame(detectFrame);
-        }
-
-        detectFrame();
-      }
-
-      // 事件绑定
-      startBtn.addEventListener('click', startTraining);
-      skipBtn.addEventListener('click', skipRound);
-
-      // 返回按钮
-      document.querySelector('.back-btn').addEventListener('click', (e) => {
-        if (isTraining) {
-          if (!confirm('训练尚未完成，确定要退出吗？')) {
-            e.preventDefault();
-          }
-        }
-      });
-
-      // 清理资源
-      window.addEventListener('beforeunload', () => {
-        if (animationFrame) {
-          cancelAnimationFrame(animationFrame);
-        }
-        if (videoElement.srcObject) {
-          videoElement.srcObject.getTracks().forEach(track => track.stop());
-        }
-      });
-
-      // 初始化
-      initCamera();
-
-      // 禁用跳过按钮直到训练开始
-      skipBtn.disabled = true;
-    })();
-  </script>
+  <script src="../js/askName.js"></script>
 </body>
-
 </html>

@@ -1,4 +1,4 @@
-﻿from flask import Blueprint, request, jsonify, current_app
+﻿from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from models import db, User, EmailVerification, Child, NameReactionRecord, PointGameRecord, VoiceGameRecord, SurveyResult, DailyRecommendation, TreeholeMessage
 from datetime import datetime, timedelta
@@ -8,9 +8,12 @@ import string
 import re
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from config import Config
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
+
+
 
 
 def generate_verification_code(length=6):
@@ -22,21 +25,14 @@ def send_email(to_email, subject, body):
     """发送邮件的通用函数"""
     try:
         msg = MIMEMultipart()
-        sender = current_app.config['MAIL_USERNAME']
-        msg['From'] = f"StarCompanion <{sender}>"
+        msg['From'] = f"StarCompanion <{Config.MAIL_USERNAME}>"
         msg['To'] = to_email
         msg['Subject'] = subject
 
         msg.attach(MIMEText(body, 'html', 'utf-8'))
 
-        with smtplib.SMTP_SSL(
-            current_app.config['MAIL_SERVER'],
-            current_app.config['MAIL_PORT']
-        ) as server:
-            server.login(
-                current_app.config['MAIL_USERNAME'],
-                current_app.config['MAIL_PASSWORD']
-            )
+        with smtplib.SMTP_SSL(Config.MAIL_SERVER, Config.MAIL_PORT) as server:
+            server.login(Config.MAIL_USERNAME, Config.MAIL_PASSWORD)
             server.send_message(msg)
         return True, None
     except Exception as e:

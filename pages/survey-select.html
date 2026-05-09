@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>星伴 · 选择筛查量表 | 暖心评估</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #D9CBBF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+      padding: 12px;
+    }
+
+    .select-container {
+      width: 1024px;
+      height: 600px;
+      background: #FFFDF9;
+      border-radius: 48px;
+      box-shadow: 0 30px 40px -20px rgba(60, 40, 28, 0.3), 0 0 0 1px rgba(235, 216, 190, 0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1.5px solid #F0DDCB;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      background: #F5EDE4;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B88B5C;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid #EADACA;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: #EDDFD0;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #4A3724;
+    }
+
+    .header h1 i {
+      color: #D9A066;
+      margin-right: 8px;
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .child-info {
+      background: #FDF5EC;
+      padding: 8px 20px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1.5px solid #EDD9C6;
+    }
+
+    .child-info i {
+      color: #D9A066;
+      font-size: 20px;
+    }
+
+    .child-info span {
+      font-weight: 600;
+      color: #5E422C;
+    }
+
+    /* 新增：历史记录按钮 */
+    .history-btn {
+      background: #F5EDE4;
+      padding: 8px 18px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid #E6D2C0;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8B6A4C;
+    }
+
+    .history-btn:hover {
+      background: #EDDFD0;
+      border-color: #D9A066;
+    }
+
+    .history-btn i {
+      color: #B88B5C;
+    }
+
+    .content {
+      flex: 1;
+      padding: 28px 32px;
+      overflow-y: auto;
+    }
+
+    .scale-cards {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .scale-card {
+      flex: 1;
+      background: #FEFCF8;
+      border-radius: 28px;
+      padding: 24px;
+      border: 2.5px solid #F0E5DA;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scale-card:hover {
+      border-color: #D9A066;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(180, 120, 70, 0.12);
+    }
+
+    .scale-card.recommended {
+      border-color: #9BBF7A;
+      background: #F8FCF4;
+      position: relative;
+    }
+
+    .scale-card.recommended::before {
+      content: "🌟 推荐";
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      background: #9BBF7A;
+      color: white;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(155, 191, 122, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #5E422C;
+    }
+
+    .badge {
+      background: #D9A066;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .age-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: #9B846C;
+      font-size: 14px;
+    }
+
+    .age-range i {
+      color: #D9A066;
+    }
+
+    .description {
+      color: #6C4F32;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .question-count {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #8F6A44;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .select-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(145deg, #EAD1BB, #DFC4A8);
+      border: none;
+      border-radius: 44px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #6C4E32;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1.5px solid #DDBB9A;
+      transition: all 0.15s;
+    }
+
+    .select-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* 推荐理由卡片 - 放在卡片下方 */
+    .recommend-card {
+      background: linear-gradient(135deg, #E8F0D8, #D4E8C2);
+      border-radius: 20px;
+      padding: 16px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-left: 6px solid #9BBF7A;
+    }
+
+    .recommend-card i {
+      font-size: 28px;
+      color: #6B8C4A;
+    }
+
+    .recommend-text {
+      flex: 1;
+    }
+
+    .recommend-text h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #4A6B2E;
+      margin-bottom: 4px;
+    }
+
+    .recommend-text p {
+      font-size: 14px;
+      color: #5E7A3E;
+    }
+
+    .footer-note {
+      background: #FDF8F2;
+      border-radius: 20px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .footer-note i {
+      font-size: 24px;
+      color: #D9A066;
+    }
+
+    .footer-note p {
+      font-size: 13px;
+      color: #8F6A44;
+      line-height: 1.5;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FEF3E2;
+      padding: 12px 28px;
+      border-radius: 48px;
+      font-weight: 600;
+      color: #B87A48;
+      z-index: 1000;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+      border: 1px solid #F7E3CF;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    /* ========== 历史记录弹窗 ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(60, 40, 28, 0.4);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .history-modal {
+      background: #FFFDF9;
+      border-radius: 36px;
+      padding: 28px 32px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 520px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #5E422C;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-header h2 i {
+      color: #D9A066;
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      background: #F5EDE4;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B88B5C;
+      font-size: 16px;
+      cursor: pointer;
+      border: 1px solid #EADACA;
+    }
+
+    .close-btn:hover {
+      background: #EDDFD0;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #D4B99B #F3EBE2;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
+    .history-item {
+      background: #FEFCF8;
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border: 1.5px solid #F0E5DA;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .history-item:hover {
+      border-color: #D9A066;
+      background: #FDF5EC;
+      transform: translateX(4px);
+    }
+
+    .history-scale-badge {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #F8EFE4, #F0E2D4);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #B88B5C;
+      border: 1.5px solid #EDD9C6;
+      flex-shrink: 0;
+    }
+
+    .history-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-scale-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #5E422C;
+      margin-bottom: 4px;
+    }
+
+    .history-date {
+      font-size: 12px;
+      color: #9B846C;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-metrics {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .history-score {
+      font-size: 28px;
+      font-weight: 800;
+      color: #B57A48;
+      line-height: 1.1;
+    }
+
+    .history-level {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .level-low {
+      background: #E8F0D8;
+      color: #6B8C4A;
+    }
+
+    .level-medium {
+      background: #FDF5EC;
+      color: #D9A066;
+    }
+
+    .level-high {
+      background: #FCE8E8;
+      color: #C06060;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #B89A78;
+    }
+
+    .history-empty i {
+      font-size: 48px;
+      color: #E0CDB8;
+      margin-bottom: 16px;
+    }
+
+    /* ========== 详情弹窗（新窗口模拟） ========== */
+    .detail-modal {
+      background: #FFFDF9;
+      border-radius: 36px;
+      padding: 28px 32px;
+      max-width: 650px;
+      width: 90%;
+      max-height: 520px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .detail-scroll {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #D4B99B #F3EBE2;
+    }
+
+    .detail-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .detail-scroll::-webkit-scrollbar-thumb {
+      background: #D4B99B;
+      border-radius: 10px;
+    }
+
+    .detail-score-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .detail-score-card {
+      flex: 1;
+      background: #FEFAF5;
+      border-radius: 20px;
+      padding: 14px 16px;
+      text-align: center;
+      border: 1.5px solid #F0E2D4;
+    }
+
+    .detail-score-label {
+      font-size: 12px;
+      color: #9B846C;
+      margin-bottom: 6px;
+    }
+
+    .detail-score-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #D9A066;
+      line-height: 1.1;
+    }
+
+    .detail-score-max {
+      font-size: 11px;
+      color: #B89A78;
+    }
+
+    .detail-dimensions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .dimension-card {
+      flex: 1;
+      background: #FDF8F2;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .dimension-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6C4F32;
+      margin-bottom: 4px;
+    }
+
+    .dimension-bar-bg {
+      height: 6px;
+      background: #EADDCB;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .dimension-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #D9A066, #E7B87B);
+    }
+
+    .dimension-score-text {
+      font-size: 11px;
+      color: #9B846C;
+    }
+
+    .detail-ai-analysis {
+      background: linear-gradient(135deg, #FCF8F0, #F8EFE4);
+      border-radius: 20px;
+      padding: 16px 20px;
+      border-left: 4px solid #D9A066;
+    }
+
+    .detail-ai-analysis h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #5E422C;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-ai-analysis h3 i {
+      color: #D9A066;
+    }
+
+    .ai-content {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #5E422C;
+      white-space: pre-wrap;
+    }
+
+    .btns-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-outline {
+      flex: 1;
+      padding: 12px;
+      background: #F5EDE4;
+      border: 1.5px solid #E6D2C0;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #8B6A4C;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-outline:hover {
+      background: #EDDFD0;
+    }
+
+    /* 筛选标签 */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    background: #F5EDE4;
+    border: 1.5px solid #E6D2C0;
+    border-radius: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8B6A4C;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+.filter-tab:hover {
+    background: #EDDFD0;
+    border-color: #D9A066;
+}
+
+.filter-tab.active {
+    background: #D9A066;
+    color: #FFF;
+    border-color: #D9A066;
+}
+
+.filter-tab i {
+    font-size: 12px;
+}
+  </style>
+</head>
+
+<body>
+  <div class="select-container">
+    <div class="header">
+      <a href="mainPart.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1><i class="fas fa-clipboard-list"></i>选择筛查量表</h1>
+      <div class="header-right" style="position: relative;">
+    <div class="child-info" id="childInfo">
+        <i class="fas fa-child"></i>
+        <span id="childDisplayName">加载中...</span>
+        <i class="fas fa-chevron-down" style="font-size:12px; margin-left:4px; cursor:pointer;" onclick="toggleChildDropdown()"></i>
+    </div>
+    
+    <!-- 孩子切换下拉 -->
+    <div class="child-dropdown" id="childDropdownMenu" style="
+        display:none; 
+        position:absolute; 
+        top:45px; 
+        right:0; 
+        background:#FFF; 
+        border-radius:24px; 
+        box-shadow:0 8px 24px rgba(0,0,0,0.1); 
+        z-index:100; 
+        padding:8px; 
+        min-width:180px; 
+        border:1.5px solid #F0E2D4;
+    ">
+        <div style="padding:8px 14px;font-size:12px;color:#9B846C;font-weight:600;border-bottom:1px solid #F0E2D4;">
+            <i class="fas fa-users"></i> 切换宝贝
+        </div>
+        <ul id="childDropdownList" style="list-style:none;padding:4px 0;"></ul>
+    </div>
+    
+    <div class="history-btn" id="historyBtn">
+        <i class="fas fa-history"></i>
+        <span>历史记录</span>
+    </div>
+</div>
+    </div>
+
+    <div class="content">
+      <!-- 量表卡片 -->
+      <div class="scale-cards">
+        <!-- M-CHAT-R 卡片 -->
+        <div class="scale-card" id="mchatCard" data-scale="mchat">
+          <div class="card-header">
+            <h2>M-CHAT-R</h2>
+            <span class="badge">金标准</span>
+          </div>
+          <div class="age-range">
+            <i class="fas fa-calendar-alt"></i>
+            <span>适用于 16-30 个月</span>
+          </div>
+          <div class="description">
+            婴幼儿孤独症筛查量表（修订版），国际公认的早期筛查金标准。
+            通过20个简单问题评估社交、语言和行为模式。
+          </div>
+          <div class="question-count">
+            <i class="fas fa-list"></i>
+            <span>共 20 题 · 约 5 分钟</span>
+          </div>
+          <button class="select-btn" data-scale="mchat">
+            <i class="fas fa-play-circle"></i> 开始 M-CHAT-R 筛查
+          </button>
+        </div>
+
+        <!-- CAST 卡片 -->
+        <div class="scale-card" id="castCard" data-scale="cast">
+          <div class="card-header">
+            <h2>CAST</h2>
+            <span class="badge">全面评估</span>
+          </div>
+          <div class="age-range">
+            <i class="fas fa-calendar-alt"></i>
+            <span>适用于 4-11 岁</span>
+          </div>
+          <div class="description">
+            儿童孤独症谱系测试，更细致的评估工具。涵盖社交沟通、
+            刻板行为和同伴关系三个维度，适合稍大儿童。
+          </div>
+          <div class="question-count">
+            <i class="fas fa-list"></i>
+            <span>共 37 题 · 约 10 分钟</span>
+          </div>
+          <button class="select-btn" data-scale="cast">
+            <i class="fas fa-play-circle"></i> 开始 CAST 筛查
+          </button>
+        </div>
+      </div>
+
+      <!-- 推荐理由卡片 -->
+      <div class="recommend-card" id="recommendCard">
+        <i class="fas fa-lightbulb" id="recommendIcon"></i>
+        <div class="recommend-text">
+          <h3 id="recommendTitle">正在分析宝贝月龄...</h3>
+          <p id="recommendReason">请稍候，我们正在为您推荐最合适的量表</p>
+        </div>
+      </div>
+
+      <!-- 温馨提示 -->
+      <div class="footer-note">
+        <i class="fas fa-heart"></i>
+        <p>
+          <strong>温馨提示：</strong>筛查结果仅供家庭参考，不能替代专业医疗诊断。
+          如有疑虑，请咨询发育行为儿科医生。
+        </p>
+      </div>
+    </div>
+  </div>
+
+ <!-- 历史记录弹窗 -->
+<div class="modal-overlay" id="historyModal">
+    <div class="history-modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-history"></i> 问卷筛查历史</h2>
+            <div class="close-btn" id="closeHistoryBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        
+        <!-- 新增：筛选标签 -->
+        <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" data-filter="all">全部</button>
+            <button class="filter-tab" data-filter="mchat">
+                <i class="fas fa-clipboard-check"></i> M-CHAT-R
+            </button>
+            <button class="filter-tab" data-filter="cast">
+                <i class="fas fa-clipboard-list"></i> CAST
+            </button>
+        </div>
+        
+        <div class="history-list" id="historyList">
+            <!-- 动态渲染 -->
+        </div>
+    </div>
+</div>
+
+  <!-- 详情弹窗 -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="detail-modal">
+      <div class="modal-header">
+        <h2><i class="fas fa-file-alt"></i> 筛查详情报告</h2>
+        <div class="close-btn" id="closeDetailBtn">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <div class="detail-scroll" id="detailContent">
+        <!-- 动态渲染 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/survey-select.js"></script>
+</body>
+
+</html>
