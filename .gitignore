@@ -8,16 +8,21 @@ __pycache__/
 instance/
 .venv/
 
+# Claude Code (dev only)
+.claude/
+CLAUDE.md
+
 # IDE
 .vscode/
 .idea/
 
-# Claude Code
-.claude/
-
-# Node
+# Node (only for dev)
 node_modules/
 package-lock.json
+package.json
+
+# Docs (dev only)
+docs/superpowers/
 
 # OS
 .DS_Store

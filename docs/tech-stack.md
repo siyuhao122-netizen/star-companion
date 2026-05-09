@@ -20,7 +20,7 @@
 
 ### 数据库设计
 
-- **数据库类型**：SQLite（轻量级嵌入式数据库，零配置）
+- **数据库类型**：MySQL（通过环境变量 `DATABASE_URL` 配置连接，如 `mysql+pymysql://user:pass@host/star_companion`）
 - **ORM 模型**：10 张表 —— User、EmailVerification、Child、NameReactionRecord、PointGameRecord、VoiceGameRecord、SurveyResult、TreeholeMessage、DailyRecommendation、AITokenUsage
 - **索引优化**：对高频查询字段（email、child_id、session_date）建立索引
 - **级联删除**：User → Child → 所有关联记录自动级联删除
@@ -106,7 +106,7 @@
 │              业务逻辑层                           │
 │  RAG 知识检索 | AI Prompt 构造 | 音频处理         │
 ├──────────────┬──────────────────────────────────┤
-│   SQLite DB  │  阿里云百炼 (qwen-turbo/qwen3)    │
+│   MySQL DB   │  阿里云百炼 (qwen-turbo/qwen3)    │
 │   (本地)     │  阿里云 ASR (语音识别)             │
 └──────────────┴──────────────────────────────────┘
 ```

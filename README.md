@@ -28,7 +28,7 @@
 
 | 层级 | 技术 |
 |------|------|
-| 后端 | Python Flask 3.0 + SQLAlchemy + SQLite |
+| 后端 | Python Flask 3.0 + SQLAlchemy + MySQL |
 | 前端 | Vanilla HTML + CSS + JavaScript（无框架） |
 | AI 模型 | 阿里云百炼 qwen-turbo / qwen3-8b（微调） |
 | 语音识别 | 阿里云 ASR（实时语音转写） |
@@ -57,6 +57,8 @@ cp .env.example .env
 ```
 
 必填配置：
+- `DATABASE_URL` — MySQL 数据库连接（如 `mysql+pymysql://user:pass@host/star_companion`）
+- `SECRET_KEY` — Flask 密钥
 - `MAIL_USERNAME` / `MAIL_PASSWORD` — QQ 邮箱 SMTP（用于验证码发送）
 - `BAILIAN_API_KEY` / `POINT_GAME_AI_API_KEY` — 阿里云百炼 API Key
 - `ALIYUN_ACCESS_KEY_ID` / `ALIYUN_ACCESS_KEY_SECRET` / `ALIYUN_APP_KEY` — 阿里云语音识别
@@ -127,7 +129,7 @@ star-project/
 
 ## 数据库
 
-使用 SQLite（文件存储在 `backend/star_companion.db`）。首次运行时自动建表。10 张核心表：
+使用 MySQL（通过 `DATABASE_URL` 环境变量配置连接）。首次运行时自动建表。10 张核心表：
 
 User → Child → (NameReactionRecord | PointGameRecord | VoiceGameRecord | SurveyResult)
 同时包含 EmailVerification、TreeholeMessage、DailyRecommendation、AITokenUsage
