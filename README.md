@@ -34,7 +34,7 @@
 | 语音识别 | 阿里云 ASR（实时语音转写） |
 | RAG 知识库 | 本地 TF-IDF + jieba 分词 + 循证 ASD 专业知识库 |
 | 数据可视化 | Chart.js 4.4 |
-| PDF 导出 | html2canvas + jsPDF |
+| PDF 导出 | jsPDF（纯文字排版） |
 
 ## 快速开始
 

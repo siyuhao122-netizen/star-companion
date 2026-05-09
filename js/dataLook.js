@@ -1235,80 +1235,68 @@ window.showMicDetail = showMicDetail;
         }
     }
 
-    function getModuleElement(module) {
-        switch(module) {
-            case 'overview': return document.querySelector('.overview-grid');
-            case 'chart': return document.querySelector('.chart-section');
-            case 'analysis': return document.querySelector('.analysis-section');
-            case 'name': return document.querySelectorAll('.game-card')[0];
-            case 'point': return document.querySelectorAll('.game-card')[1];
-            case 'mic': return document.querySelectorAll('.game-card')[2];
-            default: return null;
-        }
-    }
+    // ========== PDF 导出 — 纯文字数据报告 ==========
 
-    function ensureElementVisible(module) {
-        const cardMap = { name: 'nameCard', point: 'pointCard', mic: 'micCard' };
-        const cardId = cardMap[module];
-        if (!cardId) return;
-        const body = document.getElementById(cardId);
-        const icon = document.getElementById(cardId + 'Icon');
-        if (body && !body.classList.contains('open')) {
-            body.classList.add('open');
-            if (icon) icon.className = 'fas fa-chevron-up';
-        }
-    }
-
-    // ========== PDF 导出 — 专业报告 ==========
-
-    const GAME_CONFIG = {
-        name: { label: '叫名反应 · 听觉回应', endpoint: 'name-reaction-ai' },
-        point: { label: '指物练习 · 趣味指认', endpoint: 'point-game-ai' },
-        mic: { label: '声音小话筒 · 发声启蒙', endpoint: 'voice-game-ai' }
+    const GAME_CFG = {
+        name:  { label: '叫名反应 · 听觉回应', endpoint: 'name-reaction-ai',  records: () => nameReactionRecords },
+        point: { label: '指物练习 · 趣味指认', endpoint: 'point-game-ai',     records: () => pointGameRecords },
+        mic:   { label: '声音小话筒 · 发声启蒙', endpoint: 'voice-game-ai',    records: () => voiceGameRecords }
     };
 
     async function fetchAIAnalysis(gameType) {
         try {
-            const endpoint = GAME_CONFIG[gameType].endpoint;
-            const resp = await fetch(`${API_BASE}/${endpoint}/trend-analysis/${currentChildId}?limit=7`);
-            const data = await resp.json();
-            if (data.success && data.data && data.data.ai_analysis) {
-                return data.data.ai_analysis;
-            }
+            const ep = GAME_CFG[gameType].endpoint;
+            const resp = await fetch(`${API_BASE}/${ep}/trend-analysis/${currentChildId}?limit=7`);
+            const d = await resp.json();
+            if (d.success && d.data && d.data.ai_analysis) return d.data.ai_analysis;
         } catch (e) { console.warn('AI分析获取失败:', e); }
         return null;
     }
 
-    function addFormattedText(pdf, text, x, y, maxW, lh, fs) {
+    // 自动换行文本，返回结束 Y 坐标
+    function writeText(pdf, text, x, y, maxW, lh, fs, color) {
         pdf.setFontSize(fs || 10);
+        if (color) pdf.setTextColor.apply(pdf, color);
         const lines = pdf.splitTextToSize(text, maxW);
-        const ph = pdf.internal.pageSize.getHeight();
+        const ph = pdf.internal.pageSize.getHeight(), mb = 12;
         let cy = y;
         for (const l of lines) {
-            if (cy + lh > ph - 12) { pdf.addPage(); cy = 12; }
+            if (cy + lh > ph - mb) { pdf.addPage(); cy = mb; }
             pdf.text(l, x, cy);
             cy += lh;
         }
         return cy;
     }
 
-    async function captureToPage(pdf, element) {
-        const P = pdf.internal.pageSize;
-        const M = 10, cw = P.getWidth() - 2 * M;
-        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-        const canvas = await html2canvas(element, { backgroundColor: '#FFFDF9', scale: 2, useCORS: true, logging: false });
-        const h = (canvas.height * cw) / canvas.width;
-        const img = canvas.toDataURL('image/png');
-        pdf.addPage();
-        let left = h, pos = M;
-        pdf.addImage(img, 'PNG', M, pos, cw, h);
-        left -= (P.getHeight() - 2 * M);
-        while (left > 0) {
-            pos = M - (h - left);
-            pdf.addPage();
-            pdf.addImage(img, 'PNG', M, pos, cw, h);
-            left -= (P.getHeight() - 2 * M);
+    // 绘制标题栏
+    function drawTitleBar(pdf, title, y) {
+        const PW = pdf.internal.pageSize.getWidth(), M = 12;
+        pdf.setFillColor(77, 55, 36);
+        pdf.rect(M, y, PW - 2 * M, 9, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(11);
+        pdf.text(title, M + 3, y + 6.2);
+        return y + 13;
+    }
+
+    // 绘制表格行
+    function drawTableRow(pdf, cols, widths, y, isHeader) {
+        const M = 12, rowH = 7;
+        if (isHeader) {
+            pdf.setFillColor(249, 242, 235);
+            pdf.rect(M, y - 4.5, pdf.internal.pageSize.getWidth() - 2 * M, rowH, 'F');
+            pdf.setFontSize(9);
+            pdf.setTextColor(140, 110, 80);
+        } else {
+            pdf.setFontSize(9);
+            pdf.setTextColor(77, 55, 36);
         }
+        let x = M;
+        cols.forEach((col, i) => {
+            pdf.text(col, x, y);
+            x += widths[i];
+        });
+        return y + rowH;
     }
 
     async function exportPDF() {
@@ -1318,7 +1306,6 @@ window.showMicDetail = showMicDetail;
 
         const checkedSet = new Set();
         checkedItems.forEach(i => checkedSet.add(i.dataset.module));
-        const gameOrder = ['name', 'point', 'mic'].filter(g => checkedSet.has(g));
 
         showToast('正在生成报告...');
 
@@ -1331,70 +1318,116 @@ window.showMicDetail = showMicDetail;
             const childAge = (document.getElementById('currentChildAge')?.textContent || '').trim();
             const today = new Date().toISOString().slice(0, 10);
 
-            // === 封面标题 ===
-            pdf.setFillColor(77, 55, 36); pdf.rect(0, 0, PW, 20, 'F');
-            pdf.setTextColor(255, 255, 255); pdf.setFontSize(15);
-            pdf.text('星伴 · 数据成长报告', M, 13.5);
-            pdf.setTextColor(77, 55, 36); pdf.setFontSize(10);
-            let ty = 26;
-            pdf.text(`${childName}  ${childAge}`, M, ty); ty += 5.5;
-            pdf.text(`导出日期: ${today}`, M, ty); ty += 5.5;
-            pdf.text('数据范围: 最近 7 次训练记录', M, ty); ty += 5;
+            // ===== 封面 =====
+            pdf.setFillColor(77, 55, 36); pdf.rect(0, 0, PW, 24, 'F');
+            pdf.setTextColor(255, 255, 255); pdf.setFontSize(17);
+            pdf.text('星伴 · 数据成长报告', M, 16);
+            pdf.setFontSize(25);
+            pdf.text('*', PW - 20, 17);
+
+            pdf.setTextColor(77, 55, 36);
+            let y = 34;
+            pdf.setFontSize(13);
+            pdf.text(childName, M, y); y += 8;
+            if (childAge) { pdf.setFontSize(10); pdf.text(childAge, M, y); y += 6; }
+            pdf.setFontSize(10);
+            pdf.text(`导出日期：${today}`, M, y); y += 6;
+            pdf.text('数据范围：最近 7 次训练记录', M, y); y += 6;
+            pdf.text('报告说明：本报告由星伴平台自动生成，数据来源于孩子的游戏训练记录。', M, y); y += 4;
+            pdf.text('AI 分析基于循证 ASD 专业知识库，仅供参考，不构成医疗诊断。', M, y);
+            y += 8;
             pdf.setDrawColor(207, 162, 118); pdf.setLineWidth(0.3);
-            pdf.line(M, ty, PW - M, ty);
+            pdf.line(M, y, PW - M, y);
 
-            // === 核心指标 ===
+            // ===== 核心指标概览 =====
             if (checkedSet.has('overview')) {
-                const el = document.querySelector('.overview-grid');
-                if (el) await captureToPage(pdf, el);
+                y += 10;
+                y = drawTitleBar(pdf, '核心指标概览', y);
+                y += 4;
+
+                const games = ['name', 'point', 'mic'];
+                const colW = [(PW - 2 * M) / 4, (PW - 2 * M) / 4, (PW - 2 * M) / 4, (PW - 2 * M) / 4];
+                y = drawTableRow(pdf, ['训练项目', '最新正确率', '趋势', '评价'], colW, y, true);
+
+                for (const g of games) {
+                    const recs = GAME_CFG[g].records() || [];
+                    if (recs.length === 0) {
+                        y = drawTableRow(pdf, [GAME_CFG[g].label, '暂无数据', '—', '完成训练后显示'], colW, y);
+                        continue;
+                    }
+                    const latest = recs[0].accuracy || 0;
+                    let trend = '—', comment = '';
+                    if (recs.length >= 2) {
+                        const prevAvg = recs.slice(1).reduce((s, r) => s + (r.accuracy || 0), 0) / (recs.length - 1);
+                        const diff = latest - prevAvg;
+                        trend = diff >= 0 ? `↑ +${diff.toFixed(1)}%` : `↓ ${diff.toFixed(1)}%`;
+                        comment = diff > 0 ? '持续进步' : (diff < -3 ? '需要关注' : '基本稳定');
+                    } else {
+                        trend = '首次训练'; comment = '刚刚开始';
+                    }
+                    y = drawTableRow(pdf, [GAME_CFG[g].label, `${latest}%`, trend, comment], colW, y);
+                }
             }
-            // === 趋势图 ===
-            if (checkedSet.has('chart')) {
-                const el = document.querySelector('.chart-section');
-                if (el) await captureToPage(pdf, el);
-            }
 
-            // === 每个游戏: AI 分析 + 历史记录 ===
-            for (const gameType of gameOrder) {
-                const cfg = GAME_CONFIG[gameType];
-                const aiText = await fetchAIAnalysis(gameType);
+            // ===== 每个游戏: AI 分析 + 历史记录 =====
+            const gameOrder = ['name', 'point', 'mic'].filter(g => checkedSet.has(g));
+            for (const g of gameOrder) {
+                const cfg = GAME_CFG[g];
+                const recs = cfg.records() || [];
 
-                // AI 分析页
-                pdf.addPage();
-                pdf.setFillColor(249, 242, 235); pdf.rect(M, M, PW - 2 * M, 11, 'F');
-                pdf.setTextColor(77, 55, 36); pdf.setFontSize(12);
-                pdf.text(cfg.label + '  —  AI 分析与建议', M + 3, M + 7.5);
+                y += 10;
+                if (y > 240) { pdf.addPage(); y = M; }
+                y = drawTitleBar(pdf, cfg.label + '  —  AI 分析与建议', y);
+                y += 2;
 
-                let tY = M + 16;
+                const aiText = await fetchAIAnalysis(g);
                 if (aiText) {
                     const clean = aiText.replace(/^#{1,3}\s+/gm, '').replace(/\*\*/g, '').trim();
-                    tY = addFormattedText(pdf, clean, M, tY, PW - 2 * M, 5.2, 10);
+                    y = writeText(pdf, clean, M, y, PW - 2 * M, 5, 10, [77, 55, 36]);
                 } else {
-                    pdf.setFontSize(10); pdf.setTextColor(150, 130, 110);
-                    pdf.text('暂无 AI 分析数据，完成更多训练后将自动生成。', M, tY);
-                    tY += 7;
+                    y = writeText(pdf, '暂无 AI 分析数据。完成更多训练后，系统将自动生成个性化的专业分析与建议。', M, y, PW - 2 * M, 5, 10, [150, 130, 110]);
                 }
 
-                // 分隔 + 历史记录标题
-                tY += 4;
-                pdf.setDrawColor(207, 162, 118); pdf.setLineWidth(0.2);
-                pdf.line(M, tY, PW - M, tY); tY += 7;
-                pdf.setTextColor(77, 55, 36); pdf.setFontSize(11);
-                pdf.text(cfg.label + '  —  训练记录', M, tY);
+                // 训练历史表
+                y += 5;
+                if (y > 245) { pdf.addPage(); y = M; }
+                y = drawTitleBar(pdf, cfg.label + '  —  训练记录', y);
+                y += 2;
+                const tw = [(PW - 2 * M) * 0.28, (PW - 2 * M) * 0.28, (PW - 2 * M) * 0.22, (PW - 2 * M) * 0.22];
+                y = drawTableRow(pdf, ['日期', '正确率', '完成情况', '反应/用时'], tw, y, true);
 
-                // 历史记录截图
-                const card = document.querySelectorAll('.game-card')[['name','point','mic'].indexOf(gameType)];
-                if (card) {
-                    ensureElementVisible(gameType);
-                    await captureToPage(pdf, card);
+                if (recs.length === 0) {
+                    y = drawTableRow(pdf, ['暂无训练记录', '', '', ''], tw, y);
+                } else {
+                    for (const r of recs.slice(0, 7)) {
+                        const date = r.session_date || '';
+                        const rate = `${r.accuracy || 0}%`;
+                        let complete = '', extra = '';
+                        if (g === 'name') {
+                            complete = `${r.success_count || 0}/${r.round_total || 0} 成功`;
+                            extra = `${r.avg_reaction_time || 0}秒`;
+                        } else if (g === 'point') {
+                            complete = `${r.correct_rounds || 0}/${r.round_total || 0} 正确`;
+                            extra = `${r.avg_time_sec || 0}秒/轮`;
+                        } else {
+                            complete = `${r.completed_rounds || 0}/${r.round_total || 0} 完成`;
+                            extra = `${r.success_count || 0}次成功`;
+                        }
+                        y = drawTableRow(pdf, [date, rate, complete, extra], tw, y);
+                        if (y > 270) { pdf.addPage(); y = M; }
+                    }
                 }
             }
 
-            // === AI 智能分析预览 ===
-            if (checkedSet.has('analysis')) {
-                const el = document.querySelector('.analysis-section');
-                if (el) await captureToPage(pdf, el);
-            }
+            // ===== 声明 =====
+            y += 12;
+            if (y > 255) { pdf.addPage(); y = M; }
+            pdf.setDrawColor(207, 162, 118); pdf.setLineWidth(0.3);
+            pdf.line(M, y, PW - M, y); y += 6;
+            pdf.setFontSize(8);
+            pdf.setTextColor(160, 140, 120);
+            const disclaimer = '声明：本报告由星伴平台自动生成，所有数据来源于孩子在平台上的游戏训练记录。AI 分析基于循证 ASD（孤独症谱系障碍）专业知识库生成，旨在为家长提供参考和建议，不构成医疗诊断。如对孩子的发展有任何担忧，请咨询专业儿科医生或儿童发育行为专家。';
+            writeText(pdf, disclaimer, M, y, PW - 2 * M, 3.5, 8, [160, 140, 120]);
 
             panel.classList.remove('show');
             document.getElementById('overlay').classList.remove('show');
