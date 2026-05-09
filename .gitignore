@@ -1,0 +1,17 @@
+# 环境变量（含敏感信息）
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.db
+instance/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
