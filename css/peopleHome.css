@@ -475,6 +475,7 @@
       overflow-y: auto;
       box-shadow: 0 20px 40px rgba(80, 50, 30, 0.2);
       border: 1.5px solid #F0E2D4;
+      font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
     }
 
     .modal-header {
@@ -488,6 +489,7 @@
       font-size: 22px;
       font-weight: 700;
       color: #5E422C;
+      font-family: 'Noto Sans SC', sans-serif;
     }
 
     .close-modal-btn {
@@ -1040,145 +1042,6 @@
 .security-option .fa-chevron-right {
   color: #C4A88B;
   font-size: 14px;
-
-/* ===== 通知铃铛 ===== */
-.notif-bell {
-  position: relative;
-  margin-left: auto;
-  font-size: 20px;
-  color: #5E422C;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background 0.2s;
-}
-.notif-bell:hover { background: #F5EDE4; }
-.notif-badge {
-  position: absolute;
-  top: 2px; right: 2px;
-  background: #E07060;
-  color: #FFF;
-  font-size: 10px;
-  min-width: 18px; height: 18px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  padding: 0 4px;
-  border: 2px solid #FFFDF9;
-}
-
-/* ===== 通知弹窗 ===== */
-.notif-popup {
-  display: none;
-  position: fixed;
-  top: 60px; right: 20px;
-  width: 340px; max-height: 420px;
-  background: #FFFDF9;
-  border-radius: 18px;
-  box-shadow: 0 12px 40px rgba(68,48,28,0.18), 0 0 0 1px rgba(235,218,196,0.5);
-  z-index: 1000;
-  overflow: hidden;
-  flex-direction: column;
-}
-.notif-popup.show { display: flex; }
-.notif-popup-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 18px;
-  border-bottom: 1px solid #F0E2D4;
-  font-size: 15px; font-weight: 700; color: #4A3724;
-  font-family: 'Noto Sans SC', sans-serif;
-}
-.notif-mark-all {
-  background: none; border: none;
-  color: #D9A066; font-size: 12px; cursor: pointer;
-  font-weight: 500; transition: color 0.2s;
-}
-.notif-mark-all:hover { color: #C08050; }
-.notif-list { overflow-y: auto; flex: 1; padding: 10px 12px; }
-.notif-empty {
-  text-align: center; padding: 40px 20px; color: #B89A78;
-  font-size: 14px; font-family: 'Noto Sans SC', sans-serif;
-}
-.notif-empty::before {
-  content: '\f0f3'; font-family: 'Font Awesome 6 Free'; font-weight: 400;
-  display: block; font-size: 36px; margin-bottom: 12px; color: #E0D0BE;
-}
-.notif-item {
-  padding: 12px 14px; border-radius: 12px; margin-bottom: 6px;
-  cursor: pointer; transition: all 0.2s;
-  border: 1px solid transparent;
-}
-.notif-item:hover { background: #FDF5EC; border-color: #F0E2D4; }
-.notif-item.unread { background: linear-gradient(135deg, #FFF8F0, #FEF3E8); border-color: #F5E0CC; }
-.notif-item .notif-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #E07060; display: inline-block; margin-right: 8px; flex-shrink: 0;
-}
-.notif-item.read .notif-dot { visibility: hidden; }
-.notif-item .notif-title {
-  font-size: 14px; color: #4A3724; font-weight: 600;
-  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.01em;
-}
-.notif-item .notif-content {
-  font-size: 12px; color: #8C7A6A; margin-top: 3px; line-height: 1.4;
-  font-family: 'Noto Sans SC', sans-serif;
-}
-.notif-item .notif-time {
-  font-size: 11px; color: #B89A78; margin-top: 5px;
-  font-family: 'Inter', sans-serif;
-}
-
-/* ===== 通知设置（隐私政策同款简洁风格） ===== */
-.notif-settings-list { padding: 0; }
-.notif-setting-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 16px 0; border-bottom: 1px solid #F0E2D4;
-}
-.notif-setting-item:last-child { border-bottom: none; }
-.notif-setting-info { flex: 1; }
-.notif-setting-title {
-  font-size: 14px; color: #5E422C; font-weight: 600; margin-bottom: 2px;
-}
-.notif-setting-desc { font-size: 12px; color: #9B846C; line-height: 1.4; }
-
-/* ===== Toggle Switch ===== */
-.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.toggle-slider {
-  position: absolute; cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: #D5CCBF; border-radius: 24px; transition: 0.2s;
-}
-.toggle-slider:before {
-  content: ""; position: absolute;
-  height: 18px; width: 18px; left: 3px; bottom: 3px;
-  background: #FFF; border-radius: 50%; transition: 0.2s;
-}
-.toggle-switch input:checked + .toggle-slider { background: #D9A066; }
-.toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
-
-/* ===== FAQ 折叠面板 ===== */
-.faq-item { border-bottom: 1px solid #F0E2D4; }
-.faq-item:last-child { border-bottom: none; }
-.faq-q {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0; cursor: pointer;
-  font-size: 14px; color: #5E422C;
-}
-.faq-q i { color: #B89A78; font-size: 12px; transition: transform 0.2s; }
-.faq-a {
-  display: none; padding: 0 0 14px 0;
-  font-size: 13px; color: #6C4F32; line-height: 1.6;
-}
-.faq-item.open .faq-a { display: block; }
-.faq-item.open .faq-q i { transform: rotate(180deg); }
-
-/* ===== 反馈 ===== */
-.feedback-section { margin-top: 20px; border-top: 1px solid #F0E2D4; padding-top: 16px; }
-.feedback-section .form-input {
-  width: 100%; min-height: 90px; box-sizing: border-box;
 }
 
 /* ===== 通知铃铛 ===== */
@@ -1312,3 +1175,71 @@
 }
 .toggle-switch input:checked + .toggle-slider { background: #D9A066; }
 .toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+
+/* ===== FAQ 折叠面板 ===== */
+.section-subtitle {
+  color: #5E422C; font-size: 15px; font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.02em;
+}
+.section-subtitle i { color: #D9A066; font-size: 16px; }
+
+.faq-item {
+  border: 1px solid #F0E2D4; border-radius: 12px; margin-bottom: 10px;
+  overflow: hidden; transition: box-shadow 0.2s;
+}
+.faq-item:hover { box-shadow: 0 2px 8px rgba(68,48,28,0.06); }
+.faq-item.open { border-color: #E0C8A8; }
+
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; cursor: pointer;
+  font-size: 14px; color: #4A3724; font-weight: 600;
+  background: #FCF8F2; transition: background 0.2s;
+  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.01em;
+}
+.faq-q:hover { background: #F5EDE4; }
+.faq-q i { transition: transform 0.25s ease; color: #C4A88B; font-size: 12px; }
+.faq-a {
+  display: none; padding: 14px 18px 18px;
+  font-size: 13px; color: #6B5A4A; line-height: 1.75; letter-spacing: 0.01em;
+  font-family: 'Noto Sans SC', sans-serif;
+  border-top: 1px solid #F5EDE4; background: #FFFEFC;
+}
+.faq-a b { color: #5E422C; font-weight: 600; }
+.faq-item.open .faq-a { display: block; }
+.faq-item.open .faq-q { background: #FDF5EC; }
+.faq-item.open .faq-q i { transform: rotate(180deg); color: #D9A066; }
+
+/* ===== 反馈表单 ===== */
+.feedback-section {
+  margin-top: 24px; border-top: 2px solid #F0E2D4; padding-top: 20px;
+}
+.feedback-hint {
+  font-size: 12px; color: #B89A78; margin: -8px 0 12px 0;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.feedback-textarea {
+  width: 100%; min-height: 100px; padding: 14px 16px;
+  border: 1.5px solid #E8D7C3; border-radius: 12px;
+  font-size: 14px; color: #4A3724; resize: vertical;
+  font-family: 'Noto Sans SC', sans-serif; line-height: 1.6;
+  background: #FFFEFC; transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.feedback-textarea:focus {
+  outline: none; border-color: #D9A066;
+  box-shadow: 0 0 0 3px rgba(217,160,102,0.1);
+}
+.feedback-textarea::placeholder { color: #C4B0A0; }
+.feedback-submit-btn {
+  margin-top: 12px; width: 100%; padding: 13px 0;
+  background: linear-gradient(135deg, #D9A066, #C88B4A);
+  color: #FFF; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.02em;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(217,160,102,0.25);
+}
+.feedback-submit-btn:hover { background: linear-gradient(135deg, #C88B4A, #B87A3A); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217,160,102,0.35); }
+.feedback-submit-btn:active { transform: translateY(0); }
+.feedback-submit-btn i { margin-right: 6px; }
