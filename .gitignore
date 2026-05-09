@@ -22,7 +22,7 @@ package-lock.json
 package.json
 
 # Dev docs (keep locally, not in repo)
-docs/
+docs/superpowers/
 test.py
 
 # OS
