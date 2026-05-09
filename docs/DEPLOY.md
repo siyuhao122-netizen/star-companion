@@ -37,13 +37,23 @@ brew services start mysql
 
 #### 创建数据库
 
-使用 MySQL Workbench 或命令行：
+打开命令行（Windows 按 `Win+R` 输入 `cmd`，macOS 打开终端），输入以下命令连接到 MySQL：
+
+```bash
+mysql -u root -p
+```
+
+输入 root 密码后进入 MySQL 命令行界面（提示符变为 `mysql>`），执行：
 
 ```sql
 CREATE DATABASE star_companion DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-验证数据库连接：
+看到 `Query OK` 即创建成功。输入 `exit` 退出。
+
+> 如果提示 `mysql` 命令找不到，打开 **MySQL Workbench**，连接数据库后，在 Query 窗口中执行上面的 SQL 语句。
+
+验证数据库已创建（在命令行中）：
 ```bash
 mysql -u root -p -e "SHOW DATABASES;" | grep star_companion
 ```

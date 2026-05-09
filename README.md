@@ -54,10 +54,22 @@
    - **MySQL Workbench**（可视化管理工具，建议勾选）
 5. 点击 Next 直到安装完成
 6. 在配置步骤中设置 **root 密码**（请记住这个密码，后续需要用到），其他保持默认
-7. 安装完成后，打开 **MySQL Workbench**（或命令行），创建一个新数据库：
+7. 安装完成后，打开命令行连接到 MySQL 并创建数据库：
+
+   **Windows**：按 `Win + R`，输入 `cmd` 回车，然后输入：
+   ```
+   mysql -u root -p
+   ```
+   输入安装时设置的 root 密码，进入 MySQL 命令行后执行：
    ```sql
    CREATE DATABASE star_companion DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
+   输入 `exit` 退出。
+
+   **macOS**：打开终端，输入 `mysql -u root -p`，同上操作。
+
+   > 如果提示 `mysql` 命令找不到，说明 MySQL 没有加入系统 PATH。可以打开 **MySQL Workbench**（安装时勾选了的），在左侧点击数据库实例连接，然后在 Query 窗口中输入上面的 SQL 语句，点击执行。
+
 8. 记下以下信息，后续配置需要：
    - 主机地址：`localhost`（本机）
    - 端口：`3306`
