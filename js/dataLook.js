@@ -1235,7 +1235,7 @@ window.showMicDetail = showMicDetail;
         }
     }
 
-    // ========== PDF 导出 — 纯文字数据报告 ==========
+    // ========== PDF 导出 — 纯文字数据报告（Canvas 渲染中文） ==========
 
     const GAME_CFG = {
         name:  { label: '叫名反应 · 听觉回应', endpoint: 'name-reaction-ai',  records: () => nameReactionRecords },
@@ -1249,51 +1249,93 @@ window.showMicDetail = showMicDetail;
             const resp = await fetch(`${API_BASE}/${ep}/trend-analysis/${currentChildId}?limit=7`);
             const d = await resp.json();
             if (d.success && d.data && d.data.ai_analysis) return d.data.ai_analysis;
-        } catch (e) { console.warn('AI分析获取失败:', e); }
+        } catch (e) {}
         return null;
     }
 
-    // 自动换行文本，返回结束 Y 坐标
-    function writeText(pdf, text, x, y, maxW, lh, fs, color) {
-        pdf.setFontSize(fs || 10);
-        if (color) pdf.setTextColor.apply(pdf, color);
-        const lines = pdf.splitTextToSize(text, maxW);
-        const ph = pdf.internal.pageSize.getHeight(), mb = 12;
-        let cy = y;
-        for (const l of lines) {
-            if (cy + lh > ph - mb) { pdf.addPage(); cy = mb; }
-            pdf.text(l, x, cy);
-            cy += lh;
+    // Canvas 渲染中文文本块，输出为图片添加到 PDF
+    const _cnCanvas = document.createElement('canvas');
+    const _cnCtx = _cnCanvas.getContext('2d');
+    const FONT_FAMILY = '"Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif';
+    const SCALE = 3;  // 高清渲染
+
+    function _cnTextToImage(text, fontSize, color, fontWeight, maxWidthPx) {
+        const fs = fontSize * SCALE;
+        _cnCtx.font = `${fontWeight || 'normal'} ${fs}px ${FONT_FAMILY}`;
+        _cnCtx.fillStyle = color || '#4D3724';
+
+        // 手动换行（按像素宽度）
+        const words = text.split('');
+        const lines = [];
+        let cur = '';
+        for (const ch of words) {
+            const test = cur + ch;
+            if (_cnCtx.measureText(test).width > maxWidthPx * SCALE && cur.length > 0) {
+                lines.push(cur);
+                cur = ch;
+            } else {
+                cur = test;
+            }
         }
-        return cy;
+        if (cur) lines.push(cur);
+
+        const lineH = fs * 1.5;
+        const totalH = lineH * lines.length;
+        _cnCanvas.width = maxWidthPx * SCALE;
+        _cnCanvas.height = totalH;
+        // 重新设置 font（canvas resize 会重置 context）
+        _cnCtx.font = `${fontWeight || 'normal'} ${fs}px ${FONT_FAMILY}`;
+        _cnCtx.fillStyle = color || '#4D3724';
+        _cnCtx.textBaseline = 'top';
+
+        lines.forEach((l, i) => {
+            _cnCtx.fillText(l, 0, i * lineH);
+        });
+
+        return {
+            dataUrl: _cnCanvas.toDataURL('image/png'),
+            w: maxWidthPx,
+            h: (totalH / SCALE) * 0.264583  // px → mm (1px ≈ 0.264583mm)
+        };
     }
 
-    // 绘制标题栏
+    // 写中文文本块到 PDF
+    function writeCNBlock(pdf, text, x, y, maxW, fontSize, color, fontWeight) {
+        const maxPx = maxW / 0.264583;
+        const img = _cnTextToImage(text, fontSize, color || '#4D3724', fontWeight, maxPx);
+        const ph = pdf.internal.pageSize.getHeight(), mb = 12;
+        const imgH = img.h;
+
+        if (y + imgH > ph - mb) { pdf.addPage(); y = mb; }
+        pdf.addImage(img.dataUrl, 'PNG', x, y, maxW, imgH);
+        return y + imgH + 1;
+    }
+
+    // 渲染标题栏
     function drawTitleBar(pdf, title, y) {
         const PW = pdf.internal.pageSize.getWidth(), M = 12;
         pdf.setFillColor(77, 55, 36);
-        pdf.rect(M, y, PW - 2 * M, 9, 'F');
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(11);
-        pdf.text(title, M + 3, y + 6.2);
-        return y + 13;
+        pdf.rect(M, y, PW - 2 * M, 10, 'F');
+        const img = _cnTextToImage(title, 11, '#FFFFFF', 'bold', (PW - 2 * M - 6) / 0.264583);
+        pdf.addImage(img.dataUrl, 'PNG', M + 3, y + 1, PW - 2 * M - 6, img.h);
+        return y + 14;
     }
 
-    // 绘制表格行
+    // 渲染表格行（每列独立 canvas 渲染）
     function drawTableRow(pdf, cols, widths, y, isHeader) {
         const M = 12, rowH = 7;
         if (isHeader) {
             pdf.setFillColor(249, 242, 235);
             pdf.rect(M, y - 4.5, pdf.internal.pageSize.getWidth() - 2 * M, rowH, 'F');
-            pdf.setFontSize(9);
-            pdf.setTextColor(140, 110, 80);
-        } else {
-            pdf.setFontSize(9);
-            pdf.setTextColor(77, 55, 36);
         }
         let x = M;
         cols.forEach((col, i) => {
-            pdf.text(col, x, y);
+            const wMM = widths[i] - 2;
+            const color = isHeader ? '#8C6E50' : '#4D3724';
+            const img = _cnTextToImage(col, 9, color, isHeader ? 'bold' : 'normal', wMM / 0.264583);
+            const cellH = img.h;
+            const cellY = y - cellH + 1;
+            pdf.addImage(img.dataUrl, 'PNG', x, Math.max(cellY, y - 4), wMM, cellH);
             x += widths[i];
         });
         return y + rowH;
@@ -1320,22 +1362,17 @@ window.showMicDetail = showMicDetail;
 
             // ===== 封面 =====
             pdf.setFillColor(77, 55, 36); pdf.rect(0, 0, PW, 24, 'F');
-            pdf.setTextColor(255, 255, 255); pdf.setFontSize(17);
-            pdf.text('星伴 · 数据成长报告', M, 16);
-            pdf.setFontSize(25);
-            pdf.text('*', PW - 20, 17);
+            let y = 8;
+            y = writeCNBlock(pdf, '星伴 · 数据成长报告', M, y, PW - 2 * M, 17, '#FFFFFF', 'bold');
 
-            pdf.setTextColor(77, 55, 36);
-            let y = 34;
-            pdf.setFontSize(13);
-            pdf.text(childName, M, y); y += 8;
-            if (childAge) { pdf.setFontSize(10); pdf.text(childAge, M, y); y += 6; }
-            pdf.setFontSize(10);
-            pdf.text(`导出日期：${today}`, M, y); y += 6;
-            pdf.text('数据范围：最近 7 次训练记录', M, y); y += 6;
-            pdf.text('报告说明：本报告由星伴平台自动生成，数据来源于孩子的游戏训练记录。', M, y); y += 4;
-            pdf.text('AI 分析基于循证 ASD 专业知识库，仅供参考，不构成医疗诊断。', M, y);
-            y += 8;
+            y = 32;
+            y = writeCNBlock(pdf, childName, M, y, PW - 2 * M, 13, '#4D3724');
+            if (childAge) y = writeCNBlock(pdf, childAge, M, y, PW - 2 * M, 10, '#6B5A4A');
+            y = writeCNBlock(pdf, `导出日期：${today}`, M, y, PW - 2 * M, 10, '#6B5A4A');
+            y = writeCNBlock(pdf, '数据范围：最近 7 次训练记录', M, y, PW - 2 * M, 10, '#6B5A4A');
+            y += 2;
+            y = writeCNBlock(pdf, '本报告由星伴平台自动生成，数据来源于孩子的游戏训练记录。AI 分析基于循证 ASD 专业知识库，仅供参考，不构成医疗诊断。', M, y, PW - 2 * M, 8.5, '#9A8A7A');
+            y += 4;
             pdf.setDrawColor(207, 162, 118); pdf.setLineWidth(0.3);
             pdf.line(M, y, PW - M, y);
 
@@ -1383,9 +1420,9 @@ window.showMicDetail = showMicDetail;
                 const aiText = await fetchAIAnalysis(g);
                 if (aiText) {
                     const clean = aiText.replace(/^#{1,3}\s+/gm, '').replace(/\*\*/g, '').trim();
-                    y = writeText(pdf, clean, M, y, PW - 2 * M, 5, 10, [77, 55, 36]);
+                    y = writeCNBlock(pdf, clean, M, y, PW - 2 * M, 9, '#4D3724');
                 } else {
-                    y = writeText(pdf, '暂无 AI 分析数据。完成更多训练后，系统将自动生成个性化的专业分析与建议。', M, y, PW - 2 * M, 5, 10, [150, 130, 110]);
+                    y = writeCNBlock(pdf, '暂无 AI 分析数据。完成更多训练后，系统将自动生成个性化的专业分析与建议。', M, y, PW - 2 * M, 9, '#968A7A');
                 }
 
                 // 训练历史表
@@ -1427,7 +1464,7 @@ window.showMicDetail = showMicDetail;
             pdf.setFontSize(8);
             pdf.setTextColor(160, 140, 120);
             const disclaimer = '声明：本报告由星伴平台自动生成，所有数据来源于孩子在平台上的游戏训练记录。AI 分析基于循证 ASD（孤独症谱系障碍）专业知识库生成，旨在为家长提供参考和建议，不构成医疗诊断。如对孩子的发展有任何担忧，请咨询专业儿科医生或儿童发育行为专家。';
-            writeText(pdf, disclaimer, M, y, PW - 2 * M, 3.5, 8, [160, 140, 120]);
+            writeCNBlock(pdf, disclaimer, M, y, PW - 2 * M, 8, '#A08C7A');
 
             panel.classList.remove('show');
             document.getElementById('overlay').classList.remove('show');

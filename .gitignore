@@ -21,8 +21,9 @@ node_modules/
 package-lock.json
 package.json
 
-# Docs (dev only)
-docs/superpowers/
+# Dev docs (keep locally, not in repo)
+docs/
+test.py
 
 # OS
 .DS_Store
