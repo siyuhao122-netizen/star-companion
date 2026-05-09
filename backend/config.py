@@ -22,7 +22,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CORS_ORIGINS = ['http://localhost:5500', 'http://127.0.0.1:5500',
-                    'http://localhost:8000', 'http://127.0.0.1:8000']
+                    'http://localhost:5501', 'http://127.0.0.1:5501']
 
     # QQ邮箱 SMTP
     MAIL_SERVER = "smtp.qq.com"
