@@ -532,6 +532,29 @@ def submit_feedback():
     return jsonify({'success': True, 'message': '感谢你的反馈'}), 200
 
 
+@auth_bp.route('/notifications/create', methods=['POST'])
+def create_notification_route():
+    """前端触发创建通知（训练/周报提醒）"""
+    data = request.json
+    user_id = data.get('user_id')
+    notif_type = data.get('type')
+    title = data.get('title', '')
+    content = data.get('content', '')
+
+    if not user_id or not notif_type:
+        return jsonify({'success': False, 'message': '参数错误'}), 400
+
+    n = Notification(
+        user_id=user_id,
+        type=notif_type,
+        title=title,
+        content=content
+    )
+    db.session.add(n)
+    db.session.commit()
+    return jsonify({'success': True, 'id': n.id}), 201
+
+
 def create_notification(user_id, notif_type, title, content='', related_id=None):
     """内部函数：创建通知"""
     try:

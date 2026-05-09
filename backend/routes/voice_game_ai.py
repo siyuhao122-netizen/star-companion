@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from routes.auth import create_notification
 
 voice_game_ai_bp = Blueprint('voice_game_ai', __name__)
 
@@ -209,6 +210,18 @@ def single_analysis():
         db.session.commit()
 
     save_token_usage('voice_single', record_id, child_id, Config.BAILIAN_MODEL, usage)
+
+    
+    # 通知用户
+    from models import User as _U
+    _u = _U.query.get(child.user_id)
+    cr = (record.completed_rounds / record.round_total * 100) if record.round_total > 0 else 0
+    if _u:
+        create_notification(_u.id, 'system_report',
+            f'{child.name}的声音小话筒分析已生成',
+            f'完成率：{cr:.0f}%，点击查看详情',
+            related_id=record_id)
+
 
     return jsonify({
         'success': True,

@@ -1054,11 +1054,18 @@
 
     // ========== 通知设置 ==========
     function showNotifSettingsModal() {
-        const settings = JSON.parse(localStorage.getItem('notifSettings') || '{}');
-        document.getElementById('toggleTraining').checked = settings.training !== false;
-        document.getElementById('toggleWeekly').checked = settings.weekly !== false;
-        document.getElementById('toggleTreehole').checked = settings.treehole !== false;
-        document.getElementById('toggleSystem').checked = settings.system !== false;
+        const s = JSON.parse(localStorage.getItem('notifSettings') || '{}');
+        document.getElementById('toggleTraining').checked = !!s.training;
+        document.getElementById('toggleWeekly').checked = !!s.weekly;
+        if (s.trainingStart) document.getElementById('trainingStart').value = s.trainingStart;
+        if (s.trainingEnd) document.getElementById('trainingEnd').value = s.trainingEnd;
+        document.getElementById('trainingDetail').style.display = s.training ? 'block' : 'none';
+        document.getElementById('weeklyDetail').style.display = s.weekly ? 'block' : 'none';
+        // 星期选择
+        const days = s.weeklyDays || [0];
+        document.querySelectorAll('.weekday-btn').forEach(b => {
+            b.classList.toggle('selected', days.includes(parseInt(b.dataset.day)));
+        });
         document.getElementById('notifSettingsModal').classList.add('show');
     }
 
@@ -1066,14 +1073,131 @@
         document.getElementById('notifSettingsModal').classList.remove('show');
     }
 
+    function toggleTrainingDetail() {
+        const on = document.getElementById('toggleTraining').checked;
+        document.getElementById('trainingDetail').style.display = on ? 'block' : 'none';
+        saveNotifSettings();
+    }
+
+    function toggleWeeklyDetail() {
+        const on = document.getElementById('toggleWeekly').checked;
+        document.getElementById('weeklyDetail').style.display = on ? 'block' : 'none';
+        saveNotifSettings();
+    }
+
+    function toggleWeekday(el) {
+        el.classList.toggle('selected');
+        saveNotifSettings();
+    }
+
     function saveNotifSettings() {
+        const days = [];
+        document.querySelectorAll('.weekday-btn.selected').forEach(b => {
+            days.push(parseInt(b.dataset.day));
+        });
         const settings = {
             training: document.getElementById('toggleTraining').checked,
+            trainingStart: document.getElementById('trainingStart').value,
+            trainingEnd: document.getElementById('trainingEnd').value,
             weekly: document.getElementById('toggleWeekly').checked,
-            treehole: document.getElementById('toggleTreehole').checked,
-            system: document.getElementById('toggleSystem').checked
+            weeklyDays: days
         };
         localStorage.setItem('notifSettings', JSON.stringify(settings));
+    }
+
+    // ========== 训练/周报 前端定时提醒 ==========
+    function checkReminders() {
+        const s = JSON.parse(localStorage.getItem('notifSettings') || '{}');
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+
+        // 训练提醒：页面可见 + 在时段内 + 今天未提醒
+        if (s.training && !document.hidden) {
+            const hour = now.getHours();
+            const lastRemind = localStorage.getItem('lastTrainingRemind');
+            if (hour >= parseInt(s.trainingStart || 9) && hour < parseInt(s.trainingEnd || 10) && lastRemind !== today) {
+                createReminder('training_remind', '训练时间到啦',
+                    '和宝贝一起做几分钟的互动训练吧，每天坚持一小步，成长一大步 ✨');
+                localStorage.setItem('lastTrainingRemind', today);
+                fetchNotifications();
+            }
+        }
+
+        // 周报提醒：今天是选定星期 + 今天未提醒
+        if (s.weekly && !document.hidden) {
+            const day = now.getDay();
+            const days = s.weeklyDays || [0];
+            const lastWeekly = localStorage.getItem('lastWeeklyRemind');
+            if (days.includes(day) && lastWeekly !== today) {
+                createReminder('weekly_report', '本周数据周报已生成',
+                    '快来看看宝贝这周的成长变化吧，点击查看数据看板 📊');
+                localStorage.setItem('lastWeeklyRemind', today);
+                fetchNotifications();
+            }
+        }
+    }
+
+    async function createReminder(type, title, content) {
+        try {
+            await fetch(`${API_BASE}/auth/notifications/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, type, title, content })
+            });
+        } catch (e) { /* 静默 */ }
+    }
+
+    setInterval(checkReminders, 60000); // 每分钟检查一次
+
+    // ========== 分类消息列表弹窗 ==========
+    async function showNotifTypeList(type) {
+        const titleMap = {
+            treehole: { title: '树洞互动消息', icon: 'fa-heart', filter: ['treehole_like', 'treehole_reply'] },
+            system: { title: '系统消息', icon: 'fa-robot', filter: ['system', 'system_report'] }
+        };
+        const cfg = titleMap[type];
+        document.getElementById('notifTypeTitle').innerHTML = `<i class="fas ${cfg.icon}" style="color:#D9A066;margin-right:6px;"></i>${cfg.title}`;
+
+        const resp = await fetch(`${API_BASE}/auth/notifications/${userId}?limit=50`);
+        const d = await resp.json();
+        const list = (d.data?.list || []).filter(n => cfg.filter.includes(n.type));
+
+        const container = document.getElementById('notifTypeList');
+        if (list.length === 0) {
+            container.innerHTML = '<div class="notif-empty">暂无消息</div>';
+        } else {
+            container.innerHTML = list.map(n => {
+                const time = new Date(n.created_at).toLocaleString('zh-CN', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+                return `<div class="notif-type-item ${n.is_read ? 'read' : 'unread'}" onclick="handleNotifClick('${n.type}', ${n.related_id || 0}, ${n.id})">
+                    <div class="type-dot"></div>
+                    <div class="type-content">
+                        <div class="type-title">${n.title}</div>
+                        <div class="type-text">${n.content || ''}</div>
+                        <div class="type-time">${time}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        document.getElementById('notifTypeModal').classList.add('show');
+    }
+
+    function closeNotifTypeList() {
+        document.getElementById('notifTypeModal').classList.remove('show');
+    }
+
+    async function handleNotifClick(type, relatedId, notifId) {
+        // 标记已读
+        await fetch(`${API_BASE}/auth/notifications/mark-read`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: notifId })
+        });
+        // 跳转
+        if (type.startsWith('treehole')) {
+            location.href = 'seniorHole.html';
+        } else if (type.startsWith('system')) {
+            location.href = 'dataLook.html';
+        }
     }
 
     // ========== 帮助与反馈 ==========
@@ -1113,7 +1237,13 @@
     window.markAllRead = markAllRead;
     window.showNotifSettingsModal = showNotifSettingsModal;
     window.closeNotifSettingsModal = closeNotifSettingsModal;
+    window.toggleTrainingDetail = toggleTrainingDetail;
+    window.toggleWeeklyDetail = toggleWeeklyDetail;
+    window.toggleWeekday = toggleWeekday;
     window.saveNotifSettings = saveNotifSettings;
+    window.showNotifTypeList = showNotifTypeList;
+    window.closeNotifTypeList = closeNotifTypeList;
+    window.handleNotifClick = handleNotifClick;
     window.showHelpModal = showHelpModal;
     window.closeHelpModal = closeHelpModal;
     window.toggleFAQ = toggleFAQ;

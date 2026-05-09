@@ -1134,6 +1134,152 @@
 }
 
 /* ===== 通知设置弹窗 ===== */
+.notif-settings-list { padding: 0; }
+.notif-setting-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; border-bottom: 1px solid #F0E2D4;
+}
+.notif-setting-item:last-child { border-bottom: none; }
+.notif-setting-item.clickable { cursor: pointer; }
+.notif-setting-item.clickable .fa-chevron-right { color: #C4A88B; font-size: 13px; }
+.notif-setting-info { flex: 1; }
+.notif-setting-title { font-size: 14px; color: #5E422C; font-weight: 600; margin-bottom: 2px; }
+.notif-setting-desc { font-size: 12px; color: #9B846C; }
+
+/* 展开的详细设置区 */
+.notif-detail {
+  padding: 6px 20px 14px 20px;
+  border-bottom: 1px solid #F0E2D4;
+  background: #FDFAF6;
+}
+.detail-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #5E422C; margin-bottom: 6px; }
+.detail-row select {
+  padding: 6px 10px; border: 1px solid #E0D0BE; border-radius: 8px;
+  font-size: 13px; color: #4A3724; background: #FFF; cursor: pointer;
+}
+.detail-row select:focus { outline: none; border-color: #D9A066; }
+.detail-hint { font-size: 11px; color: #B89A78; margin: 0; }
+
+/* 星期选择按钮 */
+.weekdays { gap: 6px; }
+.weekday-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer; border: 1px solid #E0D0BE;
+  background: #FFF; color: #9B846C; transition: all 0.15s;
+}
+.weekday-btn.selected { background: #D9A066; color: #FFF; border-color: #D9A066; }
+
+/* 分类消息列表弹窗 */
+.notif-type-list { max-height: 350px; overflow-y: auto; padding: 4px 0; }
+.notif-type-list .notif-empty { text-align: center; padding: 30px; color: #B89A78; font-size: 13px; }
+.notif-type-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 20px; border-bottom: 1px solid #F0E2D4; cursor: pointer;
+  transition: background 0.15s;
+}
+.notif-type-item:hover { background: #FDFAF6; }
+.notif-type-item.unread { background: #FFF9F2; }
+.notif-type-item .type-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #E07060;
+  margin-top: 4px; flex-shrink: 0;
+}
+.notif-type-item.read .type-dot { visibility: hidden; }
+.notif-type-item .type-content { flex: 1; }
+.notif-type-item .type-title { font-size: 14px; color: #4A3724; font-weight: 500; }
+.notif-type-item .type-text { font-size: 12px; color: #9B846C; margin-top: 2px; line-height: 1.4; }
+.notif-type-item .type-time { font-size: 11px; color: #B89A78; margin-top: 4px; }
+
+/* ===== 通知铃铛 ===== */
+.notif-bell {
+  position: relative;
+  margin-left: auto;
+  font-size: 20px;
+  color: #5E422C;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.notif-bell:hover { background: #F5EDE4; }
+.notif-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  background: #E07060;
+  color: #FFF;
+  font-size: 10px;
+  min-width: 18px; height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  padding: 0 4px;
+  border: 2px solid #FFFDF9;
+}
+
+/* ===== 通知弹窗 ===== */
+.notif-popup {
+  display: none;
+  position: fixed;
+  top: 60px; right: 20px;
+  width: 340px; max-height: 420px;
+  background: #FFFDF9;
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(68,48,28,0.18), 0 0 0 1px rgba(235,218,196,0.5);
+  z-index: 1000;
+  overflow: hidden;
+  flex-direction: column;
+}
+.notif-popup.show { display: flex; }
+.notif-popup-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #F0E2D4;
+  font-size: 15px; font-weight: 700; color: #4A3724;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.notif-mark-all {
+  background: none; border: none;
+  color: #D9A066; font-size: 12px; cursor: pointer;
+  font-weight: 500; transition: color 0.2s;
+}
+.notif-mark-all:hover { color: #C08050; }
+.notif-list { overflow-y: auto; flex: 1; padding: 10px 12px; }
+.notif-empty {
+  text-align: center; padding: 40px 20px; color: #B89A78;
+  font-size: 14px; font-family: 'Noto Sans SC', sans-serif;
+}
+.notif-empty::before {
+  content: '\f0f3'; font-family: 'Font Awesome 6 Free'; font-weight: 400;
+  display: block; font-size: 36px; margin-bottom: 12px; color: #E0D0BE;
+}
+.notif-item {
+  padding: 12px 14px; border-radius: 12px; margin-bottom: 6px;
+  cursor: pointer; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.notif-item:hover { background: #FDF5EC; border-color: #F0E2D4; }
+.notif-item.unread { background: linear-gradient(135deg, #FFF8F0, #FEF3E8); border-color: #F5E0CC; }
+.notif-item .notif-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #E07060; display: inline-block; margin-right: 8px; flex-shrink: 0;
+}
+.notif-item.read .notif-dot { visibility: hidden; }
+.notif-item .notif-title {
+  font-size: 14px; color: #4A3724; font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.01em;
+}
+.notif-item .notif-content {
+  font-size: 12px; color: #8C7A6A; margin-top: 3px; line-height: 1.4;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.notif-item .notif-time {
+  font-size: 11px; color: #B89A78; margin-top: 5px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===== 通知设置弹窗 ===== */
 .notif-settings-list { padding: 4px 0; }
 .notif-setting-item {
   display: flex; align-items: center; gap: 14px;

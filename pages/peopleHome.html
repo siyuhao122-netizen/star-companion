@@ -529,50 +529,91 @@
         <div class="close-modal-btn" onclick="closeNotifSettingsModal()"><i class="fas fa-times"></i></div>
       </div>
       <div class="notif-settings-list">
+
+        <!-- 训练提醒：开关 + 时段选择 -->
         <div class="notif-setting-item">
-          <div class="notif-setting-icon"><i class="fas fa-calendar-check"></i></div>
           <div class="notif-setting-info">
             <div class="notif-setting-title">训练提醒</div>
-            <div class="notif-setting-desc">每天固定时间提醒带宝贝做训练，养成好习惯</div>
+            <div class="notif-setting-desc" id="trainingDesc">每天固定时段提醒带宝贝做训练</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggleTraining" checked onchange="saveNotifSettings()">
+            <input type="checkbox" id="toggleTraining" onchange="toggleTrainingDetail()">
             <span class="toggle-slider"></span>
           </label>
         </div>
+        <div class="notif-detail" id="trainingDetail" style="display:none;">
+          <div class="detail-row">
+            <span>提醒时段</span>
+            <select id="trainingStart" onchange="saveNotifSettings()">
+              <option value="8">08:00</option><option value="9" selected>09:00</option><option value="10">10:00</option>
+              <option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option>
+              <option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option>
+            </select>
+            <span>—</span>
+            <select id="trainingEnd" onchange="saveNotifSettings()">
+              <option value="9">09:00</option><option value="10" selected>10:00</option><option value="11">11:00</option>
+              <option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option>
+              <option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option>
+            </select>
+          </div>
+          <p class="detail-hint">在该时段内打开页面时会弹出训练提醒</p>
+        </div>
+
+        <!-- 周报提醒：开关 + 星期选择 -->
         <div class="notif-setting-item">
-          <div class="notif-setting-icon"><i class="fas fa-chart-bar"></i></div>
           <div class="notif-setting-info">
             <div class="notif-setting-title">周报提醒</div>
-            <div class="notif-setting-desc">每周一推送宝贝的数据成长周报</div>
+            <div class="notif-setting-desc" id="weeklyDesc">每周固定日期提醒查看数据周报</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggleWeekly" checked onchange="saveNotifSettings()">
+            <input type="checkbox" id="toggleWeekly" onchange="toggleWeeklyDetail()">
             <span class="toggle-slider"></span>
           </label>
         </div>
-        <div class="notif-setting-item">
-          <div class="notif-setting-icon"><i class="fas fa-heart"></i></div>
+        <div class="notif-detail" id="weeklyDetail" style="display:none;">
+          <div class="detail-row weekdays">
+            <span data-day="1" class="weekday-btn" onclick="toggleWeekday(this)">一</span>
+            <span data-day="2" class="weekday-btn" onclick="toggleWeekday(this)">二</span>
+            <span data-day="3" class="weekday-btn" onclick="toggleWeekday(this)">三</span>
+            <span data-day="4" class="weekday-btn" onclick="toggleWeekday(this)">四</span>
+            <span data-day="5" class="weekday-btn" onclick="toggleWeekday(this)">五</span>
+            <span data-day="6" class="weekday-btn" onclick="toggleWeekday(this)">六</span>
+            <span data-day="0" class="weekday-btn selected" onclick="toggleWeekday(this)">日</span>
+          </div>
+          <p class="detail-hint">在选定日期的当天打开页面时会收到周报提醒</p>
+        </div>
+
+        <!-- 树洞互动：点击进入消息列表 -->
+        <div class="notif-setting-item clickable" onclick="showNotifTypeList('treehole')">
           <div class="notif-setting-info">
             <div class="notif-setting-title">树洞互动</div>
-            <div class="notif-setting-desc">有人点赞或回复我的树洞留言时通知</div>
+            <div class="notif-setting-desc">点赞、回复等互动消息</div>
           </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="toggleTreehole" checked onchange="saveNotifSettings()">
-            <span class="toggle-slider"></span>
-          </label>
+          <i class="fas fa-chevron-right"></i>
         </div>
-        <div class="notif-setting-item">
-          <div class="notif-setting-icon"><i class="fas fa-robot"></i></div>
+
+        <!-- 系统消息：点击进入消息列表 -->
+        <div class="notif-setting-item clickable" onclick="showNotifTypeList('system')">
           <div class="notif-setting-info">
             <div class="notif-setting-title">系统消息</div>
-            <div class="notif-setting-desc">AI 分析报告生成、重要系统更新通知</div>
+            <div class="notif-setting-desc">AI 报告生成、重要更新</div>
           </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="toggleSystem" checked onchange="saveNotifSettings()">
-            <span class="toggle-slider"></span>
-          </label>
+          <i class="fas fa-chevron-right"></i>
         </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 分类消息列表弹窗 -->
+  <div class="modal-overlay" id="notifTypeModal">
+    <div class="form-modal">
+      <div class="modal-header">
+        <h3 id="notifTypeTitle"><i class="fas fa-bell"></i> 消息列表</h3>
+        <div class="close-modal-btn" onclick="closeNotifTypeList()"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="notif-type-list" id="notifTypeList">
+        <div class="notif-empty">暂无消息</div>
       </div>
     </div>
   </div>

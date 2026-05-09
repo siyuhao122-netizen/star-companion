@@ -5,6 +5,7 @@ import requests
 import json
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from routes.auth import create_notification
 
 point_game_ai_bp = Blueprint('point_game_ai', __name__)
 
@@ -293,6 +294,18 @@ def single_analysis():
     # 记录token使用
     save_token_usage('point_single', record_id, child_id, Config.POINT_GAME_AI_MODEL, usage)
     
+    
+    # 通知用户
+    from models import User as _User
+    _u = _User.query.get(child.user_id)
+    acc = float(record.accuracy) if record.accuracy else 0
+    if _u:
+        create_notification(_u.id, 'system_report',
+            f'{child.name}的指物练习分析已生成',
+            f'本次正确率：{acc:.0f}%，点击查看详情',
+            related_id=record_id)
+
+
     return jsonify({
         'success': True,
         'data': {

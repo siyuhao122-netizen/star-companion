@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
-from models import db, SurveyResult, Child, AITokenUsage
+from models import db, SurveyResult, Child, AITokenUsage, User
 from datetime import datetime
 import requests
 import json
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from routes.auth import create_notification
 
 ai_bp = Blueprint('ai', __name__)
 
@@ -300,6 +301,15 @@ def survey_analysis():
         completion_tokens=usage.get('completion_tokens', 0),
         total_tokens=usage.get('total_tokens', 0)
     )
+
+    # 通知用户：AI 分析报告已生成
+    if child:
+        user = User.query.get(child.user_id)
+        if user:
+            create_notification(user.id, 'system_report',
+                f'{child.name}的筛查报告已生成',
+                f'风险等级：{risk_level}，点击查看详细分析',
+                related_id=survey_result.id)
     
     return jsonify({
         'success': True,

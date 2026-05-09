@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from routes.auth import create_notification
 
 name_reaction_ai_bp = Blueprint('name_reaction_ai', __name__)
 
@@ -214,6 +215,15 @@ def single_analysis():
         db.session.commit()
 
     save_token_usage('name_single', record_id, child_id, Config.BAILIAN_MODEL, usage)
+
+    # 通知用户
+    from models import User
+    user = User.query.get(child.user_id)
+    if user:
+        create_notification(user.id, 'system_report',
+            f'{child.name}的叫名反应分析已生成',
+            f'本次成功率：{success_rate:.0f}%，点击查看详情',
+            related_id=record_id)
 
     return jsonify({
         'success': True,

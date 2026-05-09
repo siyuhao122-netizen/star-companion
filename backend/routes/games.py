@@ -4,6 +4,7 @@ from datetime import date, datetime
 import requests
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from routes.auth import create_notification
 
 games_bp = Blueprint('games', __name__)
 
