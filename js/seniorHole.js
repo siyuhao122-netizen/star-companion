@@ -105,8 +105,8 @@
             showToast('💭 写下你想说的话吧', '#FCE8E8');
             return;
         }
-        if (content.length < 5) {
-            showToast('💭 再多说一点吧，至少5个字~', '#FCE8E8');
+        if (!Validator.isLength(content, 2, 500)) {
+            showToast('内容需2-500字', false);
             return;
         }
 

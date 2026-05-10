@@ -283,8 +283,8 @@
             showToast('请输入新密码', false);
             return;
         }
-        if (newPassword.length < 6) {
-            showToast('新密码长度至少6位', false);
+        if (!Validator.isPassword(newPassword)) {
+            showToast('密码至少8位，需包含字母和数字', false);
             return;
         }
         if (newPassword !== confirmNewPassword) {
@@ -439,12 +439,18 @@
     async function saveProfile() {
         const nameInput = document.getElementById('editParentName');
         const phoneInput = document.getElementById('editParentPhone');
-        if (!nameInput.value.trim()) {
-            showToast('请输入家长称呼', false);
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        if (!Validator.isNickname(name)) {
+            showToast('昵称需2-20个字符', false);
             return;
         }
-        parentData.name = nameInput.value.trim();
-        parentData.phone = phoneInput.value.trim();
+        if (phone && !Validator.isPhone(phone)) {
+            showToast('请输入正确的11位手机号', false);
+            return;
+        }
+        parentData.name = name;
+        parentData.phone = phone;
         const result = await saveUserInfo();
         if (result.success) {
             updateParentDisplay();
@@ -478,11 +484,15 @@
     
     async function addChild() {
         const name = document.getElementById('newChildName').value.trim();
-        if (!name) {
-            showToast('请输入宝贝昵称', false);
+        if (!Validator.isChildName(name)) {
+            showToast('宝贝昵称需2-10个字符', false);
             return;
         }
         const birthDate = document.getElementById('newChildBirth').value;
+        if (!Validator.isBirthDate(birthDate)) {
+            showToast('请选择有效的出生日期', false);
+            return;
+        }
         const relation = document.getElementById('newChildRelation').value;
         const customAvatarData = document.getElementById('newChildCustomAvatarData').value;
         let avatarType = 'icon';

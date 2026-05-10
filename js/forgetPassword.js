@@ -268,8 +268,8 @@ document.getElementById('verifyCodeBtn')?.addEventListener('click', async functi
         const pwd = document.getElementById('newPassword')?.value;
         const confirm = document.getElementById('confirmNewPassword')?.value;
         
-        if (!pwd || pwd.length < 8) { 
-            showToast('密码长度至少8位', '#FCE8E8'); 
+        if (!Validator.isPassword(pwd)) { 
+            showToast('密码至少8位，需包含字母和数字', '#FCE8E8'); 
             return; 
         }
         if (pwd !== confirm) { 

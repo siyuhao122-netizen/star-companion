@@ -3,22 +3,10 @@
     const API_BASE = 'http://localhost:5000/api';
 
     // ========== 工具函数 ==========
-    function validateEmail(email) {
-        const regex = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,30}@qq\.com$/i;
-        return regex.test(email);
-    }
-
-    function validatePassword(password) {
-        return password.length >= 6;
-    }
-
-    function validateSmsCode(code) {
-        return /^\d{6}$/.test(code);
-    }
-
-    function validateNickname(nickname) {
-        return /^[\u4e00-\u9fa5]{2,10}$/.test(nickname);
-    }
+    function validateEmail(email) { return Validator.isEmail(email); }
+    function validatePassword(password) { return Validator.isPassword(password); }
+    function validateSmsCode(code) { return Validator.isCode(code); }
+    function validateNickname(nickname) { return Validator.isNickname(nickname); }
 
     function showFieldError(inputId, errorId, message) {
         const input = document.getElementById(inputId);
