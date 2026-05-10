@@ -3,13 +3,8 @@
     const API_BASE = 'http://localhost:5000/api';
 
     // ========== 工具函数 ==========
-    function validateEmail(email) {
-        return /^[1-9]\d{4,10}@qq\.com$/.test(email);
-    }
-
-    function validateSmsCode(code) {
-        return /^\d{6}$/.test(code);
-    }
+    function validateEmail(email) { return Validator.isEmail(email); }
+    function validateSmsCode(code) { return Validator.isCode(code); }
 
     function showToast(msg, bg = '#FEF3E2') {
         let t = document.querySelector('.toast-message');
@@ -196,12 +191,8 @@ function startCountdown(btn) {
   // ========== 发送验证码 ==========
 document.getElementById('sendCodeBtn')?.addEventListener('click', async function() {
     const email = document.getElementById('resetEmail')?.value;
-    if (!email || !email.includes('@')) { 
-        showToast('请输入有效的邮箱地址', '#FCE8E8'); 
-        return; 
-    }
-    if (!validateEmail(email)) {
-        showToast('请输入正确的QQ邮箱', '#FCE8E8');
+    if (!Validator.isEmail(email)) {
+        showToast('请输入有效的邮箱地址', false);
         return;
     }
     

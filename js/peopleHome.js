@@ -566,8 +566,13 @@
     async function saveChildEdit() {
         const childId = parseInt(document.getElementById('editChildId').value);
         const name = document.getElementById('editChildName').value.trim();
-        if (!name) {
-            showToast('请输入宝贝昵称', false);
+        if (!Validator.isChildName(name)) {
+            showToast('宝贝昵称需2-10个字符', false);
+            return;
+        }
+        const birthDate = document.getElementById('editChildBirth').value;
+        if (!Validator.isBirthDate(birthDate)) {
+            showToast('请选择有效的出生日期', false);
             return;
         }
         const relation = document.getElementById('editChildRelation').value;

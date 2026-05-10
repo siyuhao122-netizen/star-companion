@@ -454,8 +454,8 @@
     document.getElementById('regNextStep2')?.addEventListener('click', () => {
         const childName = document.getElementById('regChildName')?.value.trim();
 
-        if (!validateNickname(childName)) {
-            showFieldError('regChildName', 'regChildNameError', '宝贝昵称为2-10个中文汉字');
+        if (!Validator.isChildName(childName)) {
+            showFieldError('regChildName', 'regChildNameError', '宝贝昵称需2-10个字符');
             return;
         }
 
