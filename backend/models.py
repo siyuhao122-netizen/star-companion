@@ -36,7 +36,7 @@ class EmailVerification(db.Model):
 class Child(db.Model):
     __tablename__ = 'child'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     gender = db.Column(db.Enum('男', '女', name='gender_enum'), default='男')
     relation = db.Column(db.String(20), default='妈妈')
@@ -58,7 +58,7 @@ class Child(db.Model):
 class NameReactionRecord(db.Model):
     __tablename__ = 'name_reaction_record'
     id = db.Column(db.Integer, primary_key=True)
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
     session_date = db.Column(db.Date, nullable=False)
     round_total = db.Column(db.Integer, default=8)
     success_count = db.Column(db.Integer, default=0)
@@ -71,7 +71,7 @@ class NameReactionRecord(db.Model):
 class PointGameRecord(db.Model):
     __tablename__ = 'point_game_record'
     id = db.Column(db.Integer, primary_key=True)
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
     session_date = db.Column(db.Date, nullable=False)
     round_total = db.Column(db.Integer, default=8)
     correct_rounds = db.Column(db.Integer, default=0)
@@ -94,7 +94,7 @@ class PointGameRecord(db.Model):
 class VoiceGameRecord(db.Model):
     __tablename__ = 'voice_game_record'
     id = db.Column(db.Integer, primary_key=True)
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
     session_date = db.Column(db.Date, nullable=False)
     round_total = db.Column(db.Integer, default=8)
     completed_rounds = db.Column(db.Integer, default=0)
@@ -107,7 +107,7 @@ class VoiceGameRecord(db.Model):
 class SurveyResult(db.Model):
     __tablename__ = 'survey_result'
     id = db.Column(db.Integer, primary_key=True)
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
     scale_type = db.Column(db.Enum('mchat', 'cast', name='scale_type_enum'), nullable=False)
     answers = db.Column(JSON)
     total_score = db.Column(db.Integer)
@@ -123,7 +123,7 @@ class SurveyResult(db.Model):
 class TreeholeMessage(db.Model):
     __tablename__ = 'treehole_message'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
     anonymous_name = db.Column(db.String(50))
     anonymous_avatar = db.Column(db.String(50))
     content = db.Column(db.Text, nullable=False)
@@ -137,7 +137,7 @@ class TreeholeMessage(db.Model):
 class DailyRecommendation(db.Model):
     __tablename__ = 'daily_recommendation'
     id = db.Column(db.Integer, primary_key=True)
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
     recommend_date = db.Column(db.Date, nullable=False)
     priority_game = db.Column(db.Enum('name', 'point', 'mic', name='game_type_enum'))
     tip_text = db.Column(db.String(200))
@@ -149,7 +149,7 @@ class AITokenUsage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     record_type = db.Column(db.String(50), nullable=False, comment='记录类型：name_single/name_trend/voice_single/voice_trend/point_single/point_trend/survey_analysis')
     record_id = db.Column(db.Integer, comment='关联的记录ID')
-    child_id = db.Column(db.Integer, db.ForeignKey('child.id'))
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'))
     model_name = db.Column(db.String(100), comment='使用的模型名称')
     prompt_tokens = db.Column(db.Integer, default=0)
     completion_tokens = db.Column(db.Integer, default=0)
@@ -160,7 +160,7 @@ class AITokenUsage(db.Model):
 class Notification(db.Model):
     __tablename__ = 'notification'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     type = db.Column(db.String(30), nullable=False, comment='类型：training_remind/weekly_report/treehole_like/treehole_reply/system')
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(300))

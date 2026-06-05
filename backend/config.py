@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)  # override 确保 .env 优先于系统环境变量
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -10,16 +10,11 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
 
     # SQLite 数据库
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        f"sqlite:///{os.path.join(BASE_DIR, 'star_companion.db')}"
+    # SQLite 数据库路径（绝对路径，避免 reloader 工作目录变化问题）
+    _sqlite_path = os.path.join(BASE_DIR, 'star_companion.db').replace('\\', '/')
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{_sqlite_path}"
 
-    # MySQL 连接额外参数（确保 UTF-8）
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        'connect_args': {
-            'charset': 'utf8mb4',
-            'use_unicode': True,
-        }
-    }
+    # SQLite 模式：不需要额外连接参数
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CORS_ORIGINS = ['http://localhost:5500', 'http://127.0.0.1:5500',

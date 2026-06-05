@@ -25,6 +25,10 @@ package.json
 docs/superpowers/
 test.py
 
+# Reasonix / CodeGraph tool files
+.codegraph/
+.reasonix/
+
 # OS
 .DS_Store
 Thumbs.db

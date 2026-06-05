@@ -131,6 +131,23 @@
 
 ---
 
+## 第六次迭代 — MySQL → SQLite 迁移（2026-06-05）
+
+### 改动清单
+| 文件 | 变更 |
+|------|------|
+| `.env` | 注释 DATABASE_URL（由 config.py 硬编码 SQLite 绝对路径） |
+| `backend/config.py` | 删 MySQL 专用 `ENGINE_OPTIONS`；`load_dotenv(override=True)`；硬编码 SQLite 绝对路径 |
+| `backend/models.py` | 9 个 ForeignKey 补 `ondelete`（CASCADE/SET NULL） |
+| `backend/app.py` | `PRAGMA foreign_keys=ON` 事件监听（仅 SQLite 执行） |
+
+### 关键决策
+- 外键级联：MySQL 靠 DDL，SQLite 靠模型层 `ondelete`
+- SQLite 默认不启外键，需 PRAGMA
+- 绝对路径绕过 reloader 工作目录变化 + 系统环境变量干扰
+
+---
+
 ## 第五次迭代 — 4 Bug 修复（2026-06-05）
 
 ### 1. 忘记密码跳转

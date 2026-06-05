@@ -1,6 +1,8 @@
 ﻿from flask import Flask, make_response, request as flask_request, send_from_directory
 from flask_bcrypt import Bcrypt
 from models import db
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 import os
 from config import Config
 
@@ -43,6 +45,17 @@ def create_app():
     # 新增
     app.register_blueprint(name_reaction_ai_bp, url_prefix='/api/name-reaction-ai')
     app.register_blueprint(voice_game_ai_bp, url_prefix='/api/voice-game-ai')
+
+    # ========== SQLite 外键约束启用（仅 SQLite） ==========
+    @event.listens_for(Engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        """SQLite 默认不启用外键约束，需要手动 PRAGMA"""
+        # 仅对 SQLite 执行，避免 MySQL 报语法错误
+        import sqlite3
+        if isinstance(dbapi_connection, sqlite3.Connection):
+            cursor = dbapi_connection.cursor()
+            cursor.execute("PRAGMA foreign_keys=ON")
+            cursor.close()
 
     # ========== 前端静态文件（放在 API 蓝图之后，确保 /api/* 优先匹配） ==========
     @app.route('/', defaults={'path': ''})
