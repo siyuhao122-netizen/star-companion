@@ -1260,6 +1260,13 @@ window.showMicDetail = showMicDetail;
     const SCALE = 3;  // 高清渲染
 
     function _cnTextToImage(text, fontSize, color, fontWeight, maxWidthPx) {
+        if (!text || !text.trim()) {
+            // 空文本返回 1x1 透明占位图，避免 canvas height=0 导致 toDataURL 失败
+            _cnCanvas.width = 1;
+            _cnCanvas.height = 1;
+            _cnCtx.clearRect(0, 0, 1, 1);
+            return { dataUrl: _cnCanvas.toDataURL('image/png'), w: 1, h: 0.1 };
+        }
         const fs = fontSize * SCALE;
         _cnCtx.font = `${fontWeight || 'normal'} ${fs}px ${FONT_FAMILY}`;
         _cnCtx.fillStyle = color || '#4D3724';
@@ -1348,6 +1355,21 @@ window.showMicDetail = showMicDetail;
 
         const checkedSet = new Set();
         checkedItems.forEach(i => checkedSet.add(i.dataset.module));
+
+        // 预检查：确保每个选中的游戏都有训练数据
+        const missingGames = [];
+        for (const g of ['name', 'point', 'mic']) {
+            if (checkedSet.has(g)) {
+                const recs = GAME_CFG[g].records() || [];
+                if (recs.length === 0) {
+                    missingGames.push(GAME_CFG[g].label);
+                }
+            }
+        }
+        if (missingGames.length > 0) {
+            showToast(`「${missingGames.join('」「')}」暂无训练数据，请取消勾选或前往训练`);
+            return;
+        }
 
         showToast('正在生成报告...');
 

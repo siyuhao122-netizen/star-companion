@@ -129,3 +129,23 @@
 ### 同源部署
 `app.py` 增加静态文件托管，JS 改相对路径 `/api`，浏览器直接访问 7653 端口即可。
 
+---
+
+## 第五次迭代 — 4 Bug 修复（2026-06-05）
+
+### 1. 忘记密码跳转
+根因：之前修复遗漏了 JS 拦截残留。  
+修复：确认 `href="forgetPassword.html"` + JS handler 已完全移除。
+
+### 2. 注销报错 `AITokenUsage is not defined`
+根因：`auth.py` import 行漏了 `AITokenUsage`。  
+修复：import 末尾补上。
+
+### 3. PDF 导出空数据崩溃
+根因：`_cnTextToImage` 处理空字符串时 canvas height=0 → `toDataURL()` 失败。  
+修复：空文本返回 1x1 占位图 + 导出前预检查选中游戏是否有数据，提示具体游戏名。
+
+### 4. 通知弹窗居中毛玻璃
+根因：弹窗定位为右上角，无遮罩。  
+修复：改为 `fixed + top/left 50% + translate(-50%,-50%)` 居中 + 新增 `notif-overlay` 毛玻璃背景（`backdrop-filter: blur`）+ 点击遮罩关闭。
+

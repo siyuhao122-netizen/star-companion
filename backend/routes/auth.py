@@ -1,6 +1,6 @@
 ﻿from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
-from models import db, User, EmailVerification, Child, NameReactionRecord, PointGameRecord, VoiceGameRecord, SurveyResult, DailyRecommendation, TreeholeMessage, Notification
+from models import db, User, EmailVerification, Child, NameReactionRecord, PointGameRecord, VoiceGameRecord, SurveyResult, DailyRecommendation, TreeholeMessage, Notification, AITokenUsage
 from datetime import datetime, timedelta
 import smtplib
 import random

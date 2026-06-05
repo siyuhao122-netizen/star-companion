@@ -1043,10 +1043,23 @@
 
     function showNotifPopup() {
         const popup = document.getElementById('notifPopup');
-        popup.classList.toggle('show');
-        if (popup.classList.contains('show')) {
+        const overlay = document.getElementById('notifOverlay');
+        const isOpen = popup.classList.contains('show');
+        if (isOpen) {
+            popup.classList.remove('show');
+            if (overlay) overlay.classList.remove('show');
+        } else {
+            popup.classList.add('show');
+            if (overlay) overlay.classList.add('show');
             fetchNotifications();
         }
+    }
+
+    function closeNotifPopup() {
+        const popup = document.getElementById('notifPopup');
+        const overlay = document.getElementById('notifOverlay');
+        if (popup) popup.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
     }
 
     async function markOneRead(id) {
@@ -1248,6 +1261,7 @@
 
     // 暴露全局函数
     window.showNotifPopup = showNotifPopup;
+    window.closeNotifPopup = closeNotifPopup;
     window.markOneRead = markOneRead;
     window.markAllRead = markAllRead;
     window.showNotifSettingsModal = showNotifSettingsModal;

@@ -1390,16 +1390,29 @@
 .feedback-submit-btn:active { transform: translateY(0); }
 .feedback-submit-btn i { margin-right: 6px; }
 
-/* ========== 通知弹窗（浮动覆盖层） ========== */
+/* ========== 通知遮罩（毛玻璃背景） ========== */
+.notif-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 9998;
+  display: none;
+}
+.notif-overlay.show { display: block; }
+
+/* ========== 通知弹窗（居中覆盖层） ========== */
 .notif-popup {
   position: fixed;
-  top: 60px;
-  right: 16px;
-  width: 360px;
-  max-height: 480px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  max-height: 520px;
   background: #FFFEFC;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(77, 55, 36, 0.18);
+  box-shadow: 0 12px 48px rgba(77, 55, 36, 0.22);
   z-index: 9999;
   display: none;
   flex-direction: column;
