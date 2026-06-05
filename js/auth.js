@@ -72,6 +72,10 @@
         return data;
     } catch (error) {
         console.error('注册错误:', error);
+        // 区分连接失败和 JSON 解析失败
+        if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
+            return { success: false, message: '无法连接服务器，请确认后端已启动（http://localhost:5000）' };
+        }
         return { success: false, message: '网络错误，请稍后重试' };
     }
 }
@@ -319,7 +323,7 @@
             isValid = false;
         }
         if (!validatePassword(password)) {
-            showFieldError('loginPassword', 'loginPasswordError', '密码长度至少6位');
+            showFieldError('loginPassword', 'loginPasswordError', Validator.getPasswordError(password));
             isValid = false;
         }
         if (!isValid) return;
@@ -463,7 +467,7 @@
             isValid = false;
         }
         if (!validatePassword(pwd)) {
-            showFieldError('regPassword', 'regPasswordError', '密码长度至少6位');
+            showFieldError('regPassword', 'regPasswordError', Validator.getPasswordError(pwd));
             isValid = false;
         }
         if (pwd !== confirmPwd) {

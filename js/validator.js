@@ -11,6 +11,18 @@ const Validator = {
         return (v || '').length >= 8 && /[a-zA-Z]/.test(v) && /[0-9]/.test(v);
     },
 
+    // 获取密码不满足的第一个约束的提示（多种不满足时随机返回一种）
+    getPasswordError(v) {
+        const s = v || '';
+        const errors = [];
+        if (s.length < 8) errors.push('密码长度至少8位');
+        if (!/[a-zA-Z]/.test(s)) errors.push('密码需包含字母');
+        if (!/[0-9]/.test(s)) errors.push('密码需包含数字');
+        if (errors.length === 0) return '';
+        // 多种约束未满足时随机返回一条
+        return errors[Math.floor(Math.random() * errors.length)];
+    },
+
     // 验证码：6 位数字
     isCode(v) {
         return /^\d{6}$/.test(v || '');

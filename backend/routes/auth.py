@@ -164,8 +164,8 @@ def register():
     if not re.match(r'^[\u4e00-\u9fa5]{2,10}$', nickname):
         return jsonify({'success': False, 'message': '昵称应为2-10个中文汉字'}), 400
 
-    if len(password) < 6:
-        return jsonify({'success': False, 'message': '密码长度至少6位'}), 400
+    if len(password) < 8 or not re.search(r'[a-zA-Z]', password) or not re.search(r'[0-9]', password):
+        return jsonify({'success': False, 'message': '密码长度至少8位，需包含字母和数字'}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({'success': False, 'message': '该邮箱已被注册'}), 400
@@ -289,8 +289,8 @@ def reset_password():
 
     if not all([email, new_password]):
         return jsonify({'success': False, 'message': '请填写完整信息'}), 400
-    if len(new_password) < 6:
-        return jsonify({'success': False, 'message': '密码长度至少6位'}), 400
+    if len(new_password) < 8 or not re.search(r'[a-zA-Z]', new_password) or not re.search(r'[0-9]', new_password):
+        return jsonify({'success': False, 'message': '密码长度至少8位，需包含字母和数字'}), 400
 
     user = User.query.filter_by(email=email).first()
     if not user:
@@ -370,8 +370,8 @@ def change_password():
 
     if not all([user_id, current_password, new_password]):
         return jsonify({'success': False, 'message': '请填写完整信息'}), 400
-    if len(new_password) < 6:
-        return jsonify({'success': False, 'message': '新密码长度至少6位'}), 400
+    if len(new_password) < 8 or not re.search(r'[a-zA-Z]', new_password) or not re.search(r'[0-9]', new_password):
+        return jsonify({'success': False, 'message': '新密码长度至少8位，需包含字母和数字'}), 400
 
     user = User.query.get(user_id)
     if not user:

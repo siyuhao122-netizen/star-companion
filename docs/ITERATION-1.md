@@ -75,3 +75,26 @@
 | `js/forgetPassword.js` | 同上模式：超时 + 按钮禁用 + 加载态 + 失败恢复 |
 | `js/seniorHole.js` | `publishMessage` 增加 `publishBtn.disabled` + "发布中…" + `finally` 恢复 |
 
+---
+
+## 第三次迭代 — 密码约束提示 + 注册网络错误修复（2026-06-05）
+
+### 密码约束提示精确化
+
+**问题**：所有密码违规（长度不足/无字母/无数字）统一提示"密码至少6位"，用户不知道具体哪里不满足。
+
+**修复**：
+| 文件 | 变更 |
+|------|------|
+| `js/validator.js` | 新增 `Validator.getPasswordError(password)` — 逐条检查，多种不满足时随机返回一条 |
+| `js/auth.js` | 登录/注册两处密码校验改用 `Validator.getPasswordError()` |
+| `backend/routes/auth.py` | 三条密码校验（register/reset-password/change-password）从 `len<6` 改为 `≥8+字母+数字` |
+
+### 注册"网络错误"修复
+
+**问题**：注册时点击"完成注册"提示"网络错误，请稍后重试"，无法判断是后端未启动还是代码 bug。
+
+**修复**：`js/auth.js` 中 `registerUser` 的 catch 块区分：
+- TypeError + "fetch/NetworkError" → "无法连接服务器，请确认后端已启动"
+- 其他异常 → 保留"网络错误，请稍后重试"
+
