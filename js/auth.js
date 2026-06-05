@@ -106,6 +106,7 @@
     let customAvatarUrl = '';
     let codeCountdown = 0;
     let codeTimer = null;
+    let regCodeVerified = false;  // 验证码是否已通过后端校验
 
     // DOM 元素
     const authTabs = document.getElementById('authTabs');
@@ -427,6 +428,7 @@
         clearFieldError('regEmail', 'regEmailError');
 
         // 立即禁用按钮并显示加载状态，防止重复点击和无反馈
+        regCodeVerified = false;  // 新验证码，重置校验标记
         const btn = this;
         const originalText = btn.textContent;
         btn.disabled = true;
@@ -477,6 +479,12 @@
 
         if (!isValid) return;
 
+        // 验证码已通过后端校验，无需重复验证
+        if (regCodeVerified) {
+            showRegStep(2);
+            return;
+        }
+
         // 验证码后端校验
         const btn = document.getElementById('regNextStep1');
         const originalText = btn.textContent;
@@ -490,6 +498,7 @@
             });
             const data = await resp.json();
             if (data.success) {
+                regCodeVerified = true;  // 标记已验证，下次无需重复
                 showRegStep(2);
             } else {
                 showFieldError('regEmailCode', 'regEmailCodeError', data.message || '验证码错误');
