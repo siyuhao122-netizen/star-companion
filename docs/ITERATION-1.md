@@ -148,6 +148,22 @@
 
 ---
 
+## 第七次迭代 — 3 Bug 修复（2026-06-05）
+
+### 1. 注销报错 NOT NULL constraint failed
+根因：`delete_account` 漏删 Notification，`db.session.delete(user)` 时 SQLAlchemy 尝试 SET NULL 但列不允许。  
+修复：增加 `Notification.query.filter_by(user_id=user_id).delete()`。
+
+### 2. 完整分析始终分析指物练习
+根因：`goToFullAnalysis()` 中 `game=point` 硬编码。  
+修复：自动读取当前激活的 `.tab-btn.active` 的 `data-analysis` 属性，无数据时提示具体游戏名。
+
+### 3. 忘记密码第一次点击不跳转
+根因：`<a href="...">` 在某些浏览器/场景下被拦截。  
+修复：改为 `onclick="location.href='forgetPassword.html'"` 内联 JS 跳转。
+
+---
+
 ## 第五次迭代 — 4 Bug 修复（2026-06-05）
 
 ### 1. 忘记密码跳转

@@ -438,7 +438,10 @@ def delete_account():
         # 4. 删除树洞留言
         TreeholeMessage.query.filter_by(user_id=user_id).delete()
 
-        # 5. 最后删除用户
+        # 5. 删除通知
+        Notification.query.filter_by(user_id=user_id).delete()
+
+        # 6. 最后删除用户
         db.session.delete(user)
         db.session.commit()
 

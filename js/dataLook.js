@@ -1153,9 +1153,23 @@ async function loadNameReactionData(count) {
     function toggleFilterDropdown(e) { e.stopPropagation(); document.getElementById('dropdownMenu').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
     function closeAllDropdowns() { childDropdown.classList.remove('show'); document.getElementById('dropdownMenu').classList.remove('show'); document.getElementById('exportPanel').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
 
-    function goToFullAnalysis() {
+    function goToFullAnalysis(gameType) {
         if (!currentChildId) return;
-        location.href = `dataAnalys.html?childId=${currentChildId}&game=point&count=${currentCount}`;
+        // 如果没有传 gameType，从当前激活的 tab 按钮读取
+        if (!gameType) {
+            const activeTab = document.querySelector('.tab-btn.active');
+            gameType = activeTab?.dataset?.analysis;
+            if (!gameType) {
+                showToast('请先选择一个游戏');
+                return;
+            }
+        }
+        const recs = GAME_CFG[gameType]?.records() || [];
+        if (recs.length === 0) {
+            showToast(`「${GAME_CFG[gameType]?.label || gameType}」暂无训练数据`);
+            return;
+        }
+        location.href = `dataAnalys.html?childId=${currentChildId}&game=${gameType}&count=${currentCount}`;
     }
 
     function selectFilter(count, label) {
