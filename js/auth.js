@@ -444,8 +444,8 @@
         }
     });
 
-    // ========== 注册步骤1验证 ==========
-    document.getElementById('regNextStep1')?.addEventListener('click', () => {
+    // ========== 注册步骤1验证（含后端验证码校验） ==========
+    document.getElementById('regNextStep1')?.addEventListener('click', async () => {
         const nickname = document.getElementById('parentNickname')?.value.trim();
         const email = document.getElementById('regEmail')?.value.trim();
         const code = document.getElementById('regEmailCode')?.value.trim();
@@ -477,7 +477,30 @@
 
         if (!isValid) return;
 
-        showRegStep(2);
+        // 验证码后端校验
+        const btn = document.getElementById('regNextStep1');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '验证中...';
+        try {
+            const resp = await fetch(`${API_BASE}/auth/verify-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code, type: 'register' })
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showRegStep(2);
+            } else {
+                showFieldError('regEmailCode', 'regEmailCodeError', data.message || '验证码错误');
+                showToast(data.message || '验证码错误', '#FCE8E8');
+            }
+        } catch (e) {
+            showToast('验证失败，请检查网络', '#FCE8E8');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
     });
 
     document.getElementById('regPrevStep2')?.addEventListener('click', () => showRegStep(1));

@@ -1112,7 +1112,7 @@ async function loadNameReactionData(count) {
             });
         });
         
-        document.getElementById('analysisJumpBtn').addEventListener('click', goToFullAnalysis);
+        document.getElementById('analysisJumpBtn').addEventListener('click', () => goToFullAnalysis());
         
         document.querySelectorAll('.tab-btn').forEach(tab => {
             tab.addEventListener('click', () => switchGame(tab.dataset.analysis));

@@ -164,6 +164,22 @@
 
 ---
 
+## 第八次迭代 — 3 Bug 修复（2026-06-05）
+
+### 1. 注销后登录页按钮全部失效
+根因：注销成功跳转用了相对路径 `sign-inANDsign-up.html`，解析出错。  
+修复：改为绝对路径 `/pages/sign-inANDsign-up.html` + `localStorage.clear()` 彻底清理。
+
+### 2. 完整分析提示「[object PointerEvent]」
+根因：`addEventListener('click', goToFullAnalysis)` 把 event 对象传入函数，变 `gameType={event}`。  
+修复：改为 `() => goToFullAnalysis()` 不传参数。
+
+### 3. 注册验证码提前校验
+根因：步骤1只校验格式，到最终提交才调后端。  
+修复：`regNextStep1` 增加 `await fetch('/api/auth/verify-code')` 后端校验，通过才进入步骤2。
+
+---
+
 ## 第五次迭代 — 4 Bug 修复（2026-06-05）
 
 ### 1. 忘记密码跳转

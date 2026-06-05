@@ -779,10 +779,9 @@
         if (response.ok && result.success) {
             showToast('账户已注销，感谢曾经的陪伴');
             closeDeleteModal();
-            localStorage.removeItem('user');
-            localStorage.removeItem('starCompanionActiveChild');
+            localStorage.clear();
             setTimeout(() => {
-                window.location.href = 'sign-inANDsign-up.html';
+                window.location.href = '/pages/sign-inANDsign-up.html';
             }, 1500);
         } else {
             showToast(result.message || '注销失败，请稍后重试', false);
