@@ -38,14 +38,23 @@
 
     // ========== API 请求 ==========
     async function sendVerificationCode(email, type) {
+        // 使用 AbortController 设置 15 秒超时，避免请求挂起导致按钮看起来"无反应"
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         try {
             const response = await fetch(`${API_BASE}/auth/send-verify-code`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, type })
+                body: JSON.stringify({ email, type }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
             return await response.json();
         } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                return { success: false, message: '请求超时，请检查网络后重试' };
+            }
             return { success: false, message: '网络错误，请稍后重试' };
         }
     }
@@ -253,19 +262,19 @@
     });
 
     // ========== 倒计时 ==========
-    function startCodeCountdown(btn) {
+    function startCodeCountdown(btn, originalText) {
         if (codeTimer) clearInterval(codeTimer);
         codeCountdown = 60;
         btn.disabled = true;
-        const originalText = btn.innerText;
+        const text = originalText || btn.textContent;
         codeTimer = setInterval(() => {
             codeCountdown--;
-            btn.innerText = `${codeCountdown}秒后重试`;
+            btn.textContent = `${codeCountdown}秒后重试`;
             if (codeCountdown <= 0) {
                 clearInterval(codeTimer);
                 codeTimer = null;
                 btn.disabled = false;
-                btn.innerText = originalText;
+                btn.textContent = text;
             }
         }, 1000);
     }
@@ -350,12 +359,21 @@
             return;
         }
         clearFieldError('codeEmail', 'codeEmailError');
-        
+
+        // 立即禁用按钮并显示加载状态，防止重复点击和无反馈
+        const btn = this;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '发送中...';
+
         const result = await sendVerificationCode(email, 'login');
         if (result.success) {
-            startCodeCountdown(this);
+            startCodeCountdown(btn, originalText);
             showToast('📧 验证码已发送至您的QQ邮箱');
         } else {
+            // 失败时恢复按钮
+            btn.disabled = false;
+            btn.textContent = originalText;
             showToast(result.message, '#FCE8E8');
         }
     });
@@ -403,12 +421,21 @@
             return;
         }
         clearFieldError('regEmail', 'regEmailError');
-        
+
+        // 立即禁用按钮并显示加载状态，防止重复点击和无反馈
+        const btn = this;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '发送中...';
+
         const result = await sendVerificationCode(email, 'register');
         if (result.success) {
-            startCodeCountdown(this);
+            startCodeCountdown(btn, originalText);
             showToast('📧 验证码已发送至您的QQ邮箱');
         } else {
+            // 失败时恢复按钮
+            btn.disabled = false;
+            btn.textContent = originalText;
             showToast(result.message, '#FCE8E8');
         }
     });

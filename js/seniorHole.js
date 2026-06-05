@@ -127,6 +127,10 @@
             ai_reply: aiReply
         };
 
+        // 防止重复提交
+        publishBtn.disabled = true;
+        publishBtn.textContent = '发布中...';
+
         try {
             const response = await fetch(`${API_BASE}/treehole/post`, {
                 method: 'POST',
@@ -144,6 +148,9 @@
         } catch (error) {
             console.error('发布失败:', error);
             showToast('网络错误，发布失败', '#FCE8E8');
+        } finally {
+            publishBtn.disabled = false;
+            publishBtn.textContent = '🌳 放入树洞';
         }
     }
 

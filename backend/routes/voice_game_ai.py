@@ -1,20 +1,12 @@
 ﻿from flask import Blueprint, request, jsonify
 from models import db, VoiceGameRecord, Child, AITokenUsage
 from datetime import datetime
-import requests
 from config import Config
-from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from rag import retrieve, build_query_for_retrieval
 from routes.auth import create_notification
+from utils import calculate_month_age, save_token_usage, call_bailian_ai
 
 voice_game_ai_bp = Blueprint('voice_game_ai', __name__)
-
-
-def calculate_month_age(birth_date):
-    if not birth_date:
-        return 0
-    today = datetime.now().date()
-    months = (today.year - birth_date.year) * 12 + (today.month - birth_date.month)
-    return max(0, months)
 
 
 def get_recent_records(child_id, limit=5):
@@ -24,58 +16,7 @@ def get_recent_records(child_id, limit=5):
     return records
 
 
-def save_token_usage(record_type, record_id, child_id, model_name, usage_data):
-    try:
-        token_record = AITokenUsage(
-            record_type=record_type,
-            record_id=record_id,
-            child_id=child_id,
-            model_name=model_name,
-            prompt_tokens=usage_data.get('prompt_tokens', 0),
-            completion_tokens=usage_data.get('completion_tokens', 0),
-            total_tokens=usage_data.get('total_tokens', 0)
-        )
-        db.session.add(token_record)
-        db.session.commit()
-        print(f"✅ Token记录已保存: {usage_data.get('total_tokens', 0)} tokens")
-    except Exception as e:
-        print(f"⚠️ Token记录保存失败: {e}")
 
-
-def call_ai(prompt, extra_knowledge='', analysis_type='voice', max_tokens=500):
-    """调用AI模型（集成RAG）"""
-    try:
-        url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {Config.BAILIAN_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        system_content = build_system_prompt(analysis_type, extra_knowledge)
-
-        payload = {
-            "model": Config.BAILIAN_MODEL,
-            "messages": [
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.7,
-            "max_tokens": max_tokens
-        }
-        print(f"🤖 声音小话筒AI调用: {Config.BAILIAN_MODEL}")
-        response = requests.post(url, json=payload, headers=headers)
-        result = response.json()
-        if "choices" in result and len(result["choices"]) > 0:
-            content = result["choices"][0]["message"]["content"]
-            usage = result.get("usage", {})
-            print(f"✅ 声音小话筒AI完成 | tokens: {usage.get('total_tokens', 'N/A')}")
-            return content, usage
-        else:
-            print(f"❌ AI失败: {result}")
-            return None, {}
-    except Exception as e:
-        print(f"❌ AI异常: {e}")
-        return None, {}
 
 
 def build_single_analysis_prompt(child_name, age_months, record):
@@ -203,7 +144,7 @@ def single_analysis():
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_single_analysis_prompt(child.name, age_months, record)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
+    ai_analysis, usage = call_bailian_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
 
     if ai_analysis:
         record.ai_analysis = ai_analysis
@@ -273,7 +214,7 @@ def trend_analysis(child_id):
     extra_knowledge = retrieve(retrieval_query)
 
     prompt = build_trend_analysis_prompt(child.name, age_months, records)
-    ai_analysis, usage = call_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
+    ai_analysis, usage = call_bailian_ai(prompt, extra_knowledge, 'voice', max_tokens=1000)
     save_token_usage('voice_trend', None, child_id, Config.BAILIAN_MODEL, usage)
 
     return jsonify({

@@ -19,14 +19,22 @@
 
     // ========== API 请求 ==========
     async function sendVerificationCode(email, type) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         try {
             const response = await fetch(`${API_BASE}/auth/send-verify-code`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, type })
+                body: JSON.stringify({ email, type }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
             return await response.json();
         } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                return { success: false, message: '请求超时，请检查网络后重试' };
+            }
             return { success: false, message: '网络错误，请稍后重试' };
         }
     }
@@ -107,19 +115,19 @@
    let codeCountdown = 0;      // ✅ 和 auth.js 保持一致的变量名
 let codeTimer = null;
 
-function startCountdown(btn) {
+function startCountdown(btn, originalText) {
     if (codeTimer) clearInterval(codeTimer);
     codeCountdown = 60;
     btn.disabled = true;
-    const originalText = btn.innerText;
+    const text = originalText || btn.textContent;
     codeTimer = setInterval(() => {
         codeCountdown--;
-        btn.innerText = `${codeCountdown}秒后重试`;
+        btn.textContent = `${codeCountdown}秒后重试`;
         if (codeCountdown <= 0) {
             clearInterval(codeTimer);
             codeTimer = null;
             btn.disabled = false;
-            btn.innerText = originalText;
+            btn.textContent = text;
         }
     }, 1000);
 }
@@ -199,26 +207,41 @@ document.getElementById('sendCodeBtn')?.addEventListener('click', async function
     userEmail = email;
     const displayEmail = document.getElementById('displayEmail');
     if (displayEmail) displayEmail.textContent = email;
-    
+
+    // 立即禁用按钮并显示加载状态
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '发送中...';
+
     const result = await sendVerificationCode(email, 'reset_password');
     if (result.success) {
         showToast('📧 验证码已发送至您的邮箱', '#E8F0D8');
-        startCountdown(this);
+        startCountdown(btn, originalText);
         showForgotStep(2);
     } else {
+        btn.disabled = false;
+        btn.textContent = originalText;
         showToast(result.message, '#FCE8E8');
     }
 });
 
 // ========== 重新发送验证码 ==========
 document.getElementById('resendCodeBtn')?.addEventListener('click', async function() {
-    if (codeCountdown > 0) return;  // ✅ 倒计时中不允许点击
-    
+    if (codeCountdown > 0) return;  // 倒计时中不允许点击
+
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '发送中...';
+
     const result = await sendVerificationCode(userEmail, 'reset_password');
     if (result.success) {
         showToast('📧 验证码已重新发送', '#E8F0D8');
-        startCountdown(this);
+        startCountdown(btn, originalText);
     } else {
+        btn.disabled = false;
+        btn.textContent = originalText;
         showToast(result.message, '#FCE8E8');
     }
 });

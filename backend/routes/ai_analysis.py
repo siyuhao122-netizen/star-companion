@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
 from models import db, SurveyResult, Child, AITokenUsage, User
 from datetime import datetime
-import requests
-import json
 from config import Config
 from rag import retrieve, build_system_prompt, build_query_for_retrieval
 from routes.auth import create_notification
+from utils import calculate_month_age, save_token_usage, call_bailian_ai
 
 ai_bp = Blueprint('ai', __name__)
 
@@ -73,15 +72,6 @@ SCALES = {
 }
 
 
-def calculate_month_age(birth_date):
-    """计算月龄"""
-    if not birth_date:
-        return 0
-    today = datetime.now().date()
-    months = (today.year - birth_date.year) * 12 + (today.month - birth_date.month)
-    return max(0, months)
-
-
 def calculate_score(answers, scale_type):
     """计算总分和各维度得分"""
     config = SCALES[scale_type]
@@ -119,63 +109,6 @@ def get_risk_level(score, scale_type):
         if min_score <= score <= max_score:
             return level_config['level']
     return '未知'
-
-
-def save_token_usage(record_type, record_id, child_id, model_name, prompt_tokens, completion_tokens, total_tokens):
-    """保存token使用记录"""
-    try:
-        token_record = AITokenUsage(
-            record_type=record_type,
-            record_id=record_id,
-            child_id=child_id,
-            model_name=model_name,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens
-        )
-        db.session.add(token_record)
-        db.session.commit()
-    except Exception as e:
-        print(f"⚠️ Token记录保存失败: {e}")
-
-
-def call_bailian_ai(prompt, extra_knowledge='', analysis_type='survey'):
-    """调用阿里云百炼AI（集成RAG），返回内容和token信息"""
-    try:
-        url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {Config.BAILIAN_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        system_content = build_system_prompt(analysis_type, extra_knowledge)
-
-        payload = {
-            "model": Config.BAILIAN_MODEL,
-            "messages": [
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.7,
-            "max_tokens": 1000
-        }
-        
-        print(f"🤖 问卷AI调用: {Config.BAILIAN_MODEL}")
-        response = requests.post(url, json=payload, headers=headers)
-        result = response.json()
-        
-        if "choices" in result and len(result["choices"]) > 0:
-            content = result["choices"][0]["message"]["content"]
-            usage = result.get("usage", {})
-            print(f"✅ 问卷AI完成 | tokens: {usage.get('total_tokens', 'N/A')}")
-            return content, usage
-        else:
-            print(f"❌ AI调用失败: {result}")
-            return None, {}
-            
-    except Exception as e:
-        print(f"❌ AI调用异常: {e}")
-        return None, {}
 
 
 def generate_ai_prompt(child_name, age_months, scale_type, total_score, max_score, 
@@ -274,8 +207,8 @@ def survey_analysis():
         risk_level, dimension_scores, answers_summary
     )
 
-    # 调用AI（集成RAG知识）
-    ai_analysis, usage = call_bailian_ai(prompt, extra_knowledge, 'survey')
+    # 调用AI（集成RAG知识，max_tokens=1000 用于完整报告）
+    ai_analysis, usage = call_bailian_ai(prompt, extra_knowledge, 'survey', max_tokens=1000)
     
     # 保存结果到数据库
     survey_result = SurveyResult(
@@ -292,15 +225,7 @@ def survey_analysis():
     db.session.commit()
     
     # 记录token使用
-    save_token_usage(
-        record_type='survey_analysis',
-        record_id=survey_result.id,
-        child_id=child_id,
-        model_name=Config.BAILIAN_MODEL,
-        prompt_tokens=usage.get('prompt_tokens', 0),
-        completion_tokens=usage.get('completion_tokens', 0),
-        total_tokens=usage.get('total_tokens', 0)
-    )
+    save_token_usage('survey_analysis', survey_result.id, child_id, Config.BAILIAN_MODEL, usage)
 
     # 通知用户：AI 分析报告已生成
     if child:

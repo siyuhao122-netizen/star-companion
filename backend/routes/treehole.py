@@ -1,52 +1,11 @@
 ﻿from flask import Blueprint, request, jsonify
 from models import db, TreeholeMessage, Notification
 from config import Config
-import requests
 from datetime import datetime
-from rag import retrieve, build_system_prompt, build_query_for_retrieval
+from rag import retrieve, build_query_for_retrieval
+from utils import call_bailian_ai
 
 treehole_bp = Blueprint('treehole', __name__)
-
-
-def call_ai_for_treehole(user_message, tag="日常倾诉", extra_knowledge=''):
-    """调用 AI 生成树洞回信（集成RAG）"""
-    try:
-        url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {Config.BAILIAN_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        # RAG 增强的专业角色设定
-        system_content = build_system_prompt('treehole', extra_knowledge)
-        system_content += f"\n\n消息标签：{tag}。请根据标签调整回复侧重。"
-
-        payload = {
-            "model": Config.BAILIAN_MODEL,
-            "messages": [
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": user_message}
-            ],
-            "temperature": 0.7,
-            "max_tokens": 300,
-            "enable_thinking": False
-        }
-
-        print(f"🤖 树洞AI调用: {Config.BAILIAN_MODEL}, 标签: {tag}")
-        response = requests.post(url, json=payload, headers=headers, timeout=15)
-        result = response.json()
-
-        if "choices" in result and len(result["choices"]) > 0:
-            reply = result["choices"][0]["message"]["content"]
-            print(f"✅ 树洞AI回复生成成功")
-            return reply
-        else:
-            print(f"❌ 树洞AI调用失败: {result}")
-            return None
-
-    except Exception as e:
-        print(f"❌ 树洞AI调用异常: {e}")
-        return None
 
 
 @treehole_bp.route('/messages', methods=['GET'])
@@ -92,7 +51,7 @@ def post_message():
     extra_knowledge = retrieve(retrieval_query)
 
     # 调用AI生成回复
-    ai_reply = call_ai_for_treehole(content, tag, extra_knowledge)
+    ai_reply, _ = call_bailian_ai(content, extra_knowledge, 'treehole', max_tokens=300, enable_thinking=False, system_suffix=f"\n\n消息标签：{tag}。请根据标签调整回复侧重。")
     if not ai_reply:
         ai_reply = "感谢你的分享～ 每一个小小的进步都值得被看见，星伴会一直陪着你。🌱"
 
@@ -126,7 +85,7 @@ def regenerate_ai_reply(msg_id):
         f"{msg.tag} {msg.content[:100]}"
     )
     extra_knowledge = retrieve(retrieval_query)
-    new_reply = call_ai_for_treehole(msg.content, msg.tag, extra_knowledge)
+    new_reply, _ = call_bailian_ai(msg.content, extra_knowledge, 'treehole', max_tokens=300, enable_thinking=False, system_suffix=f"\n\n消息标签：{msg.tag}。请根据标签调整回复侧重。")
     if new_reply:
         msg.ai_reply = new_reply
         db.session.commit()

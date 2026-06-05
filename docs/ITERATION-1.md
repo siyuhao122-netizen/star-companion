@@ -1,0 +1,77 @@
+# 第一次迭代报告 — 2026-06-05
+
+## 迭代目标
+
+对星伴项目进行首次代码质量审查 + 功能测试，发现问题并建立基础设施。
+
+## 发现的问题清单
+
+### 🔴 严重问题（6 个）
+
+| ID | 问题描述 | 文件位置 | 状态 |
+|----|---------|---------|------|
+| C-1 | 游戏提交接口未校验 child_id，不存在的 child 导致 500 错误（返回 HTML 异常页而非 JSON） | `backend/routes/games.py` | ❌ 待修复 |
+| C-2 | `point_game_record` 表缺少 `avg_reaction_time` 列 | MySQL DDL | ✅ 已修复 |
+| C-3 | `name_reaction_record`、`voice_game_record`、`point_game_record` 表缺少 `ai_analysis` 列 | MySQL DDL | ✅ 已修复 |
+| C-4 | `survey_result` 表缺少 `scale_type`、`max_score`、`ai_analysis`、`dimension_scores` 列 | MySQL DDL | ✅ 已修复 |
+| C-5 | `call_ai_for_game_analysis` 忽略了调用方传入的 `max_tokens` 参数（硬编码 500） | `backend/routes/games.py:31` | ❌ 待修复 |
+| C-6 | 3 个 AI 调用函数（`ai_analysis.py`、`point_game_ai.py`、`voice_game_ai.py`）缺少 `requests.post` 的 `timeout` 参数 | 3 个文件 | ❌ 待修复 |
+
+### 🟡 一般问题（9 个）
+
+| ID | 问题描述 | 涉及文件 |
+|----|---------|---------|
+| M-1 | `calculate_month_age()` 重复定义 5 次 | 5 个 routes 文件 |
+| M-2 | `save_token_usage()` 重复定义 5 次，签名不一致（1 个版本传独立参数，4 个版本传 dict） | 5 个 routes 文件 |
+| M-3 | AI 调用函数碎片化：6 个文件中有 4 种命名（`call_bailian_ai`/`call_ai`/`call_ai_for_game_analysis`/`call_ai_for_treehole`），实现逻辑高度相似 | 6 个文件 |
+| M-4 | `build_single_analysis_prompt` 和 `build_trend_analysis_prompt` 模式在 3 个文件中重复 | `point_game_ai.py`、`name_reaction_ai.py`、`voice_game_ai.py` |
+| M-5 | `get_recent_records()` 重复 3 份（仅模型类名不同） | 同 M-4 |
+| M-6 | `temperature=0.7` 硬编码 6 处 | 6 个 AI 调用函数 |
+| M-7 | `max_tokens` 分散硬编码（300/500/1000） | 6 个 AI 调用函数 |
+| M-8 | 通知创建时 `User` 导入风格不统一（顶层导入/局部导入/别名） | 4 处 |
+| M-9 | `games.py:203` 存在 Dead Code（`return` 后的代码在编辑器中易混淆） | `backend/routes/games.py` |
+
+### 🟢 建议优化（5 个）
+
+| ID | 问题描述 |
+|----|---------|
+| L-1 | 未使用的 `import json`（`ai_analysis.py`、`point_game_ai.py`） |
+| L-2 | `treehole.py` 中 RAG 月龄参数硬编码 30 个月 |
+| L-3 | 分页 limit 默认值分散硬编码（5 vs 7） |
+| L-4 | Python >=3.13 兼容性：`pydub` 依赖的 `audioop` 模块被移除 |
+| L-5 | `database/star_companion.sql` 存在重复 ALTER 语句，缺少幂等性 |
+
+## 测试结果
+
+- **API 测试**：36 个测试用例，32 通过，4 失败（均为外键约束/列缺失导致，已定位根因）
+- **数据库**：发现 7 个缺失列，已全部补齐
+- **后端启动**：Python 3.9.13 + MySQL 8.0 环境成功运行于 `localhost:5000`
+
+## 下一步建议
+
+1. **优先修复 C-1**：在游戏提交接口增加 child 存在性校验 + 统一异常处理
+2. **抽取公共代码**：将 `calculate_month_age`、`save_token_usage`、`call_ai` 提取到 `backend/utils.py`
+3. **统一 AI 调用**：合并 6 个 AI 调用函数为 1 个参数化函数
+4. **修复 SQL DDL**：清理重复语句，增加幂等性
+5. **增加全局异常处理**：避免 500 错误返回 HTML 页面
+
+---
+
+## 第二次迭代 — 前端按钮响应修复（2026-06-05）
+
+### 修复内容
+
+**问题**：用户在登录/注册/忘记密码页面点击"获取验证码"按钮后无任何反应，看起来按钮失效。
+
+**根因**：
+1. `sendVerificationCode` 使用 `fetch` 但无超时（`AbortController`），后端挂起时请求无限等待
+2. 按钮 click handler 在 `await` 前未禁用按钮/显示加载状态，用户无视觉反馈
+3. 树洞发布按钮同样缺少防重复提交保护
+
+**修复文件**：
+| 文件 | 修复内容 |
+|------|---------|
+| `js/auth.js` | `sendVerificationCode` 增加 15s AbortController 超时；登录/注册两个验证码按钮增加立即禁用 + "发送中…" + 失败恢复；`startCodeCountdown` 使用 `textContent` 替代 `innerText` |
+| `js/forgetPassword.js` | 同上模式：超时 + 按钮禁用 + 加载态 + 失败恢复 |
+| `js/seniorHole.js` | `publishMessage` 增加 `publishBtn.disabled` + "发布中…" + `finally` 恢复 |
+

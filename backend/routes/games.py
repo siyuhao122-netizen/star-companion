@@ -1,57 +1,11 @@
 ﻿from flask import Blueprint, request, jsonify
-from models import db, NameReactionRecord, PointGameRecord, VoiceGameRecord, Child, AITokenUsage
+from models import db, NameReactionRecord, PointGameRecord, VoiceGameRecord, Child
 from datetime import date, datetime
-import requests
 from config import Config
-from rag import retrieve, build_system_prompt, build_query_for_retrieval
-from routes.auth import create_notification
+from rag import retrieve, build_query_for_retrieval
+from utils import calculate_month_age, save_token_usage, call_bailian_ai
 
 games_bp = Blueprint('games', __name__)
-
-
-# ---------- 通用 AI 调用函数（集成RAG） ----------
-def call_ai_for_game_analysis(prompt, extra_knowledge='', analysis_type='name'):
-    """调用AI模型（集成RAG）"""
-    try:
-        url = f"{Config.BAILIAN_BASE_URL}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {Config.BAILIAN_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        system_content = build_system_prompt(analysis_type, extra_knowledge)
-
-        payload = {
-            "model": Config.BAILIAN_MODEL,
-            "messages": [
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.7,
-            "max_tokens": 500
-        }
-
-        response = requests.post(url, json=payload, headers=headers, timeout=15)
-        result = response.json()
-        if "choices" in result and len(result["choices"]) > 0:
-            content = result["choices"][0]["message"]["content"]
-            usage = result.get("usage", {})
-            print(f"✅ 游戏AI完成 | tokens: {usage.get('total_tokens', 'N/A')}")
-            return content, usage
-        else:
-            print(f"❌ AI失败: {result}")
-            return None, {}
-    except Exception as e:
-        print(f"❌ AI异常: {e}")
-        return None, {}
-
-
-def calculate_month_age(birth_date):
-    if not birth_date:
-        return 0
-    today = datetime.now().date()
-    months = (today.year - birth_date.year) * 12 + (today.month - birth_date.month)
-    return max(0, months)
 
 
 def build_name_reaction_prompt(child_name, age_months, record):
@@ -81,24 +35,6 @@ def build_name_reaction_prompt(child_name, age_months, record):
 
 请用1-2句比喻评价整体表现，点出1个数据亮点，给出1条温柔建议。语言亲切，避免专业术语。"""
     return prompt
-
-
-def save_token_usage(record_type, record_id, child_id, model_name, usage_data):
-    try:
-        token_record = AITokenUsage(
-            record_type=record_type,
-            record_id=record_id,
-            child_id=child_id,
-            model_name=model_name,
-            prompt_tokens=usage_data.get('prompt_tokens', 0),
-            completion_tokens=usage_data.get('completion_tokens', 0),
-            total_tokens=usage_data.get('total_tokens', 0)
-        )
-        db.session.add(token_record)
-        db.session.commit()
-        print(f"✅ Token记录已保存: {usage_data.get('total_tokens', 0)} tokens")
-    except Exception as e:
-        print(f"⚠️ Token记录保存失败: {e}")
 
 
 # ---------- 叫名反应（自动AI分析 - 使用问卷AI模型） ----------
@@ -152,7 +88,10 @@ def save_name_reaction():
 
     print("================================================\n", flush=True)
 
-    # 下面保留你原来的保存数据库代码
+    # 0. 校验 child 是否存在
+    child = Child.query.get(data['child_id'])
+    if not child:
+        return jsonify({'success': False, 'message': '孩子不存在'}), 404
 
     # 1. 保存记录
     record = NameReactionRecord(
@@ -172,8 +111,7 @@ def save_name_reaction():
 
     # 2. 自动调用 AI 分析（集成RAG）
     try:
-        child = Child.query.get(data['child_id'])
-        if child and child.birth_date:
+        if child.birth_date:
             age_months = calculate_month_age(child.birth_date)
         else:
             age_months = 0
@@ -187,7 +125,7 @@ def save_name_reaction():
         extra_knowledge = retrieve(retrieval_query)
 
         prompt = build_name_reaction_prompt(child.name, age_months, record)
-        ai_analysis, usage = call_ai_for_game_analysis(prompt, extra_knowledge, 'name')
+        ai_analysis, usage = call_bailian_ai(prompt, extra_knowledge, 'name', max_tokens=500)
         if ai_analysis:
             record.ai_analysis = ai_analysis
             db.session.commit()
@@ -223,7 +161,12 @@ def get_name_history(child_id):
 @games_bp.route('/point-game', methods=['POST'])
 def save_point_game():
     data = request.json
-    print("📥 收到指物练习数据:", data)
+    print(f"[INFO] 收到指物练习数据: child_id={data.get('child_id')}")
+
+    # 校验 child 是否存在
+    child = Child.query.get(data.get('child_id'))
+    if not child:
+        return jsonify({'success': False, 'message': '孩子不存在'}), 404
 
     total_rounds = data.get('round_total', 8)
     correct_rounds = data.get('correct_rounds', 0)
@@ -279,6 +222,12 @@ def save_point_game():
 @games_bp.route('/voice-game', methods=['POST'])
 def save_voice_game():
     data = request.json
+
+    # 校验 child 是否存在
+    child = Child.query.get(data.get('child_id'))
+    if not child:
+        return jsonify({'success': False, 'message': '孩子不存在'}), 404
+
     record = VoiceGameRecord(
         child_id=data['child_id'],
         session_date=date.today(),
@@ -291,7 +240,8 @@ def save_voice_game():
     db.session.commit()
     return jsonify({'id': record.id}), 201
 
-    # ---------- 首页今日推荐数据 ----------
+
+# ---------- 首页今日推荐数据 ----------
 @games_bp.route('/recommendations/<int:child_id>', methods=['GET'])
 def get_home_recommendations(child_id):
     """首页今日推荐：返回三类训练的最近一次数据库记录"""
