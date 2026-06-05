@@ -1,6 +1,6 @@
 (function() {
     // ========== API 配置 ==========
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'http://localhost:7653/api';
 
     // ========== 工具函数 ==========
     function validateEmail(email) { return Validator.isEmail(email); }
@@ -74,7 +74,7 @@
         console.error('注册错误:', error);
         // 区分连接失败和 JSON 解析失败
         if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
-            return { success: false, message: '无法连接服务器，请确认后端已启动（http://localhost:5000）' };
+            return { success: false, message: '无法连接服务器，请确认后端已启动（http://localhost:7653）' };
         }
         return { success: false, message: '网络错误，请稍后重试' };
     }

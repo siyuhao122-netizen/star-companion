@@ -1,5 +1,5 @@
 (function () {
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'http://localhost:7653/api';
 
     // ========== 阈值配置 ==========
 // 正脸状态下，叫名后只要有轻微头动即可算作回应

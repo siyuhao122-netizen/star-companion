@@ -1,6 +1,6 @@
 // dataAnalys.js
 (function () {
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'http://localhost:7653/api';
     
     const urlParams = new URLSearchParams(window.location.search);
     const childId = urlParams.get('childId') || localStorage.getItem('starCompanionActiveChild');

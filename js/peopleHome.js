@@ -1,6 +1,6 @@
 (function() {
     // ========== API 配置 ==========
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'http://localhost:7653/api';
     
     // 获取当前登录用户
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
