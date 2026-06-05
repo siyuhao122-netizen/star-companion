@@ -133,9 +133,7 @@ def verify_code():
     if verification.expires_at < datetime.utcnow():
         return jsonify({'success': False, 'message': '验证码已过期'}), 400
 
-    verification.is_used = True
-    db.session.commit()
-
+    # 不在此时标记已使用，留给最终注册时再标记，避免提前消耗验证码
     return jsonify({'success': True, 'message': '验证成功'}), 200
 
 
