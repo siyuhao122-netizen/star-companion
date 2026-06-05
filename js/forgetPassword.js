@@ -1,6 +1,6 @@
 (function() {
     // ========== API 配置 ==========
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
 
     // ========== 工具函数 ==========
     function validateEmail(email) { return Validator.isEmail(email); }

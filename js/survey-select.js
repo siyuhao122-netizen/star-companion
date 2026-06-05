@@ -1,5 +1,5 @@
 (function () {
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
     
     // 获取当前用户ID和孩子ID
     let childId = localStorage.getItem('starCompanionActiveChild');

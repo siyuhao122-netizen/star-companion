@@ -1,5 +1,5 @@
 (function () {
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
 
     // ========== 阈值配置 ==========
     const VOICE_THRESHOLD_DB = 45;          // 声音阈值（分贝）

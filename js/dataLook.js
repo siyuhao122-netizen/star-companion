@@ -1,5 +1,5 @@
 (function () {
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
     
     let childrenData = [];
     let currentChildId = null;
@@ -1352,6 +1352,10 @@ window.showMicDetail = showMicDetail;
         showToast('正在生成报告...');
 
         try {
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                showToast('PDF库加载失败，请检查网络连接');
+                return;
+            }
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const PW = pdf.internal.pageSize.getWidth(), M = 12;

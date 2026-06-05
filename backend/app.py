@@ -1,11 +1,13 @@
-﻿from flask import Flask
-from flask_cors import CORS
+﻿from flask import Flask, make_response, request as flask_request, send_from_directory
 from flask_bcrypt import Bcrypt
 from models import db
 import os
 from config import Config
 
 bcrypt = Bcrypt()
+
+# 前端静态文件根目录（项目根，包含 index.html、pages/、js/、css/）
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 
 def create_app():
@@ -16,9 +18,8 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
-    CORS(app, origins=app.config['CORS_ORIGINS'])
 
-    # 注册蓝图
+    # 先注册 API 蓝图，确保 /api/* 优先于通配路由匹配
     from routes.auth import auth_bp
     from routes.child import child_bp
     from routes.games import games_bp
@@ -43,6 +44,17 @@ def create_app():
     app.register_blueprint(name_reaction_ai_bp, url_prefix='/api/name-reaction-ai')
     app.register_blueprint(voice_game_ai_bp, url_prefix='/api/voice-game-ai')
 
+    # ========== 前端静态文件（放在 API 蓝图之后，确保 /api/* 优先匹配） ==========
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_frontend(path):
+        if not path:
+            return send_from_directory(FRONTEND_DIR, 'index.html')
+        file_path = os.path.join(FRONTEND_DIR, path)
+        if os.path.isfile(file_path):
+            return send_from_directory(FRONTEND_DIR, path)
+        return send_from_directory(FRONTEND_DIR, 'index.html')
+
     with app.app_context():
         db.create_all()
 
@@ -51,4 +63,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, port=7653)
+    app.run(debug=True, host='0.0.0.0', port=7653)

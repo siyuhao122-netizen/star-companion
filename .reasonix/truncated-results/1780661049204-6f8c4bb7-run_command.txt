@@ -1,0 +1,408 @@
+$ findstr /n "const API_BASE" js\*.js 2>&1
+[exit 0]
+js\askName.js:2:    const API_BASE = '/api';
+js\askName.js:6:const HEAD_TURN_THRESHOLD_PX = 80;     // 头部转向阈值
+js\askName.js:7:const VOICE_THRESHOLD_DB = 75;          // 声音阈值
+js\askName.js:8:const ROUND_TIMEOUT_MS = 4000;          // 每轮 4 秒
+js\askName.js:9:const CALIBRATION_TIME_MS = 2000;
+js\askName.js:10:const TOTAL_ROUNDS = 8;
+js\askName.js:11:const RESPONSE_GRACE_MS = 800;          // 语音播报后保护期
+js\askName.js:12:const STATUS_UPDATE_INTERVAL_MS = 300;  // 状态展示刷新间隔
+js\askName.js:14:const STABLE_TRIGGER_FRAMES = 100;
+js\askName.js:15:const FACE_APPEAR_WINDOW_MS = 1500;
+js\askName.js:19:    // const EXPRESSION_THRESHOLDS = {
+js\askName.js:26:const EXPRESSION_THRESHOLDS = {
+js\askName.js:114:    const videoElement = document.getElementById('videoElement');
+js\askName.js:115:    const canvasElement = document.getElementById('canvasElement');
+js\askName.js:116:    const canvasCtx = canvasElement.getContext('2d');
+js\askName.js:117:    const startBtn = document.getElementById('startBtn');
+js\askName.js:118:    const skipBtn = document.getElementById('skipBtn');
+js\askName.js:119:    const resultModal = document.getElementById('resultModal');
+js\askName.js:120:    const homeReturnBtn = document.getElementById('homeReturnBtn');
+js\askName.js:121:    const calibrationBar = document.getElementById('calibrationBar');
+js\askName.js:122:    const calibrationFill = document.getElementById('calibrationFill');
+js\askName.js:126:const FACE_POINTS = {
+js\askName.js:155:const FACE_DRAW_POINTS = [
+js\askName.js:175:    const urlParams = new URLSearchParams(window.location.search);
+js\askName.js:176:    const urlChildId = urlParams.get('childId');
+js\askName.js:196:        const utterance = new SpeechSynthesisUtterance(text);
+js\askName.js:202:        const voices = window.speechSynthesis.getVoices();
+js\askName.js:203:        const zhVoice = voices.find(v => v.lang.includes('zh-CN')) || voices.find(v => v.lang.includes('zh'));
+js\askName.js:228:            const source = audioContext.createMediaStreamSource(audioStream);
+js\askName.js:239:        const dataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+js\askName.js:243:            const normalized = (dataArray[i] - 128) / 128;
+js\askName.js:246:        const rms = Math.sqrt(sum / dataArray.length);
+js\askName.js:279:    const leftMouth = landmarks[61];
+js\askName.js:280:    const rightMouth = landmarks[291];
+js\askName.js:281:    const upperLip = landmarks[13];
+js\askName.js:282:    const lowerLip = landmarks[14];
+js\askName.js:284:    const mouthWidth = Math.abs(rightMouth.x - leftMouth.x) * canvasElement.width;
+js\askName.js:285:    const mouthHeight = Math.abs(lowerLip.y - upperLip.y) * canvasElement.height;
+js\askName.js:296:    const nose = landmarks[1];
+js\askName.js:297:    const leftEye = landmarks[133];
+js\askName.js:298:    const rightEye = landmarks[362];
+js\askName.js:300:    const noseLeftDiffX = Math.abs(nose.x - leftEye.x) * canvasElement.width;
+js\askName.js:301:    const noseRightDiffX = Math.abs(nose.x - rightEye.x) * canvasElement.width;
+js\askName.js:304:    const eyeDistance = Math.abs(rightEye.x - leftEye.x) * canvasElement.width;
+js\askName.js:324:    const p = FACE_POINTS;
+js\askName.js:326:    const leftMouth = landmarks[p.leftMouth];
+js\askName.js:327:    const rightMouth = landmarks[p.rightMouth];
+js\askName.js:328:    const upperLip = landmarks[p.upperLip];
+js\askName.js:329:    const lowerLip = landmarks[p.lowerLip];
+js\askName.js:331:    const leftBrow = landmarks[p.leftBrow];
+js\askName.js:332:    const rightBrow = landmarks[p.rightBrow];
+js\askName.js:333:    const nose = landmarks[p.nose];
+js\askName.js:335:    const leftEyeTop = landmarks[p.leftEyeTop];
+js\askName.js:336:    const leftEyeBottom = landmarks[p.leftEyeBottom];
+js\askName.js:337:    const leftEyeLeft = landmarks[p.leftEyeLeft];
+js\askName.js:338:    const leftEyeRight = landmarks[p.leftEyeRight];
+js\askName.js:340:    const rightEyeTop = landmarks[p.rightEyeTop];
+js\askName.js:341:    const rightEyeBottom = landmarks[p.rightEyeBottom];
+js\askName.js:342:    const rightEyeLeft = landmarks[p.rightEyeLeft];
+js\askName.js:343:    const rightEyeRight = landmarks[p.rightEyeRight];
+js\askName.js:346:    const mouthWidth = Math.abs(rightMouth.x - leftMouth.x);
+js\askName.js:347:    const mouthHeight = Math.abs(lowerLip.y - upperLip.y);
+js\askName.js:350:    const currentMWR = mouthWidth / (mouthHeight || 0.001);
+js\askName.js:353:    const currentMAR = mouthHeight / (mouthWidth || 0.001);
+js\askName.js:356:    const browAvgY = (leftBrow.y + rightBrow.y) / 2;
+js\askName.js:357:    const currentBrowHeight = Math.abs(nose.y - browAvgY);
+js\askName.js:360:    const leftEAR =
+js\askName.js:364:    const rightEAR =
+js\askName.js:368:    const currentEAR = (leftEAR + rightEAR) / 2;
+js\askName.js:370:    const mwrRatio = baseline.mouthWidthRatio > 0
+js\askName.js:374:    const marRatio = baseline.mouthAspectRatio > 0
+js\askName.js:378:    const browRatio = baseline.browHeight > 0
+js\askName.js:382:    const earRatio = baseline.eyeAspectRatio > 0
+js\askName.js:411:    const names = [];
+js\askName.js:469:    const nose = landmarks[FACE_POINTS.nose];
+js\askName.js:470:    const leftEye = landmarks[FACE_POINTS.leftEyeInner];
+js\askName.js:471:    const rightEye = landmarks[FACE_POINTS.rightEyeLeft];
+js\askName.js:473:    const currentLeftDiff = Math.abs(nose.x - leftEye.x) * canvasWidth;
+js\askName.js:474:    const currentRightDiff = Math.abs(nose.x - rightEye.x) * canvasWidth;
+js\askName.js:476:    const leftDistance = Math.abs(currentLeftDiff - baseline.noseLeftEyeDiffX);
+js\askName.js:477:    const rightDistance = Math.abs(currentRightDiff - baseline.noseRightEyeDiffX);
+js\askName.js:479:    const maxDistance = Math.max(leftDistance, rightDistance);
+js\askName.js:514:    const nose = landmarks[FACE_POINTS.nose];
+js\askName.js:515:    const leftEye = landmarks[FACE_POINTS.leftEyeInner];
+js\askName.js:516:    const rightEye = landmarks[FACE_POINTS.rightEyeLeft];
+js\askName.js:522:    const currentLeftDiff = Math.abs(nose.x - leftEye.x) * canvasWidth;
+js\askName.js:523:    const currentRightDiff = Math.abs(nose.x - rightEye.x) * canvasWidth;
+js\askName.js:525:    const leftDistance = Math.abs(currentLeftDiff - baseline.noseLeftEyeDiffX);
+js\askName.js:526:    const rightDistance = Math.abs(currentRightDiff - baseline.noseRightEyeDiffX);
+js\askName.js:528:    const maxDistance = Math.max(leftDistance, rightDistance);
+js\askName.js:542:            const maxSamples = 20;  // 采集20个样本
+js\askName.js:543:            const sampleInterval = CALIBRATION_TIME_MS / maxSamples;
+js\askName.js:544:            const maxWaitTime = 5000; // 最多等待5秒
+js\askName.js:545:            const startTime = Date.now();
+js\askName.js:551:            const intervalId = setInterval(() => {
+js\askName.js:552:                const elapsed = Date.now() - startTime;
+js\askName.js:586:                  const avg = window._calibrationSamples.reduce((acc, s) => {
+js\askName.js:603:const count = window._calibrationSamples.length;
+js\askName.js:625:    const p = FACE_POINTS;
+js\askName.js:627:    const nose = landmarks[p.nose];
+js\askName.js:628:    const leftEyeInner = landmarks[p.leftEyeInner];
+js\askName.js:629:   const rightEyeInner = landmarks[p.rightEyeRight];
+js\askName.js:630:    const leftMouth = landmarks[p.leftMouth];
+js\askName.js:631:    const rightMouth = landmarks[p.rightMouth];
+js\askName.js:632:    const upperLip = landmarks[p.upperLip];
+js\askName.js:633:    const lowerLip = landmarks[p.lowerLip];
+js\askName.js:635:    const leftBrow = landmarks[p.leftBrow];
+js\askName.js:636:    const rightBrow = landmarks[p.rightBrow];
+js\askName.js:638:    const leftEyeTop = landmarks[p.leftEyeTop];
+js\askName.js:639:    const leftEyeBottom = landmarks[p.leftEyeBottom];
+js\askName.js:640:    const leftEyeLeft = landmarks[p.leftEyeLeft];
+js\askName.js:641:    const leftEyeRight = landmarks[p.leftEyeRight];
+js\askName.js:643:    const rightEyeTop = landmarks[p.rightEyeTop];
+js\askName.js:644:    const rightEyeBottom = landmarks[p.rightEyeBottom];
+js\askName.js:645:    const rightEyeLeft = landmarks[p.rightEyeLeft];
+js\askName.js:646:    const rightEyeRight = landmarks[p.rightEyeRight];
+js\askName.js:649:    const noseLeftEyeDiffX = Math.abs(nose.x - leftEyeInner.x) * canvasWidth;
+js\askName.js:650:const noseRightEyeDiffX = Math.abs(nose.x - rightEyeInner.x) * canvasWidth;
+js\askName.js:652:    const mouthWidth = Math.abs(rightMouth.x - leftMouth.x);
+js\askName.js:653:    const mouthHeight = Math.abs(lowerLip.y - upperLip.y);
+js\askName.js:654:    const mouthWidthRatio = mouthWidth / (mouthHeight || 0.001);
+js\askName.js:655:    const mouthAspectRatio = mouthHeight / (mouthWidth || 0.001);
+js\askName.js:658:    const browAvgY = (leftBrow.y + rightBrow.y) / 2;
+js\askName.js:659:    const browHeight = Math.abs(nose.y - browAvgY);
+js\askName.js:662:    const leftEAR =
+js\askName.js:666:    const rightEAR =
+js\askName.js:670:    const eyeAspectRatio = (leftEAR + rightEAR) / 2;
+js\askName.js:730:        const lm = landmarks[idx];
+js\askName.js:732:        const x = lm.x * canvasElement.width;
+js\askName.js:733:        const y = lm.y * canvasElement.height;
+js\askName.js:780:    const hasFace = results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0;
+js\askName.js:781:    const landmarks = hasFace ? results.multiFaceLandmarks[0] : null;
+js\askName.js:782:    const canvasWidth = canvasElement.width;
+js\askName.js:783:    const now = Date.now();
+js\askName.js:785:    const faceReappeared = hasFace && !lastHasFace;
+js\askName.js:808:    const voiceDB = getCurrentVolumeDB();
+js\askName.js:809:    const voiceTriggered = voiceDB >= VOICE_THRESHOLD_DB;
+js\askName.js:813:    const headResult = detectHeadTurn(landmarks, canvasWidth);
+js\askName.js:814:const currentHeadTurned = headResult.turned;
+js\askName.js:852:const mouthMetrics = getMouthMetrics(landmarks);
+js\askName.js:862:        const widthDelta = mouthMetrics.width - roundMouthBaseline.width;
+js\askName.js:863:        const heightDelta = mouthMetrics.height - roundMouthBaseline.height;
+js\askName.js:866:        const mouthOpenNow =
+js\askName.js:871:        const smileNow =
+js\askName.js:954:            const reactionTime = (Date.now() - roundStartTime) / 1000;
+js\askName.js:981:    const statusIndicator = document.getElementById('statusIndicator');
+js\askName.js:982:    const detectionResultText = document.getElementById('detectionResultText');
+js\askName.js:983:    const headPoseSpan = document.querySelector('#headPoseStatus span');
+js\askName.js:984:    const expressionSpan = document.querySelector('#expressionStatus span');
+js\askName.js:985:    const voiceSpan = document.querySelector('#voiceStatus span');
+js\askName.js:986:    const additionalInfo = document.getElementById('additionalInfo');
+js\askName.js:988:    const expressionNames = getExpressionNames(expressions);
+js\askName.js:989:    const expressionTriggered = expressionNames.length > 0;
+js\askName.js:1018:    const hasTriggered = currentRoundStatus.triggeredBy !== '无';
+js\askName.js:1052:        const successReasons = [];
+js\askName.js:1066:const record = {
+js\askName.js:1216:        const progress = (currentRound - 1) / TOTAL_ROUNDS * 100;
+js\askName.js:1223:        const successRecords = reactionRecords.filter(r => r.success);
+js\askName.js:1224:        const successTimes = successRecords.map(r => r.reactionTime).filter(t => t > 0);
+js\askName.js:1225:        const avgReactionTime = successTimes.length > 0
+js\askName.js:1229:        const headSuccess = successRecords.filter(r => r.headTurned && !r.voiceTriggered);
+js\askName.js:1230:        const voiceSuccess = successRecords.filter(r => r.voiceTriggered && !r.headTurned && !r.expressionTriggered);
+js\askName.js:1231:        const bothSuccess = successRecords.filter(r => (r.headTurned || r.expressionTriggered) && r.voiceTriggered);
+js\askName.js:1232:        const headDistances = successRecords.filter(r => r.headDistance > 0).map(r => r.headDistance);
+js\askName.js:1233:        const voiceDBs = successRecords.filter(r => r.voiceDB > 0).map(r => r.voiceDB);
+js\askName.js:1235:        const record = {
+js\askName.js:1252:            const response = await fetch(`${API_BASE}/games/name-reaction`, {
+js\askName.js:1257:            const result = await response.json();
+js\askName.js:1271:        const successRate = Math.round((successCount / TOTAL_ROUNDS) * 100);
+js\askName.js:1272:        const successRecords = reactionRecords.filter(r => r.success);
+js\askName.js:1273:        const times = successRecords.map(r => r.reactionTime).filter(t => t > 0);
+js\askName.js:1274:        const avgTime = times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : '—';
+js\askName.js:1275:        const minTime = times.length ? Math.min(...times).toFixed(1) : '—';
+js\askName.js:1276:        const maxTime = times.length ? Math.max(...times).toFixed(1) : '—';
+js\askName.js:1278:        const headOnly = successRecords.filter(r => r.headTurned && !r.voiceTriggered && !r.expressionTriggered);
+js\askName.js:1279:        const voiceOnly = successRecords.filter(r => r.voiceTriggered && !r.headTurned && !r.expressionTriggered);
+js\askName.js:1280:        const both = successRecords.filter(r => (r.headTurned || r.expressionTriggered) && r.voiceTriggered);
+js\askName.js:1281:        const headDists = successRecords.filter(r => r.headDistance > 0).map(r => r.headDistance);
+js\askName.js:1282:        const voiceDBs = successRecords.filter(r => r.voiceDB > 0).map(r => r.voiceDB);
+js\askName.js:1311:        const result = await saveTrainingRecord();
+js\askName.js:1336:        const stream = await navigator.mediaDevices.getUserMedia({
+js\askName.js:1348:            const timer = setTimeout(() => {
+js\askName.js:1352:            const done = () => {
+js\askName.js:1376:        const ok = await initFaceMesh();
+js\askQuestions.js:2:    const API_BASE = '/api';
+js\askQuestions.js:6:    const urlParams = new URLSearchParams(window.location.search);
+js\askQuestions.js:7:    const urlChildId = urlParams.get('childId');
+js\askQuestions.js:8:    const scaleType = urlParams.get('scale') || 'mchat';
+js\askQuestions.js:26:    const surveyMain = document.getElementById('surveyMain');
+js\askQuestions.js:27:    const loadingArea = document.getElementById('loadingArea');
+js\askQuestions.js:28:    const questionArea = document.getElementById('questionArea');
+js\askQuestions.js:29:    const resultArea = document.getElementById('resultArea');
+js\askQuestions.js:30:    const aiLoadingArea = document.getElementById('aiLoadingArea');
+js\askQuestions.js:31:    const progressText = document.getElementById('progressText');
+js\askQuestions.js:32:    const surveyTitle = document.getElementById('surveyTitle');
+js\askQuestions.js:33:    const surveySubtitle = document.getElementById('surveySubtitle');
+js\askQuestions.js:36:    const freqOptions = [
+js\askQuestions.js:42:    const yesNoOptions = [
+js\askQuestions.js:65:            const response = await fetch(`${API_BASE}/ai/scale-info/${scaleType}`);
+js\askQuestions.js:66:            const result = await response.json();
+js\askQuestions.js:77:            const response = await fetch(`${API_BASE}/survey/questions/${scaleType}`);
+js\askQuestions.js:78:            const result = await response.json();
+js\askQuestions.js:107:        const question = questions[currentIndex];
+js\askQuestions.js:108:        const currentVal = answers[currentIndex];
+js\askQuestions.js:112:            const isSelected = (currentVal === opt.value);
+js\askQuestions.js:121:        const html = `
+js\askQuestions.js:142:                const val = parseInt(btn.dataset.val);
+js\askQuestions.js:146:                const nextBtn = document.getElementById('nextBtn');
+js\askQuestions.js:151:        const nextBtn = document.getElementById('nextBtn');
+js\askQuestions.js:168:        const prevBtn = document.getElementById('prevBtn');
+js\askQuestions.js:186:            const response = await fetch(`${API_BASE}/ai/survey-analysis`, {
+js\askQuestions.js:196:            const result = await response.json();
+js\askQuestions.js:218:        const riskClass = data.risk_level === '低风险' ? 'risk-low' : 
+js\askQuestions.js:249:        const html = `
+js\askQuestions.js:302:    const navItems = document.querySelectorAll('.nav-item');
+js\askQuestions.js:306:            const to = item.dataset.nav;
+js\auth.js:3:    const API_BASE = '/api';
+js\auth.js:12:        const input = document.getElementById(inputId);
+js\auth.js:13:        const error = document.getElementById(errorId);
+js\auth.js:22:        const input = document.getElementById(inputId);
+js\auth.js:23:        const error = document.getElementById(errorId);
+js\auth.js:42:        const controller = new AbortController();
+js\auth.js:43:        const timeoutId = setTimeout(() => controller.abort(), 15000);
+js\auth.js:45:            const response = await fetch(`${API_BASE}/auth/send-verify-code`, {
+js\auth.js:65:        const response = await fetch(`${API_BASE}/auth/register`, {
+js\auth.js:70:        const data = await response.json();
+js\auth.js:85:            const response = await fetch(`${API_BASE}/auth/login`, {
+js\auth.js:90:            const data = await response.json();
+js\auth.js:111:    const authTabs = document.getElementById('authTabs');
+js\auth.js:112:    const loginStep = document.getElementById('loginStep');
+js\auth.js:113:    const registerStep = document.getElementById('registerStep');
+js\auth.js:114:    const formTitle = document.getElementById('formTitle');
+js\auth.js:115:    const formSubtitle = document.getElementById('formSubtitle');
+js\auth.js:116:    const passwordLogin = document.getElementById('passwordLogin');
+js\auth.js:117:    const codeLogin = document.getElementById('codeLogin');
+js\auth.js:118:    const passwordMethodBtn = document.getElementById('passwordMethodBtn');
+js\auth.js:119:    const codeMethodBtn = document.getElementById('codeMethodBtn');
+js\auth.js:122:    const rememberCheckbox = document.getElementById('rememberMe');
+js\auth.js:123:    const loginEmailInput = document.getElementById('loginEmail');
+js\auth.js:124:    const loginPasswordInput = document.getElementById('loginPassword');
+js\auth.js:126:    const savedEmail = localStorage.getItem('savedEmail');
+js\auth.js:127:    const savedPassword = localStorage.getItem('savedPassword');
+js\auth.js:135:    const yearSelect = document.getElementById('birthYear');
+js\auth.js:136:    const monthSelect = document.getElementById('birthMonth');
+js\auth.js:138:        const currentYear = new Date().getFullYear();
+js\auth.js:140:            const option = document.createElement('option');
+js\auth.js:147:            const option = document.createElement('option');
+js\auth.js:192:        const tab = e.target.closest('.tab-btn');
+js\auth.js:200:            const targetId = this.dataset.target;
+js\auth.js:201:            const input = document.getElementById(targetId);
+js\auth.js:203:                const isPassword = input.type === 'password';
+js\auth.js:227:            const preview = document.getElementById('avatarPreview');
+js\auth.js:229:                const icon = this.querySelector('i');
+js\auth.js:232:                    const cloneIcon = icon.cloneNode(true);
+js\auth.js:241:    const avatarUpload = document.getElementById('avatarUploadInput');
+js\auth.js:244:            const file = e.target.files[0];
+js\auth.js:246:                const reader = new FileReader();
+js\auth.js:251:                    const preview = document.getElementById('avatarPreview');
+js\auth.js:273:        const text = originalText || btn.textContent;
+js\auth.js:290:            const el = document.getElementById(id);
+js\auth.js:296:    const inputErrorPairs = [
+js\auth.js:309:        const input = document.getElementById(inputId);
+js\auth.js:317:        const email = document.getElementById('loginEmail')?.value.trim();
+js\auth.js:318:        const password = document.getElementById('loginPassword')?.value;
+js\auth.js:339:        const result = await loginUser({ email, password, loginType: 'password' });
+js\auth.js:360:        const email = document.getElementById('codeEmail')?.value.trim();
+js\auth.js:368:        const btn = this;
+js\auth.js:369:        const originalText = btn.textContent;
+js\auth.js:373:        const result = await sendVerificationCode(email, 'login');
+js\auth.js:387:        const email = document.getElementById('codeEmail')?.value.trim();
+js\auth.js:388:        const code = document.getElementById('smsCode')?.value.trim();
+js\auth.js:401:        const result = await loginUser({ email, code, loginType: 'code' });
+js\auth.js:422:        const email = document.getElementById('regEmail')?.value.trim();
+js\auth.js:430:        const btn = this;
+js\auth.js:431:        const originalText = btn.textContent;
+js\auth.js:435:        const result = await sendVerificationCode(email, 'register');
+js\auth.js:449:        const nickname = document.getElementById('parentNickname')?.value.trim();
+js\auth.js:450:        const email = document.getElementById('regEmail')?.value.trim();
+js\auth.js:451:        const code = document.getElementById('regEmailCode')?.value.trim();
+js\auth.js:452:        const pwd = document.getElementById('regPassword')?.value;
+js\auth.js:453:        const confirmPwd = document.getElementById('regConfirmPassword')?.value;
+js\auth.js:486:        const childName = document.getElementById('regChildName')?.value.trim();
+js\auth.js:499:    const nickname = document.getElementById('parentNickname')?.value.trim();
+js\auth.js:500:    const email = document.getElementById('regEmail')?.value.trim();
+js\auth.js:501:    const code = document.getElementById('regEmailCode')?.value.trim();
+js\auth.js:502:    const password = document.getElementById('regPassword')?.value;
+js\auth.js:503:    const childName = document.getElementById('regChildName')?.value.trim();
+js\auth.js:506:    const birthYear = document.getElementById('birthYear')?.value;
+js\auth.js:507:    const birthMonth = document.getElementById('birthMonth')?.value;
+js\auth.js:518:    const activePreset = document.querySelector('.preset-avatar.active');
+js\auth.js:534:    const result = await registerUser({
+js\auth.js:548:        const welcomeMsg = document.getElementById('welcomeMessage');
+js\auth.js:558:        const fields = ['parentNickname', 'regEmail', 'regEmailCode', 'regPassword', 'regConfirmPassword', 'regChildName'];
+js\auth.js:560:            const el = document.getElementById(id);
+js\auth.js:573:    const defaultPreview = document.getElementById('avatarPreview');
+js\dataAnalys.js:3:    const API_BASE = '/api';
+js\dataAnalys.js:5:    const urlParams = new URLSearchParams(window.location.search);
+js\dataAnalys.js:6:    const childId = urlParams.get('childId') || localStorage.getItem('starCompanionActiveChild');
+js\dataAnalys.js:7:    const count = urlParams.get('count') || 10;
+js\dataAnalys.js:35:            const user = JSON.parse(localStorage.getItem('user') || '{}');
+js\dataAnalys.js:36:            const response = await fetch(`${API_BASE}/child/list/${user.id}`);
+js\dataAnalys.js:37:            const result = await response.json();
+js\dataAnalys.js:39:                const child = result.data.find(c => c.id === parseInt(childId));
+js\dataAnalys.js:54:        const birth = new Date(birthDateStr);
+js\dataAnalys.js:55:        const today = new Date();
+js\dataAnalys.js:56:        const months = (today.getFullYear() - birth.getFullYear()) * 12 + today.getMonth() - birth.getMonth();
+js\dataAnalys.js:73:            const response = await fetch(`${API_BASE}/point-game-ai/trend-analysis/${childId}?limit=${limit}`);
+js\dataAnalys.js:74:            const result = await response.json();
+js\dataAnalys.js:77:                const data = result.data;
+js\dataAnalys.js:120:        const latest = records[0];
+js\dataAnalys.js:121:        const first = records[records.length - 1];
+js\dataAnalys.js:129:        const correctDiff = (latest.accuracy || 0) - (first.accuracy || 0);
+js\dataAnalys.js:133:        const clickDiff = (latest.click_accuracy || 0) - (first.click_accuracy || 0);
+js\dataAnalys.js:138:            const timeDiff = Math.round(((first.avg_time_sec - latest.avg_time_sec) / first.avg_time_sec) * 100);
+js\dataAnalys.js:148:        const reversed = [...records].reverse();
+js\dataAnalys.js:149:        const labels = reversed.map((r, i) => `第${i + 1}次`);
+js\dataAnalys.js:150:        const correctRates = reversed.map(r => r.accuracy || 0);
+js\dataAnalys.js:151:        const avgTimes = reversed.map(r => r.avg_time_sec || 0);
+js\dataAnalys.js:153:        const ctx1 = document.getElementById('rateChart').getContext('2d');
+js\dataAnalys.js:154:        const ctx2 = document.getElementById('timeChart').getContext('2d');
+js\dataAnalys.js:214:        const records = data.records || [];
+js\dataAnalys.js:230:            const latest = records[0];
+js\dataAnalys.js:268:        const latest = records[0];
+js\dataAnalys.js:269:        const first = records[records.length - 1];
+js\dataAnalys.js:271:        const progressHtml = `
+js\dataAnalys.js:292:            const suggestionMatch = aiAnalysis.match(/💡[^#]*/);
+js\dataAnalys.js:331:                const count = parseInt(this.dataset.count);
+js\dataAnalys.js:332:                const label = this.querySelector('span').textContent;
+js\dataLook.js:2:    const API_BASE = '/api';
+js\dataLook.js:8:    const gameMeta = {
+js\dataLook.js:23:    const childInfoCard = document.getElementById('childInfoCard');
+js\dataLook.js:24:    const childDropdown = document.getElementById('childDropdown');
+js\dataLook.js:25:    const currentChildName = document.getElementById('currentChildName');
+js\dataLook.js:26:    const currentChildAge = document.getElementById('currentChildAge');
+js\dataLook.js:27:    const currentChildAvatar = document.getElementById('currentChildAvatar');
+js\dataLook.js:28:    const childList = document.getElementById('childList');
+js\dataLook.js:29:    const ctx = document.getElementById('trendChart').getContext('2d');
+js\dataLook.js:33:        const user = JSON.parse(localStorage.getItem('user') || '{}');
+js\dataLook.js:58:    const modal = document.getElementById('detailModal');
+js\dataLook.js:64:        const response = await fetch(`${API_BASE}/name-reaction-ai/records/${currentChildId}?limit=50`);
+js\dataLook.js:65:        const result = await response.json();
+js\dataLook.js:66:        const records = result.success ? (result.data.records || []) : [];
+js\dataLook.js:72:    const child = childrenData.find(c => c.id === currentChildId);
+js\dataLook.js:76:    const successRate = ((record.success_count / record.round_total) * 100).toFixed(1);
+js\dataLook.js:87:    const existingAiDiv = document.getElementById('modalAiAnalysis');
+js\dataLook.js:90:    const aiDiv = document.createElement('div');
+js\dataLook.js:112:        const aiResponse = await fetch(`${API_BASE}/name-reaction-ai/single-analysis`, {
+js\dataLook.js:116:        const aiResult = await aiResponse.json();
+js\dataLook.js:133:    const modal = document.getElementById('detailModal');
+js\dataLook.js:139:        const response = await fetch(`${API_BASE}/voice-game-ai/records/${currentChildId}?limit=50`);
+js\dataLook.js:140:        const result = await response.json();
+js\dataLook.js:141:        const records = result.success ? (result.data.records || []) : [];
+js\dataLook.js:147:    const child = childrenData.find(c => c.id === currentChildId);
+js\dataLook.js:151:    const successRate = record.completed_rounds > 0 
+js\dataLook.js:154:    const completionRate = ((record.completed_rounds / record.round_total) * 100).toFixed(1);
+js\dataLook.js:165:    const existingAiDiv = document.getElementById('modalAiAnalysis');
+js\dataLook.js:168:    const aiDiv = document.createElement('div');
+js\dataLook.js:190:        const aiResponse = await fetch(`${API_BASE}/voice-game-ai/single-analysis`, {
+js\dataLook.js:194:        const aiResult = await aiResponse.json();
+js\dataLook.js:230:        const latest = records[0];
+js\dataLook.js:247:        const nameCard = document.querySelector('.metric-card[data-game="name"]');
+js\dataLook.js:253:        const pointCard = document.querySelector('.metric-card[data-game="point"]');
+js\dataLook.js:259:        const micCard = document.querySelector('.metric-card[data-game="mic"]');
+js\dataLook.js:273:            const response = await fetch(`${API_BASE}/child/list/${currentUserId}`);
+js\dataLook.js:274:            const result = await response.json();
+js\dataLook.js:279:                const activeChild = childrenData.find(c => c.is_active);
+js\dataLook.js:292:        const child = childrenData.find(c => c.id === currentChildId);
+js\dataLook.js:298:        const avatarContainer = currentChildAvatar;
+js\dataLook.js:301:            const img = document.createElement('img');
+js\dataLook.js:306:            const icon = document.createElement('i');
+js\dataLook.js:314:        const birth = new Date(birthDateStr);
+js\dataLook.js:315:        const today = new Date();
+js\dataLook.js:316:        const months = (today.getFullYear() - birth.getFullYear()) * 12 + today.getMonth() - birth.getMonth();
+js\dataLook.js:325:            const li = document.createElement('li');
+js\dataLook.js:357:            await fetch(`${API_BASE}/child/switch/${childId}`, {
+js\dataLook.js:376:            const child = childrenData.find(c => c.id === childId);
+js\dataLook.js:415:            const endpoint = callAI 
+js\dataLook.js:416:                ? `${API_BASE}/point-game-ai/trend-analysis/${currentChildId}?limit=${count}`
+js\dataLook.js:417:                : `${API_BASE}/point-game-ai/point-records/${currentChildId}?limit=${count}`;
+js\dataLook.js:419:            const response = await fetch(endpoint);
+js\dataLook.js:420:            const result = await response.json();
+js\dataLook.js:434:                        const latest = pointGameRecords[0];
+js\dataLook.js:467:        const latest = records[0];
+js\dataLook.js:468:        const latestRate = latest.accuracy || 0;
+js\dataLook.js:473:            const previousRecords = records.slice(1);
+js\dataLook.js:474:            const prevAvgRate = previousRecords.reduce((sum, r) => sum + (r.accuracy || 0), 0) / previousRecords.length;
+js\dataLook.js:475:            const diff = (latestRate - prevAvgRate).toFixed(1);
+js\dataLook.js:476:            const trendIcon = diff >= 0 ? 'up' : 'down';
+js\dataLook.js:477:            const trendText = diff >= 0 ? `+${diff}%` : `${diff}%`;
+js\dataLook.js:478:            const compareText = records.length > 2 ? `近${previousRecords.length}次平均` : '上次';
+js\dataLook.js:490:            const latest = records[0];
+js\dataLook.js:491:            const previousRecords = records.slice(1);
+js\dataLook.js:492:            const latestRate = latest.accuracy || 0;
+js\dataLook.js:493:            const prevAvgRate = previousRecords.reduce((sum, r) => sum + (r.accuracy || 0), 0) / previousRecords.length;
+js\dataLook.js:504:        const latest = records[0];
+js\dataLook.js:505:        const rate = latest.accuracy || 0;
+js\dataLook.js:514:        const latest = records[0];
+js\dataLook.js:515:        const accuracy = latest.accuracy || 0;
+js\dataLook.js:516:        const clickAccuracy = latest.click_accuracy || 0;
+js\dataLook.js:517:        const avgTime = latest.avg_time_sec || 0;
+js\dataLook.js:550:        const reversed = [...records].reverse();
+js\dataLook.js:551:        const labels = reversed.map((r, i) => `第${i + 1}次`);
+js\dataLook.js:552:        const rates = reversed.map(r => r.accuracy || 0);
+js\dataLook.js:573:                                const rec
+
+[… truncated 53600 chars …]

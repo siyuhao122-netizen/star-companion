@@ -1,6 +1,6 @@
 (function () {
     // ========== API 配置 ==========
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
 
     // ========== AI回复模板（保持不变） ==========
     const aiReplies = {

@@ -98,3 +98,34 @@
 - TypeError + "fetch/NetworkError" → "无法连接服务器，请确认后端已启动"
 - 其他异常 → 保留"网络错误，请稍后重试"
 
+---
+
+## 第四次迭代 — 5 Bug 修复 + 数据库编码 + 同源部署（2026-06-05）
+
+### 1. 注册头像无效
+根因：预设头像 `data-avatar` 值为 `bear/cat/dog`（非 FontAwesome 类名），存储后无法正确渲染。  
+修复：HTML 改为 `fa-face-smile/fa-cat/fa-dog`，JS 默认值改为 `fa-face-smile`。
+
+### 2. 忘记密码跳转  
+根因：`<a href="#">` 触发锚点滚动竞态。  
+修复：改为 `href="forgetPassword.html"`，移除 JS 拦截。
+
+### 3. 注销账户 FK 约束失败
+根因：`delete_account` 删除 Child 前未删除 AITokenUsage 记录。  
+修复：循环中增加 `AITokenUsage.query.filter_by(child_id=child.id).delete()`。
+
+### 4. PDF 导出失败
+根因：`window.jspdf` 缺少 null check。  
+修复：`exportPDF` 开头增加检查 + 友好提示。
+
+### 5. 通知弹窗无覆盖层
+根因：`notif-popup` 完全缺 CSS。  
+修复：`peopleHome.css` 增加 fixed 定位 + z-index:9999 + 通知列表项样式。
+
+### 数据库编码修复
+根因：`child.gender` ENUM 值为乱码 `'鐢','濂'`（建表编码错误）。  
+修复：ALTER TABLE 重设 + `config.py` 强制 utf8mb4 charset。
+
+### 同源部署
+`app.py` 增加静态文件托管，JS 改相对路径 `/api`，浏览器直接访问 7653 端口即可。
+

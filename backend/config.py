@@ -12,6 +12,14 @@ class Config:
     # SQLite 数据库
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         f"sqlite:///{os.path.join(BASE_DIR, 'star_companion.db')}"
+
+    # MySQL 连接额外参数（确保 UTF-8）
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'connect_args': {
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        }
+    }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CORS_ORIGINS = ['http://localhost:5500', 'http://127.0.0.1:5500',

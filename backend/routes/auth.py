@@ -427,6 +427,7 @@ def delete_account():
             VoiceGameRecord.query.filter_by(child_id=child.id).delete()
             SurveyResult.query.filter_by(child_id=child.id).delete()
             DailyRecommendation.query.filter_by(child_id=child.id).delete()
+            AITokenUsage.query.filter_by(child_id=child.id).delete()
 
         # 2. 删除所有孩子
         Child.query.filter_by(user_id=user_id).delete()

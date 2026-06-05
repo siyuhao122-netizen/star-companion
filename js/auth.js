@@ -1,6 +1,6 @@
 (function() {
     // ========== API 配置 ==========
-    const API_BASE = 'http://localhost:7653/api';
+    const API_BASE = '/api';
 
     // ========== 工具函数 ==========
     function validateEmail(email) { return Validator.isEmail(email); }
@@ -74,7 +74,7 @@
         console.error('注册错误:', error);
         // 区分连接失败和 JSON 解析失败
         if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
-            return { success: false, message: '无法连接服务器，请确认后端已启动（http://localhost:7653）' };
+            return { success: false, message: '无法连接服务器，请确认后端已启动' };
         }
         return { success: false, message: '网络错误，请稍后重试' };
     }
@@ -102,7 +102,7 @@
     let loginMethod = 'password';
     let regStep = 1;
     let selectedGender = 'boy';
-    let selectedAvatar = 'bear';
+    let selectedAvatar = 'fa-face-smile';
     let customAvatarUrl = '';
     let codeCountdown = 0;
     let codeTimer = null;
@@ -564,10 +564,7 @@
         showToast('🎉 注册成功！请登录您的账号', '#E8F0D8');
     });
 
-    document.getElementById('forgotPassword')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'forgetPassword.html';
-    });
+    // 忘记密码 — 直接通过 href 跳转，无需 JS 拦截
 
     // 默认头像预览
     const defaultPreview = document.getElementById('avatarPreview');
