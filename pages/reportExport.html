@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星伴 · 综合评估报告</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justify-content:center;padding:20px}
+    .report-container{max-width:800px;width:100%}
+    .report-header{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border-radius:16px;padding:24px;text-align:center;margin-bottom:20px}
+    .report-header h1{font-size:22px;margin-bottom:6px}
+    .report-header p{font-size:13px;opacity:0.9}
+    .section{background:#FFFEFC;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+    .section-title{font-size:16px;font-weight:700;color:#4D3724;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .section-title i{color:#D9A066}
+    .metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+    .metric-item{background:#FFFCF5;border-radius:12px;padding:14px;text-align:center;border:1px solid #EDD9C6}
+    .metric-item .label{font-size:12px;color:#8F7A64}
+    .metric-item .value{font-size:26px;font-weight:700;color:#D9A066;margin:4px 0}
+    .radar-box{display:flex;justify-content:center;max-height:320px}
+    .radar-box canvas{max-height:300px}
+    .ai-text{font-size:14px;color:#4D3724;line-height:1.8}
+    .action-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+    .btn{padding:12px 28px;border-radius:24px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
+    .btn-primary{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF}
+    .btn-secondary{background:#F5EDE4;color:#5E422C;border:1.5px solid #D4C4B0}
+    .loading{text-align:center;padding:40px;color:#B89A78}
+  </style>
+</head>
+<body>
+<div class="report-container" id="reportContainer">
+  <div class="loading" id="loadingArea"><i class="fas fa-spinner fa-spin"></i> 正在生成综合评估报告...</div>
+</div>
+
+<script>
+(async function(){
+    const API_BASE = '/api';
+    const params = new URLSearchParams(window.location.search);
+    const childId = params.get('childId');
+    const games = params.get('games') || 'name,point,mic,emotion';
+    if (!childId) { document.getElementById('loadingArea').innerHTML='<p style=color:#C06060>缺少孩子ID参数</p>'; return; }
+
+    try {
+        const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${childId}?games=${games}`);
+        const d = await resp.json();
+        if (!d.success) throw new Error(d.message);
+
+        const data = d.data;
+        const gameLabels = { name:'叫名反应', point:'指物练习', mic:'声音小话筒', emotion:'情绪识别' };
+        const gameIcons = { name:'fa-ear-deaf', point:'fa-hand-peace', mic:'fa-microphone-alt', emotion:'fa-face-laugh-wink' };
+
+        // 构建页面
+        let html = `
+          <div class="report-header">
+            <h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1>
+            <p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p>
+          </div>
+
+          <div class="section">
+            <div class="section-title"><i class="fas fa-chart-bar"></i> 核心指标概览</div>
+            <div class="metric-row">
+        `;
+        const glist = games.split(',');
+        glist.forEach((g,i) => {
+            const rate = data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
+            html += `<div class="metric-item"><div class="label"><i class="fas ${gameIcons[g]||'fa-star'}"></i> ${gameLabels[g]||g}</div><div class="value">${rate}%</div></div>`;
+        });
+        html += `</div></div>
+
+          <div class="section">
+            <div class="section-title"><i class="fas fa-compass"></i> 能力雷达图</div>
+            <div class="radar-box"><canvas id="radarChart"></canvas></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title"><i class="fas fa-robot"></i> AI 综合评估分析</div>
+            <div class="ai-text">${data.ai_analysis || '暂无分析数据'}</div>
+          </div>
+
+          <div class="action-bar">
+            <button class="btn btn-primary" id="downloadBtn"><i class="fas fa-download"></i> 下载 PDF</button>
+            <button class="btn btn-secondary" id="shareBtn"><i class="fas fa-share-alt"></i> 生成分享链接</button>
+            <button class="btn btn-secondary" onclick="location.href='dataLook.html'"><i class="fas fa-arrow-left"></i> 返回</button>
+          </div>`;
+
+        document.getElementById('reportContainer').innerHTML = html;
+
+        // 雷达图
+        const ctx = document.getElementById('radarChart')?.getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: glist.map(g => gameLabels[g] || g),
+                    datasets: [{
+                        label: '正确率 (%)',
+                        data: data.radar_data,
+                        backgroundColor: 'rgba(217,160,102,0.2)',
+                        borderColor: '#D9A066',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#C88B4A'
+                    }]
+                },
+                options: {
+                    scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // 下载 PDF
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (!window.jspdf?.jsPDF) { alert('PDF库加载失败'); return; }
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p','mm','a4');
+            pdf.setFontSize(18);
+            pdf.text('星伴 · 综合评估报告', 15, 20);
+            pdf.setFontSize(12);
+            pdf.text(`${data.child_name} · ${data.age_months}个月`, 15, 30);
+            glist.forEach((g,i) => {
+                pdf.text(`${gameLabels[g]||g}: ${data.radar_data[i]||0}%`, 15, 38 + i*7);
+            });
+            const y = 38 + glist.length*7 + 5;
+            pdf.setFontSize(10);
+            const lines = pdf.splitTextToSize(data.ai_analysis || '', 180);
+            pdf.text(lines, 15, y);
+            pdf.save(`星伴综合报告_${data.child_name}.pdf`);
+        });
+
+        // 分享链接
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            const url = `${location.origin}${location.pathname}?childId=${childId}&games=${games}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => alert('链接已复制到剪贴板'));
+            } else {
+                prompt('复制此链接分享:', url);
+            }
+        });
+
+    } catch(e) {
+        document.getElementById('reportContainer').innerHTML = `<div class=loading><p style=color:#C06060>加载失败: ${e.message}</p></div>`;
+    }
+})();
+</script>
+</body>
+</html>

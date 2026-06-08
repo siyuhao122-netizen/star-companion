@@ -378,3 +378,49 @@ def get_token_usage(child_id):
             } for r in records]
         }
     }), 200
+
+
+# ========== 综合评估分析（PDF 报告用） ==========
+@ai_bp.route('/comprehensive-analysis/<int:child_id>', methods=['GET'])
+def comprehensive_analysis(child_id):
+    child = Child.query.get(child_id)
+    if not child:
+        return jsonify({'success': False, 'message': '孩子不存在'}), 404
+    age_months = calculate_month_age(child.birth_date)
+    games = request.args.get('games', 'name,point,mic,emotion').split(',')
+
+    from models import NameReactionRecord, PointGameRecord, VoiceGameRecord, EmotionGameRecord
+    game_map = {
+        'name': (NameReactionRecord, 'success_count', 'round_total'),
+        'point': (PointGameRecord, 'correct_rounds', 'round_total'),
+        'mic': (VoiceGameRecord, 'success_count', 'completed_rounds'),
+        'emotion': (EmotionGameRecord, 'correct_count', 'round_total'),
+    }
+    game_labels = {'name':'叫名反应','point':'指物练习','mic':'声音小话筒','emotion':'情绪识别'}
+
+    summary_parts = []
+    radar_data = []
+    for g in games:
+        if g not in game_map: continue
+        model, num_col, den_col = game_map[g]
+        records = model.query.filter_by(child_id=child_id).order_by(model.session_date.desc()).limit(7).all()
+        if records:
+            latest = records[0]
+            num = getattr(latest, num_col, 0) or 0
+            den = getattr(latest, den_col, 0) or 8
+            rate = round((num / den * 100), 1) if den > 0 else 0
+            radar_data.append(rate)
+            summary_parts.append(f"{game_labels[g]}最新正确率{rate}%")
+        else:
+            radar_data.append(0)
+    summary = '；'.join(summary_parts) if summary_parts else '暂无训练数据'
+
+    prompt = f"""你是一位资深儿童发育行为顾问，请根据以下训练数据进行综合评估分析。
+
+【孩子】{child.name}，{age_months}个月
+【数据】{summary}
+
+请输出综合评估报告：1.整体发展评估 2.各游戏能力维度分析 3.综合建议（2-3条可操作的家庭练习）。语言温暖专业，300字以内。"""
+
+    ai_analysis, _ = call_bailian_ai(prompt, '', 'survey', max_tokens=800)
+    return jsonify({'success':True,'data':{'child_name':child.name,'age_months':age_months,'games':games,'radar_data':radar_data,'summary':summary,'ai_analysis':ai_analysis}}),200

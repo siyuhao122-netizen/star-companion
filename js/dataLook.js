@@ -8,7 +8,8 @@
     const gameMeta = {
         name: { title: '叫名反应', insight: '平均反应时间缩短0.3s', encourage: '宝贝最近叫名反应越来越快！比上周进步12% ✨', analysisDesc: '反应速度提升27%，社交回应频率显著增加，建议每日保持训练。' },
         point: { title: '指物练习', insight: '主动指认准确率提升15%', encourage: '指物练习正确率稳步提高，共同注意能力明显增强！', analysisDesc: '主动指认正确率提升至75%，共同注意能力增强，可加入更多物品指认。' },
-        mic: { title: '声音小话筒', insight: '发声频率提升42%', encourage: '声音模仿越来越积极，语言意愿明显增强！', analysisDesc: '发声频率与模仿意愿上升，58.3%正确率，多玩声音模仿游戏促进语言。' }
+        mic: { title: '声音小话筒', insight: '发声频率提升42%', encourage: '声音模仿越来越积极，语言意愿明显增强！', analysisDesc: '发声频率与模仿意愿上升，58.3%正确率，多玩声音模仿游戏促进语言。' },
+        emotion: { title: '情绪识别', insight: '情绪认知能力逐步建立', encourage: '宝贝开始理解他人情绪了，共情能力正在萌芽！', analysisDesc: '通过情景故事识别情绪，帮助孩子理解他人感受，是社交发展的重要基础。' }
     };
 
     let currentCount = 7;
@@ -261,11 +262,17 @@ function updateAnalysisForName(records) {
             micCard.removeEventListener('click', handleMicCardClick);
             micCard.addEventListener('click', handleMicCardClick);
         }
+        const emotionCard = document.querySelector('.metric-card[data-game="emotion"]');
+        if (emotionCard) {
+            emotionCard.removeEventListener('click', handleEmotionCardClick);
+            emotionCard.addEventListener('click', handleEmotionCardClick);
+        }
     }
 
     function handleNameCardClick() { switchGame('name'); }
     function handlePointCardClick() { switchGame('point'); }
     function handleMicCardClick() { switchGame('mic'); }
+    function handleEmotionCardClick() { switchGame('emotion'); }
 
     // ========== 加载孩子列表 ==========
     async function loadChildren() {
@@ -400,6 +407,8 @@ function updateAnalysisForName(records) {
             loadNameReactionData(currentCount);
         } else if (game === 'mic') {
             loadVoiceGameData(currentCount);
+        } else if (game === 'emotion') {
+            loadEmotionGameData(currentCount);
         }
         
         setTimeout(bindGameCardClick, 100);
@@ -1368,6 +1377,15 @@ window.showMicDetail = showMicDetail;
 
     async function exportPDF() {
         const panel = document.getElementById('exportPanel');
+        // 跳转到综合评估报告页面
+        const checked = [...panel.querySelectorAll('.checkbox-item.checked')].map(i => i.dataset.module);
+        const games = checked.filter(m => m !== 'overview').join(',') || 'name,point,mic,emotion';
+        window.open(`reportExport.html?childId=${currentChildId}&games=${games}`, '_blank');
+        panel.classList.remove('show');
+        document.getElementById('overlay').classList.remove('show');
+        return;
+
+        // 旧 PDF 直接生成代码已移除，改为跳转 reportExport.html
         const checkedItems = panel.querySelectorAll('.checkbox-item.checked');
         if (checkedItems.length === 0) { showToast('请至少选择一个模块'); return; }
 
@@ -1520,11 +1538,56 @@ window.showMicDetail = showMicDetail;
         }
     }
 
+    function updateEmotionMetrics() {
+        const recs = emotionGameRecords;
+        if (!recs || recs.length === 0) {
+            document.getElementById('metricEmotion').textContent = '—';
+            document.getElementById('trendEmotion').innerHTML = '<i class="fas fa-minus"></i> 暂无数据';
+            return;
+        }
+        const latest = recs[0].accuracy || 0;
+        document.getElementById('metricEmotion').textContent = latest + '%';
+        if (recs.length >= 2) {
+            const prevAvg = recs.slice(1).reduce((s, r) => s + (r.accuracy || 0), 0) / (recs.length - 1);
+            const diff = latest - prevAvg;
+            document.getElementById('trendEmotion').innerHTML = diff >= 0
+                ? `<i class="fas fa-arrow-up" style="color:#7CB342;"></i> +${diff.toFixed(1)}%`
+                : `<i class="fas fa-arrow-down" style="color:#D4A0A0;"></i> ${diff.toFixed(1)}%`;
+        } else {
+            document.getElementById('trendEmotion').innerHTML = '<i class="fas fa-minus"></i> 首次训练';
+        }
+    }
+
+    function updateEmotionGameCard() {
+        const recs = emotionGameRecords;
+        const container = document.getElementById('emotionHistoryList');
+        const statsEl = document.getElementById('emotionStats');
+        const encourageEl = document.querySelector('#emotionCard .game-encourage');
+        if (!recs || recs.length === 0) {
+            if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#B89A78;">暂无训练记录</div>';
+            if (statsEl) statsEl.innerHTML = '<div class="game-rate">—</div><div class="game-compare">暂无数据</div>';
+            if (encourageEl) encourageEl.innerHTML = '<i class="fas fa-face-smile"></i> 完成首次训练后查看分析';
+            return;
+        }
+        const latest = recs[0];
+        const rate = latest.accuracy || 0;
+        if (statsEl) statsEl.innerHTML = `<div class="game-rate">${rate}%</div><div class="game-compare">${recs.length}次训练</div>`;
+        if (container) {
+            container.innerHTML = recs.slice(0,7).map(r => `
+                <div class="history-item"><span class="history-date">${r.session_date || ''}</span>
+                <span class="history-rate">正确率：${r.correct_count}/${r.round_total} (${r.accuracy || 0}%)</span></div>
+            `).join('');
+        }
+        if (encourageEl) encourageEl.innerHTML = `<i class="fas fa-face-smile"></i> ${gameMeta.emotion.encourage}`;
+    }
+
     async function loadEmotionGameData(count) {
         try {
             const resp = await fetch(`${API_BASE}/emotion-game-ai/records/${currentChildId}?limit=${count}`);
             const d = await resp.json();
             if (d.success) { emotionGameRecords = d.data.records || []; }
+            updateEmotionMetrics();
+            updateEmotionGameCard();
         } catch (e) { emotionGameRecords = []; }
     }
 

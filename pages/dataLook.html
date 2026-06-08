@@ -100,6 +100,10 @@
                   <i class="far fa-check-square"></i>
                   <span>声音小话筒 · 分析与记录</span>
                 </div>
+                <div class="checkbox-item checked" data-module="emotion">
+                  <i class="far fa-check-square"></i>
+                  <span>情绪识别 · 分析与记录</span>
+                </div>
               </div>
               <button class="confirm-btn" id="confirmExportBtn">
                 <i class="fas fa-download"></i> 确认导出
@@ -129,6 +133,12 @@
           <div class="metric-label">声音小话筒正确率</div>
           <span class="trend" id="trendMic">—</span>
         </div>
+        <div class="metric-card" data-game="emotion">
+          <div class="metric-icon"><i class="fas fa-face-laugh-wink"></i></div>
+          <div class="metric-value" id="metricEmotion">—</div>
+          <div class="metric-label">情绪识别正确率</div>
+          <span class="trend" id="trendEmotion">—</span>
+        </div>
       </div>
 
       <!-- 智能分析板块 -->
@@ -141,6 +151,7 @@
           <div class="tab-btn" data-analysis="name"><i class="fas fa-ear-deaf"></i> 叫名反应</div>
           <div class="tab-btn" data-analysis="point"><i class="fas fa-hand-peace"></i> 指物练习</div>
           <div class="tab-btn" data-analysis="mic"><i class="fas fa-microphone-alt"></i> 声音小话筒</div>
+          <div class="tab-btn" data-analysis="emotion"><i class="fas fa-face-laugh-wink"></i> 情绪识别</div>
         </div>
         <div class="analysis-preview">
           <div class="preview-content">
@@ -162,6 +173,7 @@
             <button class="chart-switch-btn" data-chart="name">叫名反应</button>
             <button class="chart-switch-btn" data-chart="point">指物练习</button>
             <button class="chart-switch-btn" data-chart="mic">声音小话筒</button>
+            <button class="chart-switch-btn" data-chart="emotion">情绪识别</button>
           </div>
           <div class="chart-insight" id="chartInsight"><i class="fas fa-brain"></i> 正在加载...</div>
         </div>
@@ -234,6 +246,28 @@
               <div style="text-align:center; padding:20px; color:#B89A78;">加载中...</div>
             </div>
             <div class="game-encourage"><i class="fas fa-volume-up"></i>加载中...</div>
+          </div>
+        </div>
+
+        <!-- 情绪识别卡片 -->
+        <div class="game-card">
+          <div class="game-header" onclick="toggleGameCard('emotionCard')">
+            <div class="game-icon"><i class="fas fa-face-laugh-wink"></i></div>
+            <div class="game-info">
+              <div class="game-title">情绪识别 · 共情启蒙</div>
+              <div class="game-sub">听故事·猜心情</div>
+            </div>
+            <div class="game-stats" id="emotionStats">
+              <div class="game-rate">—</div>
+              <div class="game-compare">加载中...</div>
+            </div>
+            <i class="fas fa-chevron-down" id="emotionCardIcon"></i>
+          </div>
+          <div id="emotionCard" class="game-body">
+            <div class="history-list" id="emotionHistoryList">
+              <div style="text-align:center; padding:20px; color:#B89A78;">加载中...</div>
+            </div>
+            <div class="game-encourage"><i class="fas fa-face-smile"></i>加载中...</div>
           </div>
         </div>
       </div>
