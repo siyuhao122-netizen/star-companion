@@ -410,8 +410,8 @@ function updateAnalysisForName(records) {
         } else if (game === 'mic') {
             loadVoiceGameData(currentCount);
         } else if (game === 'emotion') {
+            document.getElementById('analysisDesc').textContent = '—';
             loadEmotionGameData(currentCount, true);
-            document.getElementById('analysisDesc').textContent = gameMeta.emotion.analysisDesc;
         }
         
         setTimeout(bindGameCardClick, 100);
@@ -1157,8 +1157,8 @@ async function loadNameReactionData(count) {
         });
     }
 
-    function toggleChildDropdown(e) { e.stopPropagation(); childDropdown.classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
-    function toggleFilterDropdown(e) { e.stopPropagation(); document.getElementById('dropdownMenu').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
+    function toggleChildDropdown(e) { e.stopPropagation(); const wasOpen = childDropdown.classList.contains('show'); closeAllDropdowns(); if (!wasOpen) { childDropdown.classList.add('show'); document.getElementById('overlay').classList.add('show'); } }
+    function toggleFilterDropdown(e) { e.stopPropagation(); const wasOpen = document.getElementById('dropdownMenu').classList.contains('show'); closeAllDropdowns(); if (!wasOpen) { document.getElementById('dropdownMenu').classList.add('show'); document.getElementById('overlay').classList.add('show'); } }
     function closeAllDropdowns() { childDropdown.classList.remove('show'); document.getElementById('dropdownMenu').classList.remove('show'); document.getElementById('exportPanel').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
 
     function goToFullAnalysis(gameType) {

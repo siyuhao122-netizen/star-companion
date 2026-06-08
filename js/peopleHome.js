@@ -1213,15 +1213,15 @@
     }
 
     async function handleNotifClick(type, relatedId, notifId) {
-        // 标记已读
         await fetch(`${API_BASE}/auth/notifications/mark-read`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: notifId })
         });
-        // 跳转
         if (type.startsWith('treehole')) {
             location.href = 'seniorHole.html';
+        } else if (type.startsWith('system_report')) {
+            location.href = `dataLook.html?game=point`;
         } else if (type.startsWith('system')) {
             location.href = 'dataLook.html';
         }

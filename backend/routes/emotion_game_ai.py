@@ -104,6 +104,16 @@ def single_analysis():
         db.session.commit()
 
     save_token_usage('emotion_single', record_id, child_id, Config.BAILIAN_MODEL, usage)
+
+    # 通知用户
+    from models import User as _User
+    _u = _User.query.get(child.user_id)
+    if _u:
+        create_notification(_u.id, 'system_report',
+            f'{child.name}的情绪识别分析已生成',
+            f'本次正确率：{accuracy:.0f}%，点击查看详情',
+            related_id=record_id)
+
     return jsonify({'success': True, 'data': {'ai_analysis': ai_analysis, 'from_cache': False}}), 200
 
 

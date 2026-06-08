@@ -144,18 +144,25 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             img = cnTextToImage(`${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}`, 10, '#FFFFFF', CW);
             pdf.addImage(img.dataUrl,'PNG',M,y-4,Math.min(CW,img.w/3.78),img.h); y += 8;
 
-            // ===== 核心指标概览（与网页一致：卡片式布局） =====
-            pdf.setDrawColor(237, 217, 198); pdf.setLineWidth(0.5);
-            pdf.roundedRect(M, y, CW, 32, 3, 3, 'S');
-            img = cnTextToImage('📊 核心指标概览', 11, '#4D3724', CW);
-            pdf.addImage(img.dataUrl,'PNG',M+4,y+3,CW-8,img.h); y += 10;
+            // ===== 核心指标概览（卡片式 2x2 布局，与网页一致） =====
+            img = cnTextToImage('📊 核心指标概览', 13, '#4D3724', CW);
+            pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h); y += img.h + 4;
+            const cardW = CW/2 - 4, cardH = 20;
             glist.forEach((g,i) => {
                 const val = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
+                const col = i % 2, row = Math.floor(i / 2);
+                const cx = M + col * (cardW + 4), cy = y + row * (cardH + 4);
                 const rateColor = val >= 80 ? '#7CB342' : (val >= 50 ? '#D9A066' : '#D4A0A0');
-                img = cnTextToImage(`  ${gameLabels[g]||g}: ${val}%`, 9, rateColor, CW-8);
-                pdf.addImage(img.dataUrl,'PNG',M+4,y,CW-8,img.h); y += img.h + 1;
+                pdf.setFillColor(255, 252, 245);
+                pdf.setDrawColor(237, 217, 198);
+                pdf.setLineWidth(0.3);
+                pdf.roundedRect(cx, cy, cardW, cardH, 4, 4, 'FD');
+                img = cnTextToImage(`${gameLabels[g]||g}`, 9, '#8F7A64', cardW-4);
+                pdf.addImage(img.dataUrl,'PNG',cx+3,cy+2,cardW-4,img.h);
+                img = cnTextToImage(`${val}%`, 16, rateColor, cardW-4);
+                pdf.addImage(img.dataUrl,'PNG',cx+3,cy+7,cardW-4,img.h);
             });
-            y += 4;
+            y += Math.ceil(glist.length/2) * (cardH+4) + 8;
 
             // ===== 雷达图（把网页上的 Chart.js 雷达图 Canvas 截图嵌入） =====
             const radarCanvas = document.getElementById('radarChart');
@@ -176,12 +183,16 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             pdf.setDrawColor(237, 217, 198);
             img = cnTextToImage('🤖 AI 综合评估分析', 11, '#4D3724', CW);
             const analysis = data.ai_analysis || '暂无分析数据';
-            const lines = analysis.replace(/\*\*/g,'').split('\n').filter(l=>l.trim());
+            // 保留 ** 加粗标记，在渲染时用不同颜色/字号区分
+            const lines = analysis.split('\n').filter(l=>l.trim());
             const estH = Math.min(lines.length*8 + 20, 150);
             pdf.roundedRect(M, y, CW, estH, 3, 3, 'S');
             pdf.addImage(img.dataUrl,'PNG',M+4,y+3,CW-8,img.h); y += 10;
             lines.forEach(l => {
-                img = cnTextToImage(l.trim(), 8, '#4D3724', CW-8);
+                let text = l.trim();
+                const isBold = text.startsWith('**') && text.includes('**', 2);
+                if (isBold) text = text.replace(/\*\*/g, '');
+                img = cnTextToImage(text, isBold ? 10 : 8, isBold ? '#5E422C' : '#4D3724', CW-8);
                 if (y + img.h > 275) { pdf.addPage(); y = 15; }
                 pdf.addImage(img.dataUrl,'PNG',M+4,y,CW-8,img.h); y += img.h + 2;
             });
