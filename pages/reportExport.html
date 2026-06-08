@@ -1,41 +1,63 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>星伴 · 综合评估报告</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justify-content:center;padding:20px}
-    .report-container{max-width:800px;width:100%}
-    .report-header{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border-radius:16px;padding:24px;text-align:center;margin-bottom:20px}
-    .report-header h1{font-size:22px;margin-bottom:6px}
-    .report-header p{font-size:13px;opacity:0.9}
-    .section{background:#FFFEFC;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
-    .section-title{font-size:16px;font-weight:700;color:#4D3724;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-    .section-title i{color:#D9A066}
-    .metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-    .metric-item{background:#FFFCF5;border-radius:12px;padding:14px;text-align:center;border:1px solid #EDD9C6}
-    .metric-item .label{font-size:12px;color:#8F7A64}
-    .metric-item .value{font-size:26px;font-weight:700;color:#D9A066;margin:4px 0}
-    .radar-box{display:flex;justify-content:center;max-height:320px}
-    .radar-box canvas{max-height:300px}
-    .ai-text{font-size:14px;color:#4D3724;line-height:1.8}
-    .action-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-    .btn{padding:12px 28px;border-radius:24px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
-    .btn-primary{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF}
-    .btn-secondary{background:#F5EDE4;color:#5E422C;border:1.5px solid #D4C4B0}
-    .loading{text-align:center;padding:40px;color:#B89A78}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星伴 · 综合评估报告</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justify-content:center;padding:20px}
+.report-container{max-width:800px;width:100%}
+.report-header{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border-radius:16px;padding:24px;text-align:center;margin-bottom:20px}
+.report-header h1{font-size:22px;margin-bottom:6px}
+.report-header p{font-size:13px;opacity:0.9}
+.section{background:#FFFEFC;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.section-title{font-size:16px;font-weight:700;color:#4D3724;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title i{color:#D9A066}
+.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.metric-item{background:#FFFCF5;border-radius:12px;padding:14px;text-align:center;border:1px solid #EDD9C6}
+.metric-item .label{font-size:12px;color:#8F7A64}
+.metric-item .value{font-size:26px;font-weight:700;color:#D9A066;margin:4px 0}
+.radar-box{display:flex;justify-content:center;max-height:320px}
+.radar-box canvas{max-height:300px}
+.ai-text{font-size:14px;color:#4D3724;line-height:1.8}
+.action-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.btn{padding:12px 28px;border-radius:24px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF}
+.btn-secondary{background:#F5EDE4;color:#5E422C;border:1.5px solid #D4C4B0}
+.loading{text-align:center;padding:40px;color:#B89A78}
+.error-box{text-align:center;padding:40px;color:#C06060}
+
+/* 分享弹窗 */
+.share-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:9999}
+.share-overlay.show{display:flex}
+.share-modal{background:#FFFEFC;border-radius:20px;padding:28px;width:420px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.2)}
+.share-modal h3{font-size:18px;color:#4D3724;margin-bottom:16px}
+.share-url-box{background:#F5EDE4;border-radius:10px;padding:12px 16px;font-size:13px;color:#6B5A4A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:16px;text-align:left}
+.share-actions{display:flex;gap:10px;justify-content:center}
+.copy-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#5E422C;color:#FFF;padding:10px 24px;border-radius:20px;font-size:14px;z-index:99999;display:none}
+</style>
 </head>
 <body>
 <div class="report-container" id="reportContainer">
   <div class="loading" id="loadingArea"><i class="fas fa-spinner fa-spin"></i> 正在生成综合评估报告...</div>
 </div>
+
+<div class="share-overlay" id="shareOverlay">
+  <div class="share-modal">
+    <h3><i class="fas fa-share-alt"></i> 分享链接</h3>
+    <div class="share-url-box" id="shareUrlBox"></div>
+    <div class="share-actions">
+      <button class="btn btn-primary" id="copyShareBtn"><i class="fas fa-copy"></i> 复制链接</button>
+      <button class="btn btn-secondary" id="closeShareBtn">关闭</button>
+    </div>
+  </div>
+</div>
+<div class="copy-toast" id="copyToast"><i class="fas fa-check"></i> 已复制到剪贴板</div>
 
 <script>
 (async function(){
@@ -43,7 +65,7 @@
     const params = new URLSearchParams(window.location.search);
     const childId = params.get('childId');
     const games = params.get('games') || 'name,point,mic,emotion';
-    if (!childId) { document.getElementById('loadingArea').innerHTML='<p style=color:#C06060>缺少孩子ID参数</p>'; return; }
+    if (!childId) { document.getElementById('loadingArea').innerHTML='<div class=error-box><i class="fas fa-exclamation-circle"></i><p>缺少孩子ID参数，请从数据看板进入</p></div>'; return; }
 
     try {
         const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${childId}?games=${games}`);
@@ -54,96 +76,93 @@
         const gameLabels = { name:'叫名反应', point:'指物练习', mic:'声音小话筒', emotion:'情绪识别' };
         const gameIcons = { name:'fa-ear-deaf', point:'fa-hand-peace', mic:'fa-microphone-alt', emotion:'fa-face-laugh-wink' };
 
-        // 构建页面
-        let html = `
-          <div class="report-header">
-            <h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1>
-            <p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p>
-          </div>
-
-          <div class="section">
-            <div class="section-title"><i class="fas fa-chart-bar"></i> 核心指标概览</div>
-            <div class="metric-row">
-        `;
-        const glist = games.split(',');
+        let html = `<div class="report-header"><h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1><p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p></div>
+          <div class="section"><div class="section-title"><i class="fas fa-chart-bar"></i> 核心指标概览</div><div class="metric-row">`;
+        const glist = (data.games || games.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
         glist.forEach((g,i) => {
-            const rate = data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
+            const rate = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
             html += `<div class="metric-item"><div class="label"><i class="fas ${gameIcons[g]||'fa-star'}"></i> ${gameLabels[g]||g}</div><div class="value">${rate}%</div></div>`;
         });
         html += `</div></div>
-
-          <div class="section">
-            <div class="section-title"><i class="fas fa-compass"></i> 能力雷达图</div>
-            <div class="radar-box"><canvas id="radarChart"></canvas></div>
-          </div>
-
-          <div class="section">
-            <div class="section-title"><i class="fas fa-robot"></i> AI 综合评估分析</div>
-            <div class="ai-text">${data.ai_analysis || '暂无分析数据'}</div>
-          </div>
-
+          <div class="section"><div class="section-title"><i class="fas fa-compass"></i> 能力雷达图</div><div class="radar-box"><canvas id="radarChart"></canvas></div></div>
+          <div class="section"><div class="section-title"><i class="fas fa-robot"></i> AI 综合评估分析</div><div class="ai-text">${data.ai_analysis || '暂无分析数据'}</div></div>
           <div class="action-bar">
             <button class="btn btn-primary" id="downloadBtn"><i class="fas fa-download"></i> 下载 PDF</button>
             <button class="btn btn-secondary" id="shareBtn"><i class="fas fa-share-alt"></i> 生成分享链接</button>
             <button class="btn btn-secondary" onclick="location.href='dataLook.html'"><i class="fas fa-arrow-left"></i> 返回</button>
           </div>`;
-
         document.getElementById('reportContainer').innerHTML = html;
 
         // 雷达图
         const ctx = document.getElementById('radarChart')?.getContext('2d');
         if (ctx) {
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: glist.map(g => gameLabels[g] || g),
-                    datasets: [{
-                        label: '正确率 (%)',
-                        data: data.radar_data,
-                        backgroundColor: 'rgba(217,160,102,0.2)',
-                        borderColor: '#D9A066',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#C88B4A'
-                    }]
-                },
-                options: {
-                    scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
-                    plugins: { legend: { display: false } }
-                }
-            });
+            const radarValues = data.radar_data && data.radar_data.length ? data.radar_data : glist.map(() => 0);
+            new Chart(ctx, { type:'radar', data:{ labels:glist.map(g=>gameLabels[g]||g), datasets:[{ label:'正确率 (%)', data:radarValues, backgroundColor:'rgba(217,160,102,0.2)', borderColor:'#D9A066', borderWidth:2, pointBackgroundColor:'#C88B4A' }] }, options:{ scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:20} } }, plugins:{ legend:{display:false} } } });
         }
 
-        // 下载 PDF
+        // Canvas 渲染中文 → PDF
+        const cnCanvas = document.createElement('canvas');
+        const cnCtx = cnCanvas.getContext('2d');
+        function cnTextToLine(text, fs) {
+            cnCtx.font = `${fs}px "Noto Sans SC","Microsoft YaHei",sans-serif`;
+            cnCanvas.width = cnCtx.measureText(text).width + 8;
+            cnCanvas.height = fs * 1.6;
+            cnCtx.font = `${fs}px "Noto Sans SC","Microsoft YaHei",sans-serif`;
+            cnCtx.fillStyle = '#4D3724';
+            cnCtx.textBaseline = 'top';
+            cnCtx.fillText(text, 4, 4);
+            return cnCanvas.toDataURL('image/png');
+        }
+
         document.getElementById('downloadBtn').addEventListener('click', () => {
-            if (!window.jspdf?.jsPDF) { alert('PDF库加载失败'); return; }
+            if (!window.jspdf?.jsPDF) { alert('PDF库加载失败，请检查网络'); return; }
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p','mm','a4');
-            pdf.setFontSize(18);
-            pdf.text('星伴 · 综合评估报告', 15, 20);
-            pdf.setFontSize(12);
-            pdf.text(`${data.child_name} · ${data.age_months}个月`, 15, 30);
-            glist.forEach((g,i) => {
-                pdf.text(`${gameLabels[g]||g}: ${data.radar_data[i]||0}%`, 15, 38 + i*7);
+            const M=15, PW=pdf.internal.pageSize.getWidth();
+            let y=20;
+
+            // 标题
+            const titleImg = cnTextToLine('星伴 · 综合评估报告', 18);
+            const titleW = Math.min((cnCanvas.width/3.78), PW-2*M);
+            pdf.addImage(titleImg,'PNG',M,y,titleW,9); y+=14;
+
+            // 孩子信息
+            const infoImg = cnTextToLine(`${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}`, 11);
+            pdf.addImage(infoImg,'PNG',M,y,PW-2*M,6); y+=10;
+
+            // 核心指标
+            glist.forEach((g,i)=>{
+                const val = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
+                const txt = cnTextToLine(`${gameLabels[g]||g}: ${val}%`, 11);
+                pdf.addImage(txt,'PNG',M,y,PW-2*M,6); y+=8;
             });
-            const y = 38 + glist.length*7 + 5;
-            pdf.setFontSize(10);
-            const lines = pdf.splitTextToSize(data.ai_analysis || '', 180);
-            pdf.text(lines, 15, y);
+            y+=4;
+
+            // AI分析
+            const analysis = data.ai_analysis || '暂无分析数据';
+            const chunks = analysis.match(/.{1,60}/g) || [analysis];
+            chunks.forEach(c => {
+                const aImg = cnTextToLine(c, 10);
+                pdf.addImage(aImg,'PNG',M,y,PW-2*M,5); y+=7;
+            });
+
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
         });
 
-        // 分享链接
-        document.getElementById('shareBtn').addEventListener('click', () => {
-            const url = `${location.origin}${location.pathname}?childId=${childId}&games=${games}`;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => alert('链接已复制到剪贴板'));
-            } else {
-                prompt('复制此链接分享:', url);
-            }
+        // 分享弹窗
+        const shareUrl = `${location.origin}${location.pathname}?childId=${childId}&games=${glist.join(',')}`;
+        document.getElementById('shareUrlBox').textContent = shareUrl;
+        document.getElementById('shareBtn').addEventListener('click', () => document.getElementById('shareOverlay').classList.add('show'));
+        document.getElementById('closeShareBtn').addEventListener('click', () => document.getElementById('shareOverlay').classList.remove('show'));
+        document.getElementById('copyShareBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(shareUrl).then(()=>{
+                const t = document.getElementById('copyToast');
+                t.style.display='block'; setTimeout(()=>t.style.display='none',2000);
+            });
         });
 
     } catch(e) {
-        document.getElementById('reportContainer').innerHTML = `<div class=loading><p style=color:#C06060>加载失败: ${e.message}</p></div>`;
+        document.getElementById('reportContainer').innerHTML = `<div class=error-box><i class="fas fa-exclamation-triangle"></i><p>加载失败: ${e.message}</p><button class="btn btn-secondary" onclick="location.href='dataLook.html'">返回数据看板</button></div>`;
     }
 })();
 </script>
