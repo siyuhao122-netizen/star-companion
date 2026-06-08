@@ -419,9 +419,7 @@ function updateAnalysisForName(records) {
 
     // ========== 核心：加载指物练习数据 ==========
     async function loadPointGameData(count, callAI = false) {
-        if (!currentChildId || isLoading) return;
-        
-        isLoading = true;
+        if (!currentChildId) return;
         
         try {
             const endpoint = callAI 
@@ -464,8 +462,6 @@ function updateAnalysisForName(records) {
         } catch (error) {
             console.error('加载指物练习数据失败:', error);
         }
-        
-        isLoading = false;
     }
 
     // ========== 更新指物练习指标卡片 ==========
@@ -1567,19 +1563,21 @@ window.showMicDetail = showMicDetail;
         const statsEl = document.getElementById('emotionStats');
         const encourageEl = document.querySelector('#emotionCard .game-encourage');
         if (!recs || recs.length === 0) {
-            if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#B89A78;">暂无训练记录</div>';
-            if (statsEl) statsEl.innerHTML = '<div class="game-rate">—</div><div class="game-compare">暂无数据</div>';
+            if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#B89A78;"><i class="fas fa-clipboard-list" style="font-size:32px;margin-bottom:8px;"></i><p>还没有训练记录</p></div>';
+            if (statsEl) statsEl.innerHTML = '<div class="game-rate">暂无数据</div><div class="game-compare">完成训练后显示</div>';
             if (encourageEl) encourageEl.innerHTML = '<i class="fas fa-face-smile"></i> 完成首次训练后查看分析';
             return;
         }
         const latest = recs[0];
-        const rate = latest.accuracy || 0;
-        if (statsEl) statsEl.innerHTML = `<div class="game-rate">${rate}%</div><div class="game-compare">${recs.length}次训练</div>`;
+        const latestRate = latest.accuracy || 0;
+        if (statsEl) statsEl.innerHTML = `<div class="game-rate">${latest.correct_count || 0}/${latest.round_total || 0} (${latestRate}%)</div><div class="game-compare">${recs.length}次训练</div>`;
         if (container) {
             container.innerHTML = recs.slice(0,7).map(r => `
-                <div class="history-item">
-                    <span class="history-date">${r.session_date || ''}</span>
+                <div class="history-row">
+                    <span class="history-date"><i class="far fa-calendar-alt"></i> ${r.session_date || ''}</span>
                     <span class="history-rate">正确率：${r.correct_count || 0}/${r.round_total || 0} (${r.accuracy || 0}%)</span>
+                    <span class="history-detail">共 ${r.round_total || 0} 轮 · 答对 ${r.correct_count || 0} 轮</span>
+                    <button class="detail-btn" data-game="emotion" data-record-id="${r.id}"><i class="fas fa-chart-simple"></i> 详情</button>
                 </div>
             `).join('');
         }
