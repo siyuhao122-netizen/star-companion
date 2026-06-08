@@ -374,11 +374,12 @@ function updateAnalysisForName(records) {
             updateCurrentChildDisplay();
             renderChildList();
             
-            // ✅ 切换后加载三种数据
+            // ✅ 切换后加载四种数据
             await Promise.all([
                 loadPointGameData(currentCount, false),
                 loadNameReactionData(currentCount),
-                loadVoiceGameData(currentCount)
+                loadVoiceGameData(currentCount),
+                loadEmotionGameData(currentCount)
             ]);
             
             const child = childrenData.find(c => c.id === childId);
@@ -409,7 +410,8 @@ function updateAnalysisForName(records) {
         } else if (game === 'mic') {
             loadVoiceGameData(currentCount);
         } else if (game === 'emotion') {
-            loadEmotionGameData(currentCount);
+            loadEmotionGameData(currentCount, true);
+            document.getElementById('analysisDesc').textContent = gameMeta.emotion.analysisDesc;
         }
         
         setTimeout(bindGameCardClick, 100);
@@ -1575,23 +1577,48 @@ window.showMicDetail = showMicDetail;
         if (statsEl) statsEl.innerHTML = `<div class="game-rate">${rate}%</div><div class="game-compare">${recs.length}次训练</div>`;
         if (container) {
             container.innerHTML = recs.slice(0,7).map(r => `
-                <div class="history-item"><span class="history-date">${r.session_date || ''}</span>
-                <span class="history-rate">正确率：${r.correct_count}/${r.round_total} (${r.accuracy || 0}%)</span></div>
+                <div class="history-item">
+                    <span class="history-date">${r.session_date || ''}</span>
+                    <span class="history-rate">正确率：${r.correct_count || 0}/${r.round_total || 0} (${r.accuracy || 0}%)</span>
+                </div>
             `).join('');
         }
         if (encourageEl) encourageEl.innerHTML = `<i class="fas fa-face-smile"></i> ${gameMeta.emotion.encourage}`;
+    }
+
+    function showEmptyEmotionData() {
+        document.getElementById('metricEmotion').textContent = '—';
+        document.getElementById('trendEmotion').innerHTML = '<i class="fas fa-minus"></i> 暂无数据';
+    }
+
+    function renderEmotionTrendChart(records) {
+        if (trendChart) trendChart.destroy();
+        if (!records || records.length === 0) {
+            trendChart = new Chart(ctx, { type:'line', data:{ labels:['暂无数据'], datasets:[{ label:'正确率 (%)', data:[0], borderColor:'#D9A066', backgroundColor:'#D9A06620', tension:0.3, fill:true }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false} }, scales:{ y:{ min:0, max:100, grid:{color:'#F0E6DC'} }, x:{ grid:{display:false} } } } });
+            return;
+        }
+        const reversed = [...records].reverse();
+        const labels = reversed.map((r,i) => `第${i+1}次`);
+        const rates = reversed.map(r => r.accuracy || 0);
+        trendChart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'正确率 (%)', data:rates, borderColor:'#D9A066', backgroundColor:'#D9A06620', tension:0.3, fill:true, pointBackgroundColor:'#C88B4A' }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false} }, scales:{ y:{ min:0, max:100, grid:{color:'#F0E6DC'} }, x:{ grid:{display:false} } } } });
     }
 
     async function loadEmotionGameData(count, render = true) {
         try {
             const resp = await fetch(`${API_BASE}/emotion-game-ai/records/${currentChildId}?limit=${count}`);
             const d = await resp.json();
-            if (d.success) { emotionGameRecords = d.data.records || []; }
-            if (render) {
-                updateEmotionMetrics();
-                updateEmotionGameCard();
+            if (d.success && d.data && d.data.records) {
+                emotionGameRecords = d.data.records || [];
+                if (render) {
+                    updateEmotionMetrics();
+                    updateEmotionGameCard();
+                    if (currentGame === 'emotion') renderEmotionTrendChart(emotionGameRecords);
+                }
+            } else {
+                emotionGameRecords = [];
+                showEmptyEmotionData();
             }
-        } catch (e) { emotionGameRecords = []; }
+        } catch (e) { emotionGameRecords = []; showEmptyEmotionData(); }
     }
 
     // 启动

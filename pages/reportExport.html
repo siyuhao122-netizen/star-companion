@@ -100,51 +100,85 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             new Chart(ctx, { type:'radar', data:{ labels:glist.map(g=>gameLabels[g]||g), datasets:[{ label:'正确率 (%)', data:radarValues, backgroundColor:'rgba(217,160,102,0.2)', borderColor:'#D9A066', borderWidth:2, pointBackgroundColor:'#C88B4A' }] }, options:{ scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:20} } }, plugins:{ legend:{display:false} } } });
         }
 
-        // Canvas 渲染中文 → PDF
+        // ======== Canvas 渲染中文文本块（高清） ========
         const cnCanvas = document.createElement('canvas');
         const cnCtx = cnCanvas.getContext('2d');
-        function cnTextToLine(text, fs) {
-            cnCtx.font = `${fs}px "Noto Sans SC","Microsoft YaHei",sans-serif`;
-            cnCanvas.width = cnCtx.measureText(text).width + 8;
-            cnCanvas.height = fs * 1.6;
-            cnCtx.font = `${fs}px "Noto Sans SC","Microsoft YaHei",sans-serif`;
-            cnCtx.fillStyle = '#4D3724';
+        const SCALE = 3;
+        const FONT = '"Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif';
+
+        function cnTextToImage(text, fontSize, color, maxWidthPx) {
+            const fs = fontSize * SCALE;
+            cnCtx.font = `${fs}px ${FONT}`;
+            const words = text.split('');
+            const lines = [];
+            let cur = '';
+            for (const ch of words) {
+                const test = cur + ch;
+                if (cnCtx.measureText(test).width > maxWidthPx * SCALE && cur.length > 0) { lines.push(cur); cur = ch; }
+                else { cur = test; }
+            }
+            if (cur) lines.push(cur);
+            const lineH = fs * 1.5;
+            const totalH = lineH * lines.length || 1;
+            cnCanvas.width = maxWidthPx * SCALE;
+            cnCanvas.height = totalH;
+            cnCtx.font = `${fs}px ${FONT}`;
+            cnCtx.fillStyle = color || '#4D3724';
             cnCtx.textBaseline = 'top';
-            cnCtx.fillText(text, 4, 4);
-            return cnCanvas.toDataURL('image/png');
+            lines.forEach((l, i) => cnCtx.fillText(l, 0, i * lineH));
+            return { dataUrl: cnCanvas.toDataURL('image/png'), w: maxWidthPx, h: totalH / SCALE * 0.264583 };
         }
 
-        document.getElementById('downloadBtn').addEventListener('click', () => {
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
             if (!window.jspdf?.jsPDF) { alert('PDF库加载失败，请检查网络'); return; }
+            // 等待字体加载完成
+            await document.fonts.ready;
+
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p','mm','a4');
-            const M=15, PW=pdf.internal.pageSize.getWidth();
-            let y=20;
+            const PW = pdf.internal.pageSize.getWidth(), M = 15, CW = PW - 2*M;
+            let y = 20;
 
-            // 标题
-            const titleImg = cnTextToLine('星伴 · 综合评估报告', 18);
-            const titleW = Math.min((cnCanvas.width/3.78), PW-2*M);
-            pdf.addImage(titleImg,'PNG',M,y,titleW,9); y+=14;
+            // 标题栏
+            pdf.setFillColor(77,55,36); pdf.rect(0,0,PW,20,'F');
+            let img = cnTextToImage('星伴 · 综合评估报告', 14, '#FFFFFF', CW);
+            pdf.addImage(img.dataUrl,'PNG',M,6,CW,img.h); y = 26;
 
             // 孩子信息
-            const infoImg = cnTextToLine(`${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}`, 11);
-            pdf.addImage(infoImg,'PNG',M,y,PW-2*M,6); y+=10;
+            img = cnTextToImage(`${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}`, 11, '#4D3724', CW);
+            pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h); y += img.h + 6;
 
-            // 核心指标
-            glist.forEach((g,i)=>{
+            // 核心指标概览
+            pdf.setFillColor(249,242,235); pdf.rect(M,y-4,CW,8,'F');
+            img = cnTextToImage('核心指标概览', 11, '#6B5A4A', CW);
+            pdf.addImage(img.dataUrl,'PNG',M+2,y-2,CW,img.h); y += 10;
+
+            glist.forEach((g,i) => {
                 const val = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
-                const txt = cnTextToLine(`${gameLabels[g]||g}: ${val}%`, 11);
-                pdf.addImage(txt,'PNG',M,y,PW-2*M,6); y+=8;
+                const rateColor = val >= 80 ? '#7CB342' : (val >= 50 ? '#D9A066' : '#D4A0A0');
+                img = cnTextToImage(`${gameLabels[g]||g}: ${val}%`, 10, rateColor, CW);
+                pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h); y += img.h + 2;
             });
-            y+=4;
+            y += 6;
 
             // AI分析
+            pdf.setFillColor(249,242,235); pdf.rect(M,y-4,CW,8,'F');
+            img = cnTextToImage('AI 综合评估分析', 11, '#6B5A4A', CW);
+            pdf.addImage(img.dataUrl,'PNG',M+2,y-2,CW,img.h); y += 10;
+
             const analysis = data.ai_analysis || '暂无分析数据';
-            const chunks = analysis.match(/.{1,60}/g) || [analysis];
+            const chunks = analysis.match(/.{1,50}/g) || [analysis];
             chunks.forEach(c => {
-                const aImg = cnTextToLine(c, 10);
-                pdf.addImage(aImg,'PNG',M,y,PW-2*M,5); y+=7;
+                img = cnTextToImage(c, 9, '#4D3724', CW);
+                if (y + img.h > 275) { pdf.addPage(); y = 15; }
+                pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h); y += img.h + 4;
             });
+            y += 6;
+
+            // 声明
+            pdf.setDrawColor(207,162,118); pdf.line(M,y,PW-M,y); y+=4;
+            img = cnTextToImage('声明：本报告由星伴平台自动生成，仅供参考，不构成医疗诊断。', 8, '#A08C7A', CW);
+            pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h);
 
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
         });
