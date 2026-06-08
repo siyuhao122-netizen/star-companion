@@ -1380,7 +1380,7 @@ window.showMicDetail = showMicDetail;
         // 跳转到综合评估报告页面
         const checked = [...panel.querySelectorAll('.checkbox-item.checked')].map(i => i.dataset.module);
         const games = checked.filter(m => m !== 'overview').join(',') || 'name,point,mic,emotion';
-        window.open(`reportExport.html?childId=${currentChildId}&games=${games}`, '_blank');
+        location.href = `reportExport.html?childId=${currentChildId}&games=${games}`;
         panel.classList.remove('show');
         document.getElementById('overlay').classList.remove('show');
         return;

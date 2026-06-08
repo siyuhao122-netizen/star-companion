@@ -386,9 +386,15 @@ document.querySelectorAll('.delete-action').forEach(btn => {
 
     // ========== 匿名模式切换 ==========
     window.toggleAnonymousMode = function(checkbox) {
+        // 切换发布区勾选框旁边的文字
         const label = document.getElementById('anonymousLabel');
         if (label) {
             label.textContent = checkbox.checked ? '匿名模式已开启' : '匿名模式已关闭';
+        }
+        // 同步切换顶部 header 区的匿名状态徽章
+        const badge = document.querySelector('.anonymous-badge span');
+        if (badge) {
+            badge.textContent = checkbox.checked ? '匿名模式已开启' : '匿名模式已关闭';
         }
     };
 
