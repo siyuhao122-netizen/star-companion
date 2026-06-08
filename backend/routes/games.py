@@ -320,9 +320,15 @@ def get_home_recommendations(child_id):
         .order_by(EmotionGameRecord.id.desc()) \
         .first()
 
+    def calc_emotion_rate(record):
+        if not record or not record.round_total:
+            return None
+        return round(record.correct_count / record.round_total * 100, 1)
+
     name_rate = calc_name_rate(name_record)
     point_rate = calc_point_rate(point_record)
     voice_rate = calc_voice_rate(voice_record)
+    emotion_rate = calc_emotion_rate(emotion_record)
 
     data = {
         'name': {
@@ -350,8 +356,8 @@ def get_home_recommendations(child_id):
         'emotion': {
             'game_key': 'emotion',
             'title': '情绪识别',
-            'last_rate': None,
-            'has_data': emotion_record is not None,
+            'last_rate': emotion_rate,
+            'has_data': emotion_rate is not None,
             'last_date': emotion_record.session_date.isoformat() if emotion_record else None,
             'summary': (
                 f'上次正确 {emotion_record.correct_count}/{emotion_record.round_total}'

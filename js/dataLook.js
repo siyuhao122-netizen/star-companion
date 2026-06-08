@@ -46,7 +46,8 @@ let voiceGameRecords = [];
         await Promise.all([
             loadPointGameData(currentCount, false),
             loadNameReactionData(currentCount),
-            loadVoiceGameData(currentCount)
+            loadVoiceGameData(currentCount),
+            loadEmotionGameData(currentCount)
         ]);
         
         setDefaultActiveGame();
@@ -1581,13 +1582,15 @@ window.showMicDetail = showMicDetail;
         if (encourageEl) encourageEl.innerHTML = `<i class="fas fa-face-smile"></i> ${gameMeta.emotion.encourage}`;
     }
 
-    async function loadEmotionGameData(count) {
+    async function loadEmotionGameData(count, render = true) {
         try {
             const resp = await fetch(`${API_BASE}/emotion-game-ai/records/${currentChildId}?limit=${count}`);
             const d = await resp.json();
             if (d.success) { emotionGameRecords = d.data.records || []; }
-            updateEmotionMetrics();
-            updateEmotionGameCard();
+            if (render) {
+                updateEmotionMetrics();
+                updateEmotionGameCard();
+            }
         } catch (e) { emotionGameRecords = []; }
     }
 

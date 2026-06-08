@@ -44,7 +44,7 @@ body{background:#D9CBBF;display:flex;justify-content:center;align-items:center;m
 .bar-fill{height:100%;background:linear-gradient(90deg,#D9A066,#C28958);border-radius:6px;transition:width 0.3s ease}
 .result-modal{position:absolute;inset:0;background:rgba(100,80,60,0.3);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200}
 .result-modal.show{display:flex}
-.modal-card{background:#FFFDF9;border-radius:40px;padding:28px 36px;width:500px;max-height:85%;overflow-y:auto;box-shadow:0 24px 40px rgba(60,40,20,0.2);border:1px solid #F2E7DA}
+.modal-card{background:#FFFDF9;border-radius:40px;padding:28px 36px;width:580px;max-height:90%;overflow-y:auto;box-shadow:0 24px 40px rgba(60,40,20,0.2);border:1px solid #F2E7DA}
 .modal-title{font-size:22px;font-weight:800;color:#5E422C;text-align:center;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:10px}
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
 .stat-item{background:#F8F2EA;border-radius:20px;padding:14px;text-align:center;border:1px solid #EDDDCF}
