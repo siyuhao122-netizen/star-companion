@@ -11,7 +11,7 @@ point_game_ai_bp = Blueprint('point_game_ai', __name__)
 
 def get_recent_records(child_id, limit=5):
     records = PointGameRecord.query.filter_by(child_id=child_id)\
-        .order_by(PointGameRecord.session_date.desc())\
+        .order_by(PointGameRecord.id.desc())\
         .limit(limit).all()
     return records
 

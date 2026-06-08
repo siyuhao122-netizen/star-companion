@@ -11,7 +11,7 @@ name_reaction_ai_bp = Blueprint('name_reaction_ai', __name__)
 
 def get_recent_records(child_id, limit=5):
     return NameReactionRecord.query.filter_by(child_id=child_id) \
-        .order_by(NameReactionRecord.session_date.desc()) \
+        .order_by(NameReactionRecord.id.desc()) \
         .limit(limit).all()
 
 

@@ -403,7 +403,7 @@ def comprehensive_analysis(child_id):
     for g in games:
         if g not in game_map: continue
         model, num_col, den_col = game_map[g]
-        records = model.query.filter_by(child_id=child_id).order_by(model.session_date.desc()).limit(7).all()
+        records = model.query.filter_by(child_id=child_id).order_by(model.id.desc()).limit(7).all()
         if records:
             latest = records[0]
             num = getattr(latest, num_col, 0) or 0

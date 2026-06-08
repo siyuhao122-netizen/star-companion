@@ -11,7 +11,7 @@ emotion_game_ai_bp = Blueprint('emotion_game_ai', __name__)
 
 def get_recent_records(child_id, limit=5):
     return EmotionGameRecord.query.filter_by(child_id=child_id)\
-        .order_by(EmotionGameRecord.session_date.desc()).limit(limit).all()
+        .order_by(EmotionGameRecord.id.desc()).limit(limit).all()
 
 
 def build_single_analysis_prompt(child_name, age_months, record):

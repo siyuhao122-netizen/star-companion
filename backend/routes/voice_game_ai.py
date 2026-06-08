@@ -11,7 +11,7 @@ voice_game_ai_bp = Blueprint('voice_game_ai', __name__)
 
 def get_recent_records(child_id, limit=5):
     records = VoiceGameRecord.query.filter_by(child_id=child_id) \
-        .order_by(VoiceGameRecord.session_date.desc()) \
+        .order_by(VoiceGameRecord.id.desc()) \
         .limit(limit).all()
     return records
 
