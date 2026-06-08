@@ -6,7 +6,8 @@
     const gameMap = {
         name: { title: '叫名反应', page: 'askName.html', icon: 'fa-ear-deaf' },
         point: { title: '指物练习', page: 'touchGame.html', icon: 'fa-hand-peace' },
-        mic: { title: '声音小话筒', page: 'voice.html', icon: 'fa-microphone-alt' }
+        mic: { title: '声音小话筒', page: 'voice.html', icon: 'fa-microphone-alt' },
+        emotion: { title: '情绪识别', page: 'emotionGame.html', icon: 'fa-face-laugh-wink' }
     };
 
     // 全局变量

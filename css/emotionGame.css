@@ -1,0 +1,95 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: linear-gradient(135deg, #FEF9F0, #FFF3E2);
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; font-family: 'Noto Sans SC', sans-serif;
+}
+.game-container {
+  width: 100%; max-width: 500px; min-height: 100vh;
+  background: #FFFEFC; display: flex; flex-direction: column;
+  box-shadow: 0 0 40px rgba(160,110,60,0.08);
+}
+.game-header {
+  display: flex; align-items: center; padding: 16px 20px;
+  background: linear-gradient(135deg, #D9A066, #C88B4A); color: #FFF;
+}
+.game-header h1 { flex:1; font-size:18px; text-align:center; }
+.back-btn {
+  background: rgba(255,255,255,0.2); border: none; color: #FFF;
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size:16px;
+}
+.round-indicator { font-size:13px; opacity:0.9; }
+.progress-bar { height:4px; background:#F0E2D4; }
+.progress-fill { height:100%; background:#D9A066; transition:width 0.3s; width:0; }
+
+/* 启动屏 */
+.start-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center; }
+.start-icon { font-size:72px; color:#D9A066; margin-bottom:20px; }
+.start-screen h2 { font-size:24px; color:#5E422C; margin-bottom:12px; }
+.start-screen p { font-size:14px; color:#8F6A44; line-height:1.8; margin-bottom:32px; }
+.start-btn {
+  background: linear-gradient(135deg, #D9A066, #C88B4A); color:#FFF;
+  border: none; padding: 14px 48px; border-radius: 28px; font-size:17px;
+  font-weight:600; cursor: pointer; box-shadow:0 4px 16px rgba(217,160,102,0.3);
+}
+.start-btn:hover { transform: translateY(-1px); }
+
+/* 游戏区域 */
+.game-area { flex:1; display:flex; flex-direction:column; padding:24px 20px; }
+.scenario-card {
+  background: #FFFCF5; border: 2px solid #EDD9C6; border-radius: 20px;
+  padding: 28px 24px; text-align: center; margin-bottom: 20px;
+}
+.scenario-icon { font-size:48px; color:#D9A066; margin-bottom:16px; }
+.scenario-text { font-size:18px; color:#4D3724; line-height:1.8; font-weight:500; }
+.replay-btn {
+  margin-top:16px; background:none; border:1.5px solid #D9A066; color:#D9A066;
+  padding:8px 20px; border-radius:20px; cursor:pointer; font-size:13px;
+}
+.question-prompt { font-size:16px; color:#8C6E50; text-align:center; margin-bottom:16px; font-weight:500; }
+
+/* 选项 */
+.emotion-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.emotion-option {
+  background: #FFF; border: 2px solid #EDD9C6; border-radius: 16px;
+  padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.emotion-option:hover { border-color: var(--emo-color); background: #FFFCF5; transform: translateY(-2px); }
+.emotion-option.disabled { pointer-events: none; }
+.emotion-option.correct { border-color: #7CB342; background: #F1F8E9; }
+.emotion-option.wrong { border-color: #E57373; background: #FFEBEE; }
+.emo-emoji { font-size:36px; }
+.emo-label { font-size:15px; color:#4D3724; font-weight:500; }
+
+.game-controls { display:flex; justify-content:center; margin-top:20px; }
+.skip-btn {
+  background: none; border: 1.5px solid #C4B0A0; color: #8F7A64;
+  padding: 10px 32px; border-radius: 24px; cursor: pointer; font-size:14px;
+}
+
+/* 结果 */
+.result-screen { flex:1; display:flex; flex-direction:column; align-items:center; padding:40px 20px; }
+.result-card { width:100%; max-width:400px; text-align:center; }
+.result-icon { font-size:72px; margin-bottom:12px; }
+.result-card h2 { color:#5E422C; margin-bottom:20px; }
+.result-stats { display:flex; justify-content:center; gap:40px; margin-bottom:24px; }
+.stat { display:flex; flex-direction:column; align-items:center; }
+.stat-val { font-size:36px; font-weight:700; color:#D9A066; }
+.stat-label { font-size:13px; color:#8F7A64; }
+
+.ai-analysis-box {
+  background: #FFFCF5; border: 1.5px solid #EDD9C6; border-radius: 16px;
+  padding: 20px; margin-bottom: 24px; text-align: left;
+}
+.ai-header { font-size:15px; color:#D9A066; font-weight:600; margin-bottom:10px; }
+.ai-header i { margin-right:6px; }
+.ai-content { font-size:14px; color:#4D3724; line-height:1.8; }
+
+.result-actions { display:flex; gap:12px; }
+.action-btn {
+  flex:1; padding:12px 0; border-radius:24px; border:none;
+  font-size:14px; font-weight:600; cursor:pointer;
+}
+.action-btn.primary { background: linear-gradient(135deg,#D9A066,#C88B4A); color:#FFF; }
+.action-btn:not(.primary) { background:#F5EDE4; color:#5E422C; }

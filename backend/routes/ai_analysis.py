@@ -225,6 +225,8 @@ def survey_analysis():
     db.session.commit()
     
     # 记录token使用
+    
+    # 记录token使用
     save_token_usage('survey_analysis', survey_result.id, child_id, Config.BAILIAN_MODEL, usage)
 
     # 通知用户：AI 分析报告已生成

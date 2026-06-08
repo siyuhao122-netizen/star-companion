@@ -1,5 +1,5 @@
 ﻿from flask import Blueprint, request, jsonify
-from models import db, NameReactionRecord, PointGameRecord, VoiceGameRecord, Child
+from models import db, NameReactionRecord, PointGameRecord, VoiceGameRecord, EmotionGameRecord, Child
 from datetime import date, datetime
 from config import Config
 from rag import retrieve, build_query_for_retrieval
@@ -218,7 +218,43 @@ def save_point_game():
     }), 201
 
 
-# ---------- 声音小话筒（保持不变） ----------
+# ---------- 情绪识别 ----------
+@games_bp.route('/emotion-game', methods=['POST'])
+def save_emotion_game():
+    data = request.json
+
+    child = Child.query.get(data.get('child_id'))
+    if not child:
+        return jsonify({'success': False, 'message': '孩子不存在'}), 404
+
+    record = EmotionGameRecord(
+        child_id=data['child_id'],
+        session_date=date.today(),
+        round_total=data.get('round_total', 8),
+        correct_count=data.get('correct_count', 0),
+        round_details=data.get('round_details', [])
+    )
+    db.session.add(record)
+    db.session.commit()
+    return jsonify({'success': True, 'id': record.id}), 201
+
+
+@games_bp.route('/emotion-game/history/<int:child_id>', methods=['GET'])
+def get_emotion_history(child_id):
+    records = EmotionGameRecord.query.filter_by(child_id=child_id)\
+        .order_by(EmotionGameRecord.session_date.desc()).limit(10).all()
+    return jsonify([{
+        'id': r.id,
+        'session_date': r.session_date.isoformat(),
+        'correct_count': r.correct_count,
+        'round_total': r.round_total,
+        'round_details': r.round_details,
+        'ai_analysis': r.ai_analysis,
+        'accuracy': round((r.correct_count / r.round_total * 100), 2) if r.round_total > 0 else 0
+    } for r in records])
+
+
+# ---------- 声音小话筒 ----------
 @games_bp.route('/voice-game', methods=['POST'])
 def save_voice_game():
     data = request.json
@@ -280,6 +316,10 @@ def get_home_recommendations(child_id):
         .order_by(VoiceGameRecord.id.desc()) \
         .first()
 
+    emotion_record = EmotionGameRecord.query.filter_by(child_id=child_id) \
+        .order_by(EmotionGameRecord.id.desc()) \
+        .first()
+
     name_rate = calc_name_rate(name_record)
     point_rate = calc_point_rate(point_record)
     voice_rate = calc_voice_rate(voice_record)
@@ -307,6 +347,17 @@ def get_home_recommendations(child_id):
                 if point_record else '还没有训练记录'
             )
         },
+        'emotion': {
+            'game_key': 'emotion',
+            'title': '情绪识别',
+            'last_rate': None,
+            'has_data': emotion_record is not None,
+            'last_date': emotion_record.session_date.isoformat() if emotion_record else None,
+            'summary': (
+                f'上次正确 {emotion_record.correct_count}/{emotion_record.round_total}'
+                if emotion_record else '还没有训练记录'
+            )
+        },
         'mic': {
             'game_key': 'mic',
             'title': '声音小话筒',
@@ -324,7 +375,7 @@ def get_home_recommendations(child_id):
     # 1. 没有训练过的优先推荐
     # 2. 有数据时，成功率低的优先推荐
     order = sorted(
-        ['name', 'point', 'mic'],
+        ['name', 'point', 'mic', 'emotion'],
         key=lambda k: (
             data[k]['has_data'],
             data[k]['last_rate'] if data[k]['last_rate'] is not None else -1

@@ -1180,10 +1180,11 @@ async function loadNameReactionData(count) {
             item.classList.toggle('active', parseInt(item.dataset.count) === count);
         });
         
-        // ✅ 切换次数时加载三种数据
+        // ✅ 切换次数时加载四种数据
         loadPointGameData(count, false);
         loadNameReactionData(count);
         loadVoiceGameData(count);
+        loadEmotionGameData(count);
         
         closeAllDropdowns();
         showToast(`📊 已切换至${label}数据`);
@@ -1251,10 +1252,13 @@ window.showMicDetail = showMicDetail;
 
     // ========== PDF 导出 — 纯文字数据报告（Canvas 渲染中文） ==========
 
+    let emotionGameRecords = [];
+
     const GAME_CFG = {
-        name:  { label: '叫名反应 · 听觉回应', endpoint: 'name-reaction-ai',  records: () => nameReactionRecords },
-        point: { label: '指物练习 · 趣味指认', endpoint: 'point-game-ai',     records: () => pointGameRecords },
-        mic:   { label: '声音小话筒 · 发声启蒙', endpoint: 'voice-game-ai',    records: () => voiceGameRecords }
+        name:    { label: '叫名反应 · 听觉回应', endpoint: 'name-reaction-ai',  records: () => nameReactionRecords },
+        point:   { label: '指物练习 · 趣味指认', endpoint: 'point-game-ai',     records: () => pointGameRecords },
+        mic:     { label: '声音小话筒 · 发声启蒙', endpoint: 'voice-game-ai',    records: () => voiceGameRecords },
+        emotion: { label: '情绪识别 · 共情启蒙', endpoint: 'emotion-game-ai',   records: () => emotionGameRecords }
     };
 
     async function fetchAIAnalysis(gameType) {
@@ -1514,6 +1518,14 @@ window.showMicDetail = showMicDetail;
             console.error('PDF导出失败:', error);
             showToast('导出失败，请重试');
         }
+    }
+
+    async function loadEmotionGameData(count) {
+        try {
+            const resp = await fetch(`${API_BASE}/emotion-game-ai/records/${currentChildId}?limit=${count}`);
+            const d = await resp.json();
+            if (d.success) { emotionGameRecords = d.data.records || []; }
+        } catch (e) { emotionGameRecords = []; }
     }
 
     // 启动

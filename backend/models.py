@@ -52,6 +52,7 @@ class Child(db.Model):
     name_records = db.relationship('NameReactionRecord', backref='child', lazy=True)
     point_records = db.relationship('PointGameRecord', backref='child', lazy=True)
     voice_records = db.relationship('VoiceGameRecord', backref='child', lazy=True)
+    emotion_records = db.relationship('EmotionGameRecord', backref='child', lazy=True)
     survey_results = db.relationship('SurveyResult', backref='child', lazy=True)
 
 
@@ -86,6 +87,18 @@ class PointGameRecord(db.Model):
     avg_reaction_time = db.Column(db.Numeric(5, 2))
     accuracy = db.Column(db.Numeric(5, 2))
     click_accuracy = db.Column(db.Numeric(5, 2))
+    round_details = db.Column(JSON)
+    ai_analysis = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class EmotionGameRecord(db.Model):
+    __tablename__ = 'emotion_game_record'
+    id = db.Column(db.Integer, primary_key=True)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
+    session_date = db.Column(db.Date, nullable=False)
+    round_total = db.Column(db.Integer, default=8)
+    correct_count = db.Column(db.Integer, default=0)
     round_details = db.Column(JSON)
     ai_analysis = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

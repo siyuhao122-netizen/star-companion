@@ -33,6 +33,7 @@ def create_app():
     from routes.name_reaction_ai import name_reaction_ai_bp
     from routes.voice_game_ai import voice_game_ai_bp
     from routes.voice_speech import voice_speech_bp
+    from routes.emotion_game_ai import emotion_game_ai_bp
 
     app.register_blueprint(voice_speech_bp, url_prefix='/api/voice')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -45,6 +46,7 @@ def create_app():
     # 新增
     app.register_blueprint(name_reaction_ai_bp, url_prefix='/api/name-reaction-ai')
     app.register_blueprint(voice_game_ai_bp, url_prefix='/api/voice-game-ai')
+    app.register_blueprint(emotion_game_ai_bp, url_prefix='/api/emotion-game-ai')
 
     # ========== SQLite 外键约束启用（仅 SQLite） ==========
     @event.listens_for(Engine, "connect")
@@ -76,4 +78,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=7653)
+    app.run(debug=True, host='0.0.0.0', port=7657)

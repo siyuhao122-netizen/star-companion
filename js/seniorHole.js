@@ -384,6 +384,14 @@ document.querySelectorAll('.delete-action').forEach(btn => {
     initBottomNav();
     highlightCurrentNav();
 
+    // ========== 匿名模式切换 ==========
+    window.toggleAnonymousMode = function(checkbox) {
+        const label = document.getElementById('anonymousLabel');
+        if (label) {
+            label.textContent = checkbox.checked ? '匿名模式已开启' : '匿名模式已关闭';
+        }
+    };
+
     // ========== 初始化加载数据 ==========
     loadMessagesFromServer();
 })();
