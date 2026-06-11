@@ -380,14 +380,32 @@ def get_token_usage(child_id):
     }), 200
 
 
+# ========== 综合评估分析缓存（避免每次请求重新调用 AI） ==========
+_analysis_cache = {}  # key: "childId_games", value: (timestamp, data)
+
 # ========== 综合评估分析（PDF 报告用） ==========
 @ai_bp.route('/comprehensive-analysis/<int:child_id>', methods=['GET'])
 def comprehensive_analysis(child_id):
     child = Child.query.get(child_id)
     if not child:
         return jsonify({'success': False, 'message': '孩子不存在'}), 404
+
+    games_str = request.args.get('games', 'name,point,mic,emotion')
+    cache_key = f"{child_id}_{games_str}"
+    now = datetime.utcnow().timestamp()
+
+    # 定期清理过期缓存（超过 100 条时触发）
+    if len(_analysis_cache) > 100:
+        _analysis_cache.clear()
+
+    # 缓存命中且未过期（15 分钟）
+    if cache_key in _analysis_cache:
+        cached_time, cached_data = _analysis_cache[cache_key]
+        if now - cached_time < 900:
+            return jsonify({'success': True, 'data': cached_data}), 200
+
     age_months = calculate_month_age(child.birth_date)
-    games = request.args.get('games', 'name,point,mic,emotion').split(',')
+    games = games_str.split(',')
 
     from models import NameReactionRecord, PointGameRecord, VoiceGameRecord, EmotionGameRecord
     game_map = {
@@ -423,4 +441,9 @@ def comprehensive_analysis(child_id):
 请输出综合评估报告：1.整体发展评估 2.各游戏能力维度分析 3.综合建议（2-3条可操作的家庭练习）。语言温暖专业，300字以内。"""
 
     ai_analysis, _ = call_bailian_ai(prompt, '', 'survey', max_tokens=800)
-    return jsonify({'success':True,'data':{'child_name':child.name,'age_months':age_months,'games':games,'radar_data':radar_data,'summary':summary,'ai_analysis':ai_analysis}}),200
+
+    result_data = {'child_name': child.name, 'age_months': age_months, 'games': games,
+                   'radar_data': radar_data, 'summary': summary, 'ai_analysis': ai_analysis}
+    _analysis_cache[cache_key] = (now, result_data)
+
+    return jsonify({'success': True, 'data': result_data}), 200
