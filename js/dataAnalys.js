@@ -5,8 +5,18 @@
     const urlParams = new URLSearchParams(window.location.search);
     const childId = urlParams.get('childId') || localStorage.getItem('starCompanionActiveChild');
     const count = urlParams.get('count') || 10;
+    const gameType = urlParams.get('game') || 'point';
+
+    // 游戏配置
+    const gameConfig = {
+        point: { title: '指物练习', icon: 'fa-hand-peace', endpoint: 'point-game-ai' },
+        name:  { title: '叫名反应', icon: 'fa-ear-deaf', endpoint: 'name-reaction-ai' },
+        mic:   { title: '声音小话筒', icon: 'fa-microphone-alt', endpoint: 'voice-game-ai' },
+        emotion: { title: '情绪识别', icon: 'fa-face-laugh-wink', endpoint: 'emotion-game-ai' }
+    };
+    const cfg = gameConfig[gameType] || gameConfig.point;
     
-    // 孩子信息（从localStorage或URL获取）
+    // 孩子信息
     let childName = '宝贝';
     let childAge = '';
     
@@ -14,10 +24,14 @@
     
     // ========== 初始化 ==========
     async function init() {
+        // 设置标题
+        document.getElementById('gameTitle').textContent = cfg.title;
+        document.getElementById('gameIcon').className = 'fas ' + cfg.icon;
         if (!childId) {
             showToast('参数错误');
             setTimeout(() => { location.href = 'dataLook.html'; }, 1500);
-            return;
+            return;}
+    }
         }
         
         // 获取孩子信息
@@ -79,7 +93,7 @@
     // ========== 核心：获取趋势分析 ==========
     async function fetchTrendAnalysis(limit) {
         try {
-            const response = await fetch(`${API_BASE}/point-game-ai/trend-analysis/${childId}?limit=${limit}`);
+            const response = await fetch(`${API_BASE}/${cfg.endpoint}/trend-analysis/${childId}?limit=${limit}`);
             const result = await response.json();
             
             if (result.success && result.data) {
@@ -130,23 +144,38 @@
         const first = records[records.length - 1];
         
         document.getElementById('kpiCorrectRate').textContent = (latest.accuracy || 0) + '%';
-        document.getElementById('kpiClickRate').textContent = (latest.click_accuracy || 0) + '%';
-        document.getElementById('kpiAvgTime').textContent = (latest.avg_time_sec || 0).toFixed(1) + 's';
-        document.getElementById('kpiTimeout').textContent = ((latest.timeout_count || 0) + (latest.skip_count || 0)) + '次';
+
+        if (gameType === 'point') {
+            document.getElementById('kpiClickRate').textContent = (latest.click_accuracy || 0) + '%';
+            document.getElementById('kpiAvgTime').textContent = (latest.avg_time_sec || 0).toFixed(1) + 's';
+            document.getElementById('kpiTimeout').textContent = ((latest.timeout_count || 0) + (latest.skip_count || 0)) + '次';
+        } else if (gameType === 'name') {
+            document.getElementById('kpiClickRate').textContent = (latest.avg_reaction_time || 0).toFixed(1) + 's';
+            document.getElementById('kpiAvgTime').textContent = (latest.success_count || 0) + '/' + (latest.round_total || 8);
+            document.getElementById('kpiTimeout').textContent = '—';
+        } else {
+            document.getElementById('kpiClickRate').textContent = '—';
+            document.getElementById('kpiAvgTime').textContent = '—';
+            document.getElementById('kpiTimeout').textContent = '—';
+        }
         
         // 趋势
         const correctDiff = (latest.accuracy || 0) - (first.accuracy || 0);
         document.getElementById('kpiCorrectTrend').innerHTML = 
             `<i class="fas fa-arrow-${correctDiff >= 0 ? 'up' : 'down'}"></i> ${correctDiff >= 0 ? '+' : ''}${correctDiff.toFixed(1)}%`;
-        
-        const clickDiff = (latest.click_accuracy || 0) - (first.click_accuracy || 0);
-        document.getElementById('kpiClickTrend').innerHTML = 
-            `<i class="fas fa-arrow-${clickDiff >= 0 ? 'up' : 'down'}"></i> ${clickDiff >= 0 ? '+' : ''}${clickDiff.toFixed(1)}%`;
-        
-        if (first.avg_time_sec > 0 && latest.avg_time_sec > 0) {
-            const timeDiff = Math.round(((first.avg_time_sec - latest.avg_time_sec) / first.avg_time_sec) * 100);
-            document.getElementById('kpiTimeTrend').innerHTML = 
-                `<i class="fas fa-arrow-down"></i> 缩短${Math.abs(timeDiff)}%`;
+
+        if (gameType === 'point') {
+            const clickDiff = (latest.click_accuracy || 0) - (first.click_accuracy || 0);
+            document.getElementById('kpiClickTrend').innerHTML = 
+                `<i class="fas fa-arrow-${clickDiff >= 0 ? 'up' : 'down'}"></i> ${clickDiff >= 0 ? '+' : ''}${clickDiff.toFixed(1)}%`;
+            if (first.avg_time_sec > 0 && latest.avg_time_sec > 0) {
+                const timeDiff = Math.round(((first.avg_time_sec - latest.avg_time_sec) / first.avg_time_sec) * 100);
+                document.getElementById('kpiTimeTrend').innerHTML = 
+                    `<i class="fas fa-arrow-down"></i> 缩短${Math.abs(timeDiff)}%`;
+            }
+        } else {
+            document.getElementById('kpiClickTrend').textContent = '—';
+            document.getElementById('kpiTimeTrend').textContent = '—';
         }
     }
     
@@ -237,20 +266,16 @@
         } else {
             // 简单本地分析
             const latest = records[0];
-            document.getElementById('trendList').innerHTML = `
-                <div class="trend-item">
-                    <i class="fas fa-arrow-trend-up"></i>
-                    <span class="trend-text"><strong>最新正确率</strong>：${latest.accuracy || 0}%（${latest.correct_rounds}/${latest.round_total}轮）</span>
-                </div>
-                <div class="trend-item">
-                    <i class="fas fa-mouse-pointer"></i>
-                    <span class="trend-text"><strong>点击准确率</strong>：${latest.click_accuracy || 0}%</span>
-                </div>
-                <div class="trend-item">
-                    <i class="fas fa-clock"></i>
-                    <span class="trend-text"><strong>平均用时</strong>：${latest.avg_time_sec || 0}秒/轮</span>
-                </div>
-            `;
+            let localHtml = `<div class="trend-item"><i class="fas fa-arrow-trend-up"></i><span class="trend-text"><strong>最新正确率</strong>：${latest.accuracy || 0}%`;
+            if (gameType === 'point') localHtml += `（${latest.correct_rounds}/${latest.round_total}轮）`;
+            else if (gameType === 'name') localHtml += `（${latest.success_count || 0}/${latest.round_total || 0}轮）`;
+            else localHtml += `（${latest.correct_count || latest.success_count || 0}/${latest.round_total || 0}轮）`;
+            localHtml += `</span></div>`;
+            if (gameType === 'point') {
+                localHtml += `<div class="trend-item"><i class="fas fa-mouse-pointer"></i><span class="trend-text"><strong>点击准确率</strong>：${latest.click_accuracy || 0}%</span></div>`;
+                localHtml += `<div class="trend-item"><i class="fas fa-clock"></i><span class="trend-text"><strong>平均用时</strong>：${latest.avg_time_sec || 0}秒/轮</span></div>`;
+            }
+            document.getElementById('trendList').innerHTML = localHtml;
         }
         
         // 进步与困难（用最新vs最早）

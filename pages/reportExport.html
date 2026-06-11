@@ -148,7 +148,9 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             cnCtx.fillStyle = color || '#4D3724';
             cnCtx.textBaseline = 'top';
             lines.forEach((l, i) => cnCtx.fillText(l, 0, i * lineH));
-            return { dataUrl: cnCanvas.toDataURL('image/png'), w: maxWidthPx, h: totalH / SCALE * 0.264583 };
+            // 1pt ≈ 0.3528mm, fontSize 是 pt 单位
+            const mmPerPt = 0.3528;
+            return { dataUrl: cnCanvas.toDataURL('image/png'), w: maxWidthPx, h: lines.length * fontSize * mmPerPt * 1.5 };
         }
 
         document.getElementById('downloadBtn').addEventListener('click', async () => {
@@ -256,8 +258,7 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
                 const d = await resp.json();
                 if (d.success) {
                     shareCode = d.data.code;
-                    const linkWithCode = `${location.origin}${location.pathname}?code=${shareCode}`;
-                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style=\"font-size:11px;color:#8F7A64;word-break:break-all\">${linkWithCode}</span>`;
+                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style=\"font-size:11px;color:#8F7A64\">将此码发送给朋友，在报告页输入即可查看</span>`;
                     copyBtn.onclick = () => {
                         navigator.clipboard.writeText(shareCode).then(() => {
                             copyToast.style.display = 'block';

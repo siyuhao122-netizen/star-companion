@@ -410,8 +410,16 @@ function updateAnalysisForName(records) {
         } else if (game === 'mic') {
             loadVoiceGameData(currentCount);
         } else if (game === 'emotion') {
-            document.getElementById('analysisDesc').textContent = '—';
-            loadEmotionGameData(currentCount, true);
+            document.getElementById('analysisDesc').textContent = '加载中...';
+            loadEmotionGameData(currentCount, true).then(() => {
+                const recs = emotionGameRecords;
+                if (recs && recs.length > 0) {
+                    const rate = recs[0].accuracy || 0;
+                    document.getElementById('analysisDesc').textContent = `最新正确率 ${rate}%，共 ${recs.length} 次训练记录`;
+                } else {
+                    document.getElementById('analysisDesc').textContent = '暂无训练数据';
+                }
+            });
         }
         
         setTimeout(bindGameCardClick, 100);
