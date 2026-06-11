@@ -30,8 +30,7 @@
         if (!childId) {
             showToast('参数错误');
             setTimeout(() => { location.href = 'dataLook.html'; }, 1500);
-            return;}
-    }
+            return;
         }
         
         // 获取孩子信息

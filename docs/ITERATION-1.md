@@ -164,6 +164,31 @@
 
 ---
 
+## 第九次迭代 — 分享码系统 + PDF+分析页修复（2026-06-08）
+
+### 分享码系统
+- ShareCode 模型（code/child_id/games/48h过期/可撤销）
+- /api/share/generate, /verify, /revoke 三个端点
+- 报告页 share modal 生成码+复制链接，接收方通过码验证
+
+### PDF 优化
+- 雷达图用 canvas.toDataURL() 高清截图嵌入
+- 文字比例修正（px→mm 因子 0.3528）
+- 核心指标 2×2 卡片式布局
+
+### 数据看板修复
+- 排序从 session_date 改为 id.desc()（Day类型同日记录排序不准）
+- 情绪识别卡片样式对齐（history-row + detail-btn）
+- 下拉框互斥（closeAllDropdowns）
+- 加载中显示 "-" 替代假数据/0%
+
+### 完整分析页修复
+- 支持 game 参数动态切换（指物/叫名/声音/情绪）
+- KPI 根据游戏类型显示不同字段
+- AI 加载期间显示 "-"
+
+---
+
 ## 第八次迭代 — 3 Bug 修复（2026-06-05）
 
 ### 1. 注销后登录页按钮全部失效
