@@ -183,46 +183,40 @@ body{
             const actionBar = document.getElementById('actionBar');
             if (actionBar) actionBar.style.display = 'none';
 
-            // 3. html2canvas 截图
+            // 3. html2canvas 截图（windowWidth 固定 800px，防止 viewport 宽度干扰）
             const reportEl = document.getElementById('reportContainer');
             const canvas = await html2canvas(reportEl, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: '#F5EDE4',
-                width: reportEl.offsetWidth,
-                height: reportEl.scrollHeight
+                windowWidth: 800
             });
 
-            // 5. 恢复雷达图 + 操作栏
+            // 4. 恢复雷达图 + 操作栏
             document.body.classList.remove('pdf-exporting');
             if (chartInstance) { chartInstance.resize(); }
             if (actionBar) actionBar.style.display = '';
 
-            // 5. 嵌入 PDF（按比例缩放）
+            // 5. 嵌入 PDF（mm 反推像素切页，消除单位混用）
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
-            const PW = pdf.internal.pageSize.getWidth();
-            const PH = pdf.internal.pageSize.getHeight();
+            const pageW = pdf.internal.pageSize.getWidth();
+            const pageH = pdf.internal.pageSize.getHeight();
             const M = 8;
-            const imgW = PW - 2 * M;
-            const imgH = (canvas.height / canvas.width) * imgW;
+            const usableW = pageW - 2 * M;
+            const usableH = pageH - 2 * M;
+            const pxPerMm = canvas.width / usableW;
+            const pagePx = Math.round(usableH * pxPerMm);
 
-            let y = M;
-            // 如果图片高于一页，逐页截取
-            const totalPages = Math.ceil(imgH / (PH - 2 * M));
-            for (let page = 0; page < totalPages; page++) {
-                if (page > 0) pdf.addPage();
-                const srcY = page * (canvas.height / totalPages);
-                const srcH = canvas.height / totalPages;
-                const destH = (PH - 2 * M);
-                // 创建分页 canvas
-                const pageCanvas = document.createElement('canvas');
-                pageCanvas.width = canvas.width;
-                pageCanvas.height = Math.round(srcH);
-                const pageCtx = pageCanvas.getContext('2d');
-                pageCtx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
-                const pageImg = pageCanvas.toDataURL('image/png', 1.0);
-                pdf.addImage(pageImg, 'PNG', M, M, imgW, Math.min(destH, imgH - page * destH));
+            for (let y = 0, pageNum = 0; y < canvas.height; y += pagePx, pageNum++) {
+                const sliceH = Math.min(pagePx, canvas.height - y);
+                const pc = document.createElement('canvas');
+                pc.width = canvas.width;
+                pc.height = sliceH;
+                const pctx = pc.getContext('2d');
+                pctx.drawImage(canvas, 0, y, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+                if (pageNum > 0) pdf.addPage();
+                pdf.addImage(pc.toDataURL('image/jpeg', 0.95), 'JPEG', M, M, usableW, sliceH / pxPerMm);
             }
 
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
