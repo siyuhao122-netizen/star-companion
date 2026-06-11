@@ -197,7 +197,14 @@ body{
             if (chartInstance) { chartInstance.resize(); }
             if (actionBar) actionBar.style.display = '';
 
-            // 5. 嵌入 PDF（mm 反推像素切页，消除单位混用）
+            // 5. 收集 section 块边界（防止从卡片中间切断）
+            const containerTop = reportEl.getBoundingClientRect().top;
+            const sectionTops = [...reportEl.querySelectorAll('.section')]
+                .map(el => Math.round((el.getBoundingClientRect().top - containerTop) * 2)) // scale=2
+                .filter(t => t > 0)
+                .sort((a, b) => a - b);
+
+            // 6. 嵌入 PDF（mm 反推像素切页，块级分页）
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pageW = pdf.internal.pageSize.getWidth();
@@ -207,16 +214,27 @@ body{
             const usableH = pageH - 2 * M;
             const pxPerMm = canvas.width / usableW;
             const pagePx = Math.round(usableH * pxPerMm);
+            const minPagePx = Math.round(pagePx * 0.15);
+            const lookAheadPx = Math.round(pagePx * 0.25);
 
-            for (let y = 0, pageNum = 0; y < canvas.height; y += pagePx, pageNum++) {
-                const sliceH = Math.min(pagePx, canvas.height - y);
+            for (let y = 0, pageNum = 0; y < canvas.height; pageNum++) {
+                let cutY = y + pagePx;
+
+                // 找 cutY 下方最近的 section 边界
+                const nearSection = sectionTops.find(t => t > y && t <= cutY + lookAheadPx);
+                if (nearSection && nearSection > y + minPagePx && nearSection - y < pagePx + lookAheadPx) {
+                    cutY = nearSection;  // 提前切，把整个 section 放到下一页
+                }
+
+                const sliceH = Math.min(cutY - y, canvas.height - y);
                 const pc = document.createElement('canvas');
                 pc.width = canvas.width;
-                pc.height = sliceH;
+                pc.height = Math.max(sliceH, 1);
                 const pctx = pc.getContext('2d');
                 pctx.drawImage(canvas, 0, y, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
                 if (pageNum > 0) pdf.addPage();
                 pdf.addImage(pc.toDataURL('image/jpeg', 0.95), 'JPEG', M, M, usableW, sliceH / pxPerMm);
+                y = cutY;
             }
 
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
