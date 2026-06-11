@@ -260,14 +260,38 @@ body{
                 const d = await resp.json();
                 if (d.success) {
                     shareCode = d.data.code;
-                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style="font-size:11px;color:#8F7A64">将此码发送给朋友，在报告页输入即可查看</span>`;
+                    const fullLink = `${location.origin}/pages/reportExport.html?code=${shareCode}`;
+                    codeBox.innerHTML = `<div style="margin-bottom:8px"><b>分享码：${shareCode}</b>（48小时有效）</div><div style="background:#FFF;border:1px solid #EDD9C6;border-radius:8px;padding:8px 12px;font-size:11px;color:#6B5A4A;word-break:break-all;margin-bottom:8px">${fullLink}</div><span style="font-size:11px;color:#8F7A64">将码或链接发送给朋友即可查看报告</span>`;
+                    // 切换为两个按钮：复制码 + 复制链接
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制分享码';
                     copyBtn.onclick = () => {
                         navigator.clipboard.writeText(shareCode).then(() => {
                             copyToast.style.display = 'block';
                             setTimeout(() => copyToast.style.display = 'none', 2000);
                         });
                     };
-                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制分享码';
+                    // 添加复制链接按钮
+                    const linkBtn = document.createElement('button');
+                    linkBtn.className = 'btn btn-secondary';
+                    linkBtn.innerHTML = '<i class="fas fa-link"></i> 复制链接';
+                    linkBtn.style.cssText = 'padding:10px 20px;font-size:13px';
+                    linkBtn.onclick = () => {
+                        navigator.clipboard.writeText(fullLink).then(() => {
+                            copyToast.style.display = 'block';
+                            setTimeout(() => copyToast.style.display = 'none', 2000);
+                        });
+                    };
+                    const actions = document.querySelector('.share-actions');
+                    // 移除旧按钮，添加新按钮组
+                    actions.innerHTML = '';
+                    actions.appendChild(copyBtn);
+                    actions.appendChild(linkBtn);
+                    const closeBtn = document.createElement('button');
+                    closeBtn.className = 'btn btn-secondary';
+                    closeBtn.innerHTML = '关闭';
+                    closeBtn.style.cssText = 'padding:10px 20px;font-size:13px';
+                    closeBtn.onclick = () => shareOverlay.classList.remove('show');
+                    actions.appendChild(closeBtn);
                 } else {
                     codeBox.textContent = '生成失败：' + (d.message || '请重试');
                 }

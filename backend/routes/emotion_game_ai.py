@@ -144,7 +144,7 @@ def trend_analysis(child_id):
         'round_details': r.round_details
     } for r in records]
 
-    return jsonify({'success': True, 'data': {'records': records_data, 'ai_analysis': ai_analysis}}), 200
+    return jsonify({'success': True, 'data': {'records': records_data, 'ai_analysis': ai_analysis, 'total_records': len(records_data)}}), 200
 
 
 @emotion_game_ai_bp.route('/records/<int:child_id>', methods=['GET'])
