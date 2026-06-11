@@ -170,6 +170,17 @@ class AITokenUsage(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class ShareCode(db.Model):
+    __tablename__ = 'share_code'
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(6), unique=True, nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey('child.id', ondelete='CASCADE'), nullable=False)
+    games = db.Column(db.String(100), default='name,point,mic,emotion')
+    is_revoked = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
+
+
 class Notification(db.Model):
     __tablename__ = 'notification'
     id = db.Column(db.Integer, primary_key=True)

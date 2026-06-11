@@ -49,8 +49,8 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
 
 <div class="share-overlay" id="shareOverlay">
   <div class="share-modal">
-    <h3><i class="fas fa-share-alt"></i> 分享链接</h3>
-    <div class="share-url-box" id="shareUrlBox"></div>
+    <h3><i class="fas fa-share-alt"></i> 分享报告</h3>
+    <div class="share-url-box" id="shareUrlBox">点击"生成分享链接"获取分享码</div>
     <div class="share-actions">
       <button class="btn btn-primary" id="copyShareBtn"><i class="fas fa-copy"></i> 复制链接</button>
       <button class="btn btn-secondary" id="closeShareBtn">关闭</button>
@@ -164,18 +164,23 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             });
             y += Math.ceil(glist.length/2) * (cardH+4) + 8;
 
-            // ===== 雷达图（把网页上的 Chart.js 雷达图 Canvas 截图嵌入） =====
+            // ===== 雷达图（Canvas 截图嵌入 PDF，确保 Chart.js 已完成渲染） =====
             const radarCanvas = document.getElementById('radarChart');
-            if (radarCanvas) {
-                const radarImg = radarCanvas.toDataURL('image/png');
-                const radarH = 70;
-                if (y + radarH > 270) { pdf.addPage(); y = 15; }
-                pdf.setDrawColor(237, 217, 198);
-                pdf.roundedRect(M, y, CW, radarH+14, 3, 3, 'S');
+            if (radarCanvas && radarCanvas.width > 0) {
+                // Chart.js 动画可能未完成，先手动触发渲染
+                const chartInstance = Chart.getChart(radarCanvas);
+                if (chartInstance) chartInstance.resize();
+                await new Promise(r => setTimeout(r, 200)); // 等渲染稳定
+                const radarImg = radarCanvas.toDataURL('image/png', 1.0);
+                const radarW = 80, radarH = 80;
+                if (y + radarH > 260) { pdf.addPage(); y = 15; }
+                pdf.setDrawColor(237, 217, 198); pdf.setLineWidth(0.5);
+                pdf.roundedRect(M, y, CW, radarH+16, 4, 4, 'S');
                 img = cnTextToImage('🧭 能力雷达图', 11, '#4D3724', CW);
                 pdf.addImage(img.dataUrl,'PNG',M+4,y+3,CW-8,img.h);
-                pdf.addImage(radarImg,'PNG',M+20,y+10,60,60);
-                y += radarH + 18;
+                const rx = M + (CW - radarW) / 2;
+                pdf.addImage(radarImg,'PNG',rx,y+12,radarW,radarH);
+                y += radarH + 20;
             }
 
             // ===== AI 分析（与网页一致：浅色背景卡片） =====
@@ -207,17 +212,52 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
         });
 
-        // 分享弹窗
+        // ======== 分享弹窗（含分享码生成 + 链接） ========
         const shareUrl = `${location.origin}${location.pathname}?childId=${childId}&games=${glist.join(',')}`;
-        document.getElementById('shareUrlBox').textContent = shareUrl;
-        document.getElementById('shareBtn').addEventListener('click', () => document.getElementById('shareOverlay').classList.add('show'));
-        document.getElementById('closeShareBtn').addEventListener('click', () => document.getElementById('shareOverlay').classList.remove('show'));
-        document.getElementById('copyShareBtn').addEventListener('click', () => {
-            navigator.clipboard.writeText(shareUrl).then(()=>{
-                const t = document.getElementById('copyToast');
-                t.style.display='block'; setTimeout(()=>t.style.display='none',2000);
-            });
+        let shareCode = '';
+        const codeBox = document.getElementById('shareUrlBox');
+        const copyBtn = document.getElementById('copyShareBtn');
+        const copyToast = document.getElementById('copyToast');
+        const shareOverlay = document.getElementById('shareOverlay');
+
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            // 生成分享码
+            codeBox.textContent = '正在生成分享码...';
+            shareOverlay.classList.add('show');
+            try {
+                const resp = await fetch(`${API_BASE}/share/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ child_id: parseInt(childId), games: glist.join(',') })
+                });
+                const d = await resp.json();
+                if (d.success) {
+                    shareCode = d.data.code;
+                    codeBox.textContent = `分享码：${shareCode}（48小时有效）`;
+                    copyBtn.onclick = () => {
+                        navigator.clipboard.writeText(shareCode).then(() => {
+                            copyToast.style.display = 'block';
+                            setTimeout(() => copyToast.style.display = 'none', 2000);
+                        });
+                    };
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制分享码';
+                } else {
+                    codeBox.textContent = '生成失败：' + (d.message || '请重试');
+                }
+            } catch (e) {
+                codeBox.textContent = '网络错误，请重试';
+            }
         });
+
+        document.getElementById('closeShareBtn').addEventListener('click', () => shareOverlay.classList.remove('show'));
+
+        // 初始复制按钮：复制链接
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                copyToast.style.display = 'block';
+                setTimeout(() => copyToast.style.display = 'none', 2000);
+            });
+        };
 
     } catch(e) {
         document.getElementById('reportContainer').innerHTML = `<div class=error-box><i class="fas fa-exclamation-triangle"></i><p>加载失败: ${e.message}</p><button class="btn btn-secondary" onclick="location.href='dataLook.html'">返回数据看板</button></div>`;
