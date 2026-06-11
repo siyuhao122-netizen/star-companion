@@ -319,6 +319,7 @@ body{
     } catch(e) {
         document.getElementById('reportContainer').innerHTML = `<div class=error-box><i class="fas fa-exclamation-triangle"></i><p>加载失败: ${e.message}</p><button class="btn btn-secondary" onclick="location.href='dataLook.html'">返回数据看板</button></div>`;
     }
+    }  // end loadReport
 
     // ======== 页面入口 ========
     if (childId) {
