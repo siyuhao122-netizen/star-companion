@@ -8,22 +8,45 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justify-content:center;padding:20px}
-.report-container{max-width:800px;width:100%}
-.report-header{background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border-radius:16px;padding:24px;text-align:center;margin-bottom:20px}
+body{
+  background:#F5EDE4;
+  font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  display:flex;justify-content:center;padding:20px;
+}
+/* ===== 导出容器：固定 800px 宽度，保证 PDF 与网页一致 ===== */
+.report-container{
+  width:800px;min-width:800px;max-width:800px;
+}
+.report-header{
+  background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;
+  border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;
+}
 .report-header h1{font-size:22px;margin-bottom:6px}
 .report-header p{font-size:13px;opacity:0.9}
-.section{background:#FFFEFC;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
-.section-title{font-size:16px;font-weight:700;color:#4D3724;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section{
+  background:#FFFEFC;border-radius:14px;padding:20px;margin-bottom:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.section-title{
+  font-size:16px;font-weight:700;color:#4D3724;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
 .section-title i{color:#D9A066}
-.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.metric-item{background:#FFFCF5;border-radius:12px;padding:14px;text-align:center;border:1px solid #EDD9C6}
+/* 核心指标：4列固定布局 */
+.metric-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+}
+.metric-item{
+  background:#FFFCF5;border-radius:12px;padding:14px;text-align:center;
+  border:1px solid #EDD9C6;
+}
 .metric-item .label{font-size:12px;color:#8F7A64}
-.metric-item .value{font-size:26px;font-weight:700;color:#D9A066;margin:4px 0}
-.radar-box{display:flex;justify-content:center;max-height:320px}
-.radar-box canvas{max-height:300px}
+.metric-item .value{font-size:24px;font-weight:700;color:#D9A066;margin:4px 0}
+.radar-box{display:flex;justify-content:center}
+.radar-box canvas{max-width:100%;height:280px!important}
 .ai-text{font-size:14px;color:#4D3724;line-height:1.8}
 .action-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .btn{padding:12px 28px;border-radius:24px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
@@ -40,6 +63,12 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
 .share-url-box{background:#F5EDE4;border-radius:10px;padding:12px 16px;font-size:13px;color:#6B5A4A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:16px;text-align:left}
 .share-actions{display:flex;gap:10px;justify-content:center}
 .copy-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#5E422C;color:#FFF;padding:10px 24px;border-radius:20px;font-size:14px;z-index:99999;display:none}
+
+/* ===== 打印样式：PDF 导出时强制桌面布局 ===== */
+@media print {
+  .report-container{width:800px!important;min-width:800px!important;max-width:800px!important}
+  .metric-row{grid-template-columns:repeat(4,1fr)!important}
+}
 </style>
 </head>
 <body>
@@ -65,10 +94,10 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
     const params = new URLSearchParams(window.location.search);
     const childId = params.get('childId');
     const games = params.get('games') || 'name,point,mic,emotion';
-    // 如果 URL 中有 ?code= 参数，先验证分享码
     const shareCode = params.get('code');
     let verifiedChildId = childId;
     let verifiedGames = games;
+
     if (shareCode && !childId) {
         try {
             const vResp = await fetch(`${API_BASE}/share/verify?code=${encodeURIComponent(shareCode)}`);
@@ -77,7 +106,7 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
                 verifiedChildId = vData.data.child_id;
                 verifiedGames = vData.data.games || 'name,point,mic,emotion';
             } else {
-                document.getElementById('loadingArea').innerHTML = `<div class=error-box><i class="fas fa-lock"></i><p>${vData.message || '分享码无效'}</p><div style="margin-top:12px"><input id="manualCode" placeholder="请输入分享码" style="padding:8px 16px;border:1.5px solid #D9A066;border-radius:20px;font-size:14px;text-align:center;letter-spacing:4px;text-transform:uppercase"><button onclick="location.href='?code='+document.getElementById('manualCode').value.toUpperCase()" style="margin-left:8px;padding:8px 20px;border-radius:20px;background:#D9A066;color:#FFF;border:none;cursor:pointer">验证</button></div>`;
+                document.getElementById('loadingArea').innerHTML = `<div class=error-box><i class="fas fa-lock"></i><p>${vData.message || '分享码无效'}</p><div style="margin-top:12px"><input id="manualCode" placeholder="请输入分享码" style="padding:10px 20px;border:1.5px solid #D9A066;border-radius:24px;font-size:16px;text-align:center;letter-spacing:6px;text-transform:uppercase;width:200px;outline:none"><button onclick="location.href='?code='+document.getElementById('manualCode').value.toUpperCase()" style="padding:10px 28px;border-radius:24px;background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border:none;font-size:14px;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> 验证</button></div>`;
                 return;
             }
         } catch(e) {
@@ -97,146 +126,95 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
         const data = d.data;
         const gameLabels = { name:'叫名反应', point:'指物练习', mic:'声音小话筒', emotion:'情绪识别' };
         const gameIcons = { name:'fa-ear-deaf', point:'fa-hand-peace', mic:'fa-microphone-alt', emotion:'fa-face-laugh-wink' };
+        const glist = (data.games || verifiedGames.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
 
+        // ======== 构建 HTML 页面 ========
         let html = `<div class="report-header"><h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1><p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p></div>
           <div class="section"><div class="section-title"><i class="fas fa-chart-bar"></i> 核心指标概览</div><div class="metric-row">`;
-        const glist = (data.games || verifiedGames.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
         glist.forEach((g,i) => {
             const rate = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
             html += `<div class="metric-item"><div class="label"><i class="fas ${gameIcons[g]||'fa-star'}"></i> ${gameLabels[g]||g}</div><div class="value">${rate}%</div></div>`;
         });
         html += `</div></div>
           <div class="section"><div class="section-title"><i class="fas fa-compass"></i> 能力雷达图</div><div class="radar-box"><canvas id="radarChart"></canvas></div></div>
-          <div class="section"><div class="section-title"><i class="fas fa-robot"></i> AI 综合评估分析</div><div class="ai-text">${data.ai_analysis || '暂无分析数据'}</div></div>
-          <div class="action-bar">
+          <div class="section"><div class="section-title"><i class="fas fa-robot"></i> AI 综合评估分析</div><div class="ai-text">${(data.ai_analysis || '暂无分析数据').replace(/\n/g,'<br>')}</div></div>
+          <div class="action-bar" id="actionBar">
             <button class="btn btn-primary" id="downloadBtn"><i class="fas fa-download"></i> 下载 PDF</button>
             <button class="btn btn-secondary" id="shareBtn"><i class="fas fa-share-alt"></i> 生成分享链接</button>
             <button class="btn btn-secondary" onclick="location.href='dataLook.html'"><i class="fas fa-arrow-left"></i> 返回</button>
           </div>`;
         document.getElementById('reportContainer').innerHTML = html;
 
-        // 雷达图
+        // ======== 雷达图（较大尺寸） ========
         const ctx = document.getElementById('radarChart')?.getContext('2d');
+        let chartInstance = null;
         if (ctx) {
             const radarValues = data.radar_data && data.radar_data.length ? data.radar_data : glist.map(() => 0);
-            new Chart(ctx, { type:'radar', data:{ labels:glist.map(g=>gameLabels[g]||g), datasets:[{ label:'正确率 (%)', data:radarValues, backgroundColor:'rgba(217,160,102,0.2)', borderColor:'#D9A066', borderWidth:2, pointBackgroundColor:'#C88B4A' }] }, options:{ scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:20} } }, plugins:{ legend:{display:false} } } });
+            chartInstance = new Chart(ctx, {
+                type:'radar',
+                data:{ labels:glist.map(g=>gameLabels[g]||g), datasets:[{ label:'正确率 (%)', data:radarValues, backgroundColor:'rgba(217,160,102,0.2)', borderColor:'#D9A066', borderWidth:2, pointBackgroundColor:'#C88B4A' }] },
+                options:{ responsive:true, maintainAspectRatio:true, scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:20} } }, plugins:{ legend:{display:false} } }
+            });
         }
 
-        // ======== Canvas 渲染中文文本块（高清） ========
-        const cnCanvas = document.createElement('canvas');
-        const cnCtx = cnCanvas.getContext('2d');
-        const SCALE = 3;
-        const FONT = '"Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif';
-
-        function cnTextToImage(text, fontSize, color, maxWidthPx) {
-            const fs = fontSize * SCALE;
-            cnCtx.font = `${fs}px ${FONT}`;
-            const words = text.split('');
-            const lines = [];
-            let cur = '';
-            for (const ch of words) {
-                const test = cur + ch;
-                if (cnCtx.measureText(test).width > maxWidthPx * SCALE && cur.length > 0) { lines.push(cur); cur = ch; }
-                else { cur = test; }
-            }
-            if (cur) lines.push(cur);
-            const lineH = fs * 1.5;
-            const totalH = lineH * lines.length || 1;
-            cnCanvas.width = maxWidthPx * SCALE;
-            cnCanvas.height = totalH;
-            cnCtx.font = `${fs}px ${FONT}`;
-            cnCtx.fillStyle = color || '#4D3724';
-            cnCtx.textBaseline = 'top';
-            lines.forEach((l, i) => cnCtx.fillText(l, 0, i * lineH));
-            // px→mm：canvas 像素 / SCALE = 逻辑像素，再 *0.264583 → mm（与 dataLook.js 一致）
-            return { dataUrl: cnCanvas.toDataURL('image/png'), w: maxWidthPx, h: (totalH / SCALE) * 0.264583 };
-        }
-
+        // ======== PDF 导出：html2canvas 截图 → jsPDF（所见即所得） ========
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             if (!window.jspdf?.jsPDF) { alert('PDF库加载失败，请检查网络'); return; }
+            if (typeof html2canvas === 'undefined') { alert('截图库加载失败，请检查网络'); return; }
+
+            // 1. 等待字体 + 图表渲染完成
             await document.fonts.ready;
+            if (chartInstance) { chartInstance.resize(); chartInstance.update(); }
+            await new Promise(r => setTimeout(r, 400));
+
+            // 2. 隐藏操作栏（不导出按钮）
+            const actionBar = document.getElementById('actionBar');
+            if (actionBar) actionBar.style.display = 'none';
+
+            // 3. html2canvas 截图
+            const reportEl = document.getElementById('reportContainer');
+            const canvas = await html2canvas(reportEl, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#F5EDE4',
+                width: reportEl.offsetWidth,
+                height: reportEl.scrollHeight
+            });
+
+            // 4. 恢复操作栏
+            if (actionBar) actionBar.style.display = '';
+
+            // 5. 嵌入 PDF（按比例缩放）
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p','mm','a4');
-            const PW = pdf.internal.pageSize.getWidth(), M = 15, CW = PW - 2*M;
-            let y = 20;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const PW = pdf.internal.pageSize.getWidth();
+            const PH = pdf.internal.pageSize.getHeight();
+            const M = 8;
+            const imgW = PW - 2 * M;
+            const imgH = (canvas.height / canvas.width) * imgW;
 
-            // ===== 封面标题（与网页一致：渐变背景 + 白色文字） =====
-            pdf.setFillColor(217, 160, 102); pdf.rect(0,0,PW,22,'F');
-            let img = cnTextToImage('星伴 · 综合评估报告', 16, '#FFFFFF', CW);
-            pdf.addImage(img.dataUrl,'PNG',M,7,CW,img.h); y = 28;
-            img = cnTextToImage(`${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}`, 10, '#FFFFFF', CW);
-            pdf.addImage(img.dataUrl,'PNG',M,y-4,Math.min(CW,img.w/3.78),img.h); y += 8;
-
-            // ===== 核心指标概览（卡片式 2x2 布局，与网页一致） =====
-            img = cnTextToImage('📊 核心指标概览', 13, '#4D3724', CW);
-            pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h); y += img.h + 4;
-            const cardW = CW/2 - 4, cardH = 20;
-            glist.forEach((g,i) => {
-                const val = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
-                const col = i % 2, row = Math.floor(i / 2);
-                const cx = M + col * (cardW + 4), cy = y + row * (cardH + 4);
-                const rateColor = val >= 80 ? '#7CB342' : (val >= 50 ? '#D9A066' : '#D4A0A0');
-                pdf.setFillColor(255, 252, 245);
-                pdf.setDrawColor(237, 217, 198);
-                pdf.setLineWidth(0.3);
-                pdf.roundedRect(cx, cy, cardW, cardH, 4, 4, 'FD');
-                img = cnTextToImage(`${gameLabels[g]||g}`, 9, '#8F7A64', cardW-4);
-                pdf.addImage(img.dataUrl,'PNG',cx+3,cy+2,cardW-4,img.h);
-                img = cnTextToImage(`${val}%`, 16, rateColor, cardW-4);
-                pdf.addImage(img.dataUrl,'PNG',cx+3,cy+7,cardW-4,img.h);
-            });
-            y += Math.ceil(glist.length/2) * (cardH+4) + 8;
-
-            // ===== 雷达图（Canvas 截图嵌入 PDF，确保 Chart.js 已完成渲染） =====
-            const radarCanvas = document.getElementById('radarChart');
-            if (radarCanvas && radarCanvas.width > 0) {
-                // Chart.js 动画可能未完成，先手动触发渲染
-                const chartInstance = Chart.getChart(radarCanvas);
-                if (chartInstance) chartInstance.resize();
-                await new Promise(r => setTimeout(r, 200)); // 等渲染稳定
-                const radarImg = radarCanvas.toDataURL('image/png', 1.0);
-                const aspect = radarCanvas.height / radarCanvas.width;
-                const radarW = 80, radarH = 80 * aspect;
-                if (y + radarH > 260) { pdf.addPage(); y = 15; }
-                pdf.setDrawColor(237, 217, 198); pdf.setLineWidth(0.5);
-                pdf.roundedRect(M, y, CW, radarH+16, 4, 4, 'S');
-                img = cnTextToImage('🧭 能力雷达图', 11, '#4D3724', CW);
-                pdf.addImage(img.dataUrl,'PNG',M+4,y+3,CW-8,img.h);
-                const rx = M + (CW - radarW) / 2;
-                pdf.addImage(radarImg,'PNG',rx,y+12,radarW,radarH);
-                y += radarH + 20;
+            let y = M;
+            // 如果图片高于一页，逐页截取
+            const totalPages = Math.ceil(imgH / (PH - 2 * M));
+            for (let page = 0; page < totalPages; page++) {
+                if (page > 0) pdf.addPage();
+                const srcY = page * (canvas.height / totalPages);
+                const srcH = canvas.height / totalPages;
+                const destH = (PH - 2 * M);
+                // 创建分页 canvas
+                const pageCanvas = document.createElement('canvas');
+                pageCanvas.width = canvas.width;
+                pageCanvas.height = Math.round(srcH);
+                const pageCtx = pageCanvas.getContext('2d');
+                pageCtx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+                const pageImg = pageCanvas.toDataURL('image/png', 1.0);
+                pdf.addImage(pageImg, 'PNG', M, M, imgW, Math.min(destH, imgH - page * destH));
             }
-
-            // ===== AI 分析（与网页一致：浅色背景卡片） =====
-            if (y > 250) { pdf.addPage(); y = 15; }
-            pdf.setDrawColor(237, 217, 198);
-            img = cnTextToImage('🤖 AI 综合评估分析', 11, '#4D3724', CW);
-            const analysis = data.ai_analysis || '暂无分析数据';
-            // 保留 ** 加粗标记，在渲染时用不同颜色/字号区分
-            const lines = analysis.split('\n').filter(l=>l.trim());
-            const estH = Math.min(lines.length*8 + 20, 150);
-            pdf.roundedRect(M, y, CW, estH, 3, 3, 'S');
-            pdf.addImage(img.dataUrl,'PNG',M+4,y+3,CW-8,img.h); y += 10;
-            lines.forEach(l => {
-                let text = l.trim();
-                const isBold = text.startsWith('**') && text.includes('**', 2);
-                if (isBold) text = text.replace(/\*\*/g, '');
-                img = cnTextToImage(text, isBold ? 10 : 8, isBold ? '#5E422C' : '#4D3724', CW-8);
-                if (y + img.h > 275) { pdf.addPage(); y = 15; }
-                pdf.addImage(img.dataUrl,'PNG',M+4,y,CW-8,img.h); y += img.h + 2;
-            });
-            y += 6;
-
-            // ===== 声明 =====
-            if (y > 270) { pdf.addPage(); y = 15; }
-            pdf.setDrawColor(207, 162, 118); pdf.line(M,y,PW-M,y); y+=4;
-            img = cnTextToImage('声明：本报告由星伴平台自动生成，仅供参考，不构成医疗诊断。', 8, '#A08C7A', CW);
-            pdf.addImage(img.dataUrl,'PNG',M,y,CW,img.h);
 
             pdf.save(`星伴综合报告_${data.child_name}.pdf`);
         });
 
-        // ======== 分享弹窗（含分享码生成 + 链接） ========
+        // ======== 分享弹窗 ========
         const shareUrl = `${location.origin}${location.pathname}?childId=${verifiedChildId}&games=${glist.join(',')}`;
         let shareCode = '';
         const codeBox = document.getElementById('shareUrlBox');
@@ -245,7 +223,6 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
         const shareOverlay = document.getElementById('shareOverlay');
 
         document.getElementById('shareBtn').addEventListener('click', async () => {
-            // 生成分享码
             codeBox.textContent = '正在生成分享码...';
             shareOverlay.classList.add('show');
             try {
@@ -257,7 +234,7 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
                 const d = await resp.json();
                 if (d.success) {
                     shareCode = d.data.code;
-                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style=\"font-size:11px;color:#8F7A64\">将此码发送给朋友，在报告页输入即可查看</span>`;
+                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style="font-size:11px;color:#8F7A64">将此码发送给朋友，在报告页输入即可查看</span>`;
                     copyBtn.onclick = () => {
                         navigator.clipboard.writeText(shareCode).then(() => {
                             copyToast.style.display = 'block';
@@ -274,8 +251,6 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
         });
 
         document.getElementById('closeShareBtn').addEventListener('click', () => shareOverlay.classList.remove('show'));
-
-        // 初始复制按钮：复制链接
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(shareUrl).then(() => {
                 copyToast.style.display = 'block';
