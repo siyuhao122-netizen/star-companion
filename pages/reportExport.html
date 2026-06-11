@@ -65,10 +65,32 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
     const params = new URLSearchParams(window.location.search);
     const childId = params.get('childId');
     const games = params.get('games') || 'name,point,mic,emotion';
-    if (!childId) { document.getElementById('loadingArea').innerHTML='<div class=error-box><i class="fas fa-exclamation-circle"></i><p>缺少孩子ID参数，请从数据看板进入</p></div>'; return; }
+    // 如果 URL 中有 ?code= 参数，先验证分享码
+    const shareCode = params.get('code');
+    let verifiedChildId = childId;
+    let verifiedGames = games;
+    if (shareCode && !childId) {
+        try {
+            const vResp = await fetch(`${API_BASE}/share/verify?code=${encodeURIComponent(shareCode)}`);
+            const vData = await vResp.json();
+            if (vData.success) {
+                verifiedChildId = vData.data.child_id;
+                verifiedGames = vData.data.games || 'name,point,mic,emotion';
+            } else {
+                document.getElementById('loadingArea').innerHTML = `<div class=error-box><i class="fas fa-lock"></i><p>${vData.message || '分享码无效'}</p><div style="margin-top:12px"><input id="manualCode" placeholder="请输入分享码" style="padding:8px 16px;border:1.5px solid #D9A066;border-radius:20px;font-size:14px;text-align:center;letter-spacing:4px;text-transform:uppercase"><button onclick="location.href='?code='+document.getElementById('manualCode').value.toUpperCase()" style="margin-left:8px;padding:8px 20px;border-radius:20px;background:#D9A066;color:#FFF;border:none;cursor:pointer">验证</button></div>`;
+                return;
+            }
+        } catch(e) {
+            document.getElementById('loadingArea').innerHTML='<div class=error-box><p>网络错误，无法验证分享码</p></div>';
+            return;
+        }
+    } else if (!childId) {
+        document.getElementById('loadingArea').innerHTML='<div class=error-box><i class="fas fa-exclamation-circle"></i><p>缺少孩子ID参数，请从数据看板进入</p></div>';
+        return;
+    }
 
     try {
-        const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${childId}?games=${games}`);
+        const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${verifiedChildId}?games=${verifiedGames}`);
         const d = await resp.json();
         if (!d.success) throw new Error(d.message);
 
@@ -78,7 +100,7 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
 
         let html = `<div class="report-header"><h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1><p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p></div>
           <div class="section"><div class="section-title"><i class="fas fa-chart-bar"></i> 核心指标概览</div><div class="metric-row">`;
-        const glist = (data.games || games.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
+        const glist = (data.games || verifiedGames.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
         glist.forEach((g,i) => {
             const rate = data.radar_data && data.radar_data[i] !== undefined ? data.radar_data[i] : 0;
             html += `<div class="metric-item"><div class="label"><i class="fas ${gameIcons[g]||'fa-star'}"></i> ${gameLabels[g]||g}</div><div class="value">${rate}%</div></div>`;
@@ -172,7 +194,8 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
                 if (chartInstance) chartInstance.resize();
                 await new Promise(r => setTimeout(r, 200)); // 等渲染稳定
                 const radarImg = radarCanvas.toDataURL('image/png', 1.0);
-                const radarW = 80, radarH = 80;
+                const aspect = radarCanvas.height / radarCanvas.width;
+                const radarW = 80, radarH = 80 * aspect;
                 if (y + radarH > 260) { pdf.addPage(); y = 15; }
                 pdf.setDrawColor(237, 217, 198); pdf.setLineWidth(0.5);
                 pdf.roundedRect(M, y, CW, radarH+16, 4, 4, 'S');
@@ -213,7 +236,7 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
         });
 
         // ======== 分享弹窗（含分享码生成 + 链接） ========
-        const shareUrl = `${location.origin}${location.pathname}?childId=${childId}&games=${glist.join(',')}`;
+        const shareUrl = `${location.origin}${location.pathname}?childId=${verifiedChildId}&games=${glist.join(',')}`;
         let shareCode = '';
         const codeBox = document.getElementById('shareUrlBox');
         const copyBtn = document.getElementById('copyShareBtn');
@@ -228,12 +251,13 @@ body{background:#F5EDE4;font-family:'Noto Sans SC',sans-serif;display:flex;justi
                 const resp = await fetch(`${API_BASE}/share/generate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ child_id: parseInt(childId), games: glist.join(',') })
+                    body: JSON.stringify({ child_id: parseInt(verifiedChildId), games: glist.join(',') })
                 });
                 const d = await resp.json();
                 if (d.success) {
                     shareCode = d.data.code;
-                    codeBox.textContent = `分享码：${shareCode}（48小时有效）`;
+                    const linkWithCode = `${location.origin}${location.pathname}?code=${shareCode}`;
+                    codeBox.innerHTML = `分享码：<b>${shareCode}</b>（48小时有效）<br><span style=\"font-size:11px;color:#8F7A64;word-break:break-all\">${linkWithCode}</span>`;
                     copyBtn.onclick = () => {
                         navigator.clipboard.writeText(shareCode).then(() => {
                             copyToast.style.display = 'block';

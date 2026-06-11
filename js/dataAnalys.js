@@ -59,6 +59,15 @@
     }
     
     function showLoading() {
+        // KPI 区显示 "-" 避免假数据
+        document.getElementById('kpiCorrectRate').textContent = '—';
+        document.getElementById('kpiClickRate').textContent = '—';
+        document.getElementById('kpiAvgTime').textContent = '—';
+        document.getElementById('kpiTimeout').textContent = '—';
+        document.getElementById('kpiCorrectTrend').textContent = '—';
+        document.getElementById('kpiClickTrend').textContent = '—';
+        document.getElementById('kpiTimeTrend').textContent = '—';
+        // AI分析区显示加载动画
         document.getElementById('trendList').innerHTML = `
             <div style="text-align:center; padding:40px;">
                 <i class="fas fa-spinner fa-spin" style="font-size:32px; color:#D9A066;"></i>
