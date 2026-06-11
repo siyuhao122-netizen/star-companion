@@ -101,39 +101,45 @@ body{
     const params = new URLSearchParams(window.location.search);
     const childId = params.get('childId');
     const games = params.get('games') || 'name,point,mic,emotion';
-    const shareCode = params.get('code');
-    let verifiedChildId = childId;
-    let verifiedGames = games;
+    const urlCode = params.get('code');
+    let currentChildId = childId;
+    let currentGames = games;
 
-    if (shareCode && !childId) {
+    // ======== 页面内验证码并加载报告（不通过 URL 传递码） ========
+    window.verifyCodeAndLoad = async function(inputEl) {
+        const code = (inputEl?.value || '').trim().toUpperCase();
+        if (!code) { showCodeInput('请输入分享码'); return; }
         try {
-            const vResp = await fetch(`${API_BASE}/share/verify?code=${encodeURIComponent(shareCode)}`);
+            const vResp = await fetch(`${API_BASE}/share/verify?code=${encodeURIComponent(code)}`);
             const vData = await vResp.json();
             if (vData.success) {
-                verifiedChildId = vData.data.child_id;
-                verifiedGames = vData.data.games || 'name,point,mic,emotion';
+                await loadReport(vData.data.child_id, vData.data.games || 'name,point,mic,emotion');
             } else {
-                document.getElementById('loadingArea').innerHTML = `<div class=error-box><i class="fas fa-lock"></i><p>${vData.message || '分享码无效'}</p><div style="margin-top:12px"><input id="manualCode" placeholder="请输入分享码" style="padding:10px 20px;border:1.5px solid #D9A066;border-radius:24px;font-size:16px;text-align:center;letter-spacing:6px;text-transform:uppercase;width:200px;outline:none"><button onclick="location.href='?code='+document.getElementById('manualCode').value.toUpperCase()" style="padding:10px 28px;border-radius:24px;background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border:none;font-size:14px;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> 验证</button></div>`;
-                return;
+                showCodeInput(vData.message || '分享码无效');
             }
         } catch(e) {
-            document.getElementById('loadingArea').innerHTML='<div class=error-box><p>网络错误，无法验证分享码</p></div>';
-            return;
+            showCodeInput('网络错误，请重试');
         }
-    } else if (!childId) {
-        document.getElementById('loadingArea').innerHTML = `<div style="text-align:center;padding:60px 20px"><i class="fas fa-lock" style="font-size:48px;color:#D9A066;margin-bottom:16px;display:block"></i><p style="margin-bottom:16px;font-size:16px;font-weight:600;color:#4D3724">请输入分享码查看报告</p><div style="display:flex;justify-content:center;gap:8px"><input id="manualCode" placeholder="输入分享码" style="padding:10px 20px;border:1.5px solid #D9A066;border-radius:24px;font-size:16px;text-align:center;letter-spacing:6px;text-transform:uppercase;width:200px;outline:none"><button onclick="location.href='?code='+document.getElementById('manualCode').value.toUpperCase()" style="padding:10px 28px;border-radius:24px;background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border:none;font-size:14px;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> 验证</button></div><p style="margin-top:16px;font-size:12px;color:#B89A78">向您的康复师或家长索取分享码</p></div>`;
-        return;
+    };
+
+    // ======== 显示码输入界面 ========
+    function showCodeInput(msg) {
+        document.getElementById('loadingArea').innerHTML = `<div style="text-align:center;padding:60px 20px"><i class="fas fa-lock" style="font-size:48px;color:#D9A066;margin-bottom:16px;display:block"></i><p style="margin-bottom:8px;font-size:14px;color:#C06060">${msg || ''}</p><p style="margin-bottom:16px;font-size:16px;font-weight:600;color:#4D3724">请输入分享码查看报告</p><div style="display:flex;justify-content:center;gap:8px"><input id="manualCode" placeholder="输入分享码" style="padding:10px 20px;border:1.5px solid #D9A066;border-radius:24px;font-size:16px;text-align:center;letter-spacing:6px;text-transform:uppercase;width:200px;outline:none" onkeydown="if(event.key==='Enter')verifyCodeAndLoad(this)"><button onclick="verifyCodeAndLoad(document.getElementById('manualCode'))" style="padding:10px 28px;border-radius:24px;background:linear-gradient(135deg,#D9A066,#C88B4A);color:#FFF;border:none;font-size:14px;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> 验证</button></div><p style="margin-top:16px;font-size:12px;color:#B89A78">向您的康复师或家长索取分享码</p></div>`;
     }
 
+    // ======== 加载并渲染报告 ========
+    async function loadReport(loadChildId, loadGames) {
+    currentChildId = loadChildId;
+    currentGames = loadGames;
     try {
-        const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${verifiedChildId}?games=${verifiedGames}`);
+        const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${loadChildId}?games=${loadGames}`);
         const d = await resp.json();
         if (!d.success) throw new Error(d.message);
 
         const data = d.data;
         const gameLabels = { name:'叫名反应', point:'指物练习', mic:'声音小话筒', emotion:'情绪识别' };
         const gameIcons = { name:'fa-ear-deaf', point:'fa-hand-peace', mic:'fa-microphone-alt', emotion:'fa-face-laugh-wink' };
-        const glist = (data.games || verifiedGames.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
+        const glist = (data.games || loadGames.split(',')).filter(g => ['name','point','mic','emotion'].includes(g));
 
         // ======== 构建 HTML 页面 ========
         let html = `<div class="report-header"><h1><i class="fas fa-star"></i> 星伴 · 综合评估报告</h1><p>${data.child_name} · ${data.age_months}个月 · ${new Date().toLocaleDateString('zh-CN')}</p></div>
@@ -241,7 +247,7 @@ body{
         });
 
         // ======== 分享弹窗 ========
-        const shareUrl = `${location.origin}${location.pathname}?childId=${verifiedChildId}&games=${glist.join(',')}`;
+        const shareUrl = `${location.origin}${location.pathname}?childId=${currentChildId}&games=${glist.join(',')}`;
         let shareCode = '';
         const codeBox = document.getElementById('shareUrlBox');
         const copyBtn = document.getElementById('copyShareBtn');
@@ -255,13 +261,13 @@ body{
                 const resp = await fetch(`${API_BASE}/share/generate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ child_id: parseInt(verifiedChildId), games: glist.join(',') })
+                    body: JSON.stringify({ child_id: parseInt(currentChildId), games: glist.join(',') })
                 });
                 const d = await resp.json();
                 if (d.success) {
                     shareCode = d.data.code;
-                    const fullLink = `${location.origin}/pages/reportExport.html?code=${shareCode}`;
-                    codeBox.innerHTML = `<div style="margin-bottom:8px"><b>分享码：${shareCode}</b>（48小时有效）</div><div style="background:#FFF;border:1px solid #EDD9C6;border-radius:8px;padding:8px 12px;font-size:11px;color:#6B5A4A;word-break:break-all;margin-bottom:8px">${fullLink}</div><span style="font-size:11px;color:#8F7A64">将码或链接发送给朋友即可查看报告</span>`;
+                    const fullLink = `${location.origin}/pages/reportExport.html`;
+                    codeBox.innerHTML = `<div style="margin-bottom:8px"><b>分享码：${shareCode}</b>（48小时有效）</div><div style="background:#FFF;border:1px solid #EDD9C6;border-radius:8px;padding:8px 12px;font-size:11px;color:#6B5A4A;word-break:break-all;margin-bottom:4px">分享链接：${fullLink}</div><span style="font-size:11px;color:#8F7A64">将链接发给朋友，输入上方分享码即可查看</span>`;
                     // 切换为两个按钮：复制码 + 复制链接
                     copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制分享码';
                     copyBtn.onclick = () => {
@@ -310,6 +316,20 @@ body{
 
     } catch(e) {
         document.getElementById('reportContainer').innerHTML = `<div class=error-box><i class="fas fa-exclamation-triangle"></i><p>加载失败: ${e.message}</p><button class="btn btn-secondary" onclick="location.href='dataLook.html'">返回数据看板</button></div>`;
+    }
+
+    // ======== 页面入口 ========
+    if (childId) {
+        loadReport(childId, games);
+    } else if (urlCode) {
+        // 兼容旧链接（URL 中仍带 code）：自动填入并验证
+        showCodeInput('');
+        setTimeout(() => {
+            const inp = document.getElementById('manualCode');
+            if (inp) { inp.value = urlCode; verifyCodeAndLoad(inp); }
+        }, 200);
+    } else {
+        showCodeInput('');
     }
 })();
 </script>
