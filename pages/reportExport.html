@@ -131,6 +131,8 @@ body{
     async function loadReport(loadChildId, loadGames) {
     currentChildId = loadChildId;
     currentGames = loadGames;
+    // 显示加载状态
+    document.getElementById('reportContainer').innerHTML = '<div class=\"loading\"><i class=\"fas fa-spinner fa-spin\"></i> 正在加载报告数据...</div>';
     try {
         const resp = await fetch(`${API_BASE}/ai/comprehensive-analysis/${loadChildId}?games=${loadGames}`);
         const d = await resp.json();
