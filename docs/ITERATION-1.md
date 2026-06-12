@@ -189,6 +189,40 @@
 
 ---
 
+## 第十三次迭代 — 综合报告 AI 缓存（2026-06-08）
+
+### 问题
+分享页与原报告页 AI 分析内容不同——每次打开页面都重新调用 AI API，非确定性输出导致内容不一致。
+
+### 修复
+`ai_analysis.py` 的 `comprehensive_analysis` 端点增加内存缓存：
+- 缓存键：`child_id + games`
+- 缓存值：完整 `result_data`
+- TTL：15 分钟
+- 超过 100 条自动清空
+
+同一 child+games 组合，15 分钟内重复请求直接返回缓存，AI 只调用一次。
+
+---
+
+## 第十二次迭代 — 分享链接安全 + 页面内验证（2026-06-08）
+
+### 1. 分享链接不包含分享码
+根因：生成链接时把 `?code=XXXXXX` 拼入 URL，码暴露在链接中。  
+修复：链接改为清洁路径 `/pages/reportExport.html`，不带任何参数。
+
+### 2. 分享页内验证码（不通过 URL）
+根因：验证按钮用 `location.href='?code='+value` 把码放入 URL 再刷新。  
+修复：新增 `verifyCodeAndLoad()` 在当前页面调 `/api/share/verify`，成功直接 `loadReport(child_id, games)`，不刷新、码不入 URL。
+
+### 3. 报告加载逻辑复用
+新增 `loadReport(childId, games)` 函数，被 3 条入口路径复用：
+- 数据看板进入（有 childId）→ 直接加载
+- 旧链接兼容（URL 有 code）→ 自动填入验证
+- 分享页进入（无参数）→ 显示码输入框
+
+---
+
 ## 第十一次迭代 — 分享链接显示 + 情绪分析undefined（2026-06-08）
 
 ### 1. 分享弹窗增加完整链接
